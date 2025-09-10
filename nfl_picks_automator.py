@@ -3,7 +3,7 @@ import requests
 import datetime
 import sqlite3
 
-# Connect to SQLite DB (creates if not exists, with thread safety)
+# Connect to SQLite DB (creates if not exists)
 conn = sqlite3.connect('picks.db', check_same_thread=False)
 cursor = conn.cursor()
 
@@ -71,35 +71,37 @@ def fetch_nfl_results(week, season=2025):
             return week1_fallback
         return {}
 
-# Temporary: Import dummy data for testing (remove or comment out after first run; replace with your real Excel import)
-def import_dummy_data():
-    # Clear picks for re-test
+def import_from_excel(file_path='nfl_picks_2025.xlsx'):
+    # Clear picks for re-import
     cursor.execute("DELETE FROM picks")
     conn.commit()
-    # Example for Week 1 games (add all 16 with your actual picks as 'Away' or 'Home' based on 'x')
-    games_week1 = [
-        (1, 1, 'Dallas Cowboys', 'Philadelphia Eagles', 'Away', 'Home', 'Away', 'Home', 'Away', 'Home'),
-        (1, 2, 'Kansas City Chiefs', 'Los Angeles Chargers', 'Home', 'Home', 'Away', 'Home', 'Away', 'Home'),
-        (1, 3, 'Arizona Cardinals', 'New Orleans Saints', 'Away', 'Away', 'Away', 'Away', 'Away', 'Away'),
-        (1, 4, 'Carolina Panthers', 'Jacksonville Jaguars', 'Home', 'Home', 'Home', 'Home', 'Home', 'Home'),
-        (1, 5, 'Cincinnati Bengals', 'Cleveland Browns', 'Away', 'Away', 'Away', 'Away', 'Away', 'Away'),
-        (1, 6, 'Las Vegas Raiders', 'New England Patriots', 'Away', 'Away', 'Away', 'Away', 'Away', 'Away'),
-        (1, 7, 'Miami Dolphins', 'Indianapolis Colts', 'Home', 'Home', 'Home', 'Home', 'Home', 'Home'),
-        (1, 8, 'New York Giants', 'Washington Commanders', 'Home', 'Home', 'Home', 'Home', 'Home', 'Home'),
-        (1, 9, 'Pittsburgh Steelers', 'New York Jets', 'Away', 'Away', 'Away', 'Away', 'Away', 'Away'),
-        (1, 10, 'Tampa Bay Buccaneers', 'Atlanta Falcons', 'Away', 'Away', 'Away', 'Away', 'Away', 'Away'),
-        (1, 11, 'San Francisco 49ers', 'Seattle Seahawks', 'Away', 'Away', 'Away', 'Away', 'Away', 'Away'),
-        (1, 12, 'Tennessee Titans', 'Denver Broncos', 'Home', 'Home', 'Home', 'Home', 'Home', 'Home'),
-        (1, 13, 'Detroit Lions', 'Green Bay Packers', 'Home', 'Home', 'Home', 'Home', 'Home', 'Home'),
-        (1, 14, 'Houston Texans', 'Los Angeles Rams', 'Home', 'Home', 'Home', 'Home', 'Home', 'Home'),
-        (1, 15, 'Baltimore Ravens', 'Buffalo Bills', 'Home', 'Home', 'Home', 'Home', 'Home', 'Home'),
-        (1, 16, 'Minnesota Vikings', 'Chicago Bears', 'Away', 'Away', 'Away', 'Away', 'Away', 'Away'),
-    ]
-    for game in games_week1:
-        cursor.execute("INSERT INTO picks (week, game_id, away_team, home_team, bobby_pick, chet_pick, clyde_pick, henry_pick, riley_pick, nick_pick) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", game)
-    conn.commit()
+    xl = pd.ExcelFile(file_path)
+    for sheet_name in xl.sheet_names:
+        if not sheet_name.startswith('Sheet'):
+            continue
+        week_num = int(sheet_name.replace('Sheet', ''))
+        df = pd.read_excel(file_path, sheet_name=sheet_name, header=None)
+        game_id = 1
+        for row_idx in range(2, 22):  # Rows 3-22
+            if pd.notna(df.iloc[row_idx, 7]) and pd.notna(df.iloc[row_idx, 9]):
+                away_team = str(df.iloc[row_idx, 7]).strip().rstrip('¹').strip()
+                home_team = str(df.iloc[row_idx, 9]).strip().rstrip('¹').strip()
+                pick_values = []
+                for i in range(6):
+                    away_pick = str(df.iloc[row_idx, 1 + i]).strip().lower()
+                    home_pick = str(df.iloc[row_idx, 10 + i]).strip().lower()
+                    if away_pick == 'x':
+                        pick_values.append('Away')
+                    elif home_pick == 'x':
+                        pick_values.append('Home')
+                    else:
+                        pick_values.append(None)
+                cursor.execute('''INSERT INTO picks (week, game_id, away_team, home_team, bobby_pick, chet_pick, clyde_pick, henry_pick, riley_pick, nick_pick)
+                                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (week_num, game_id, away_team, home_team, *pick_values))
+                conn.commit()
+                game_id += 1
 
-import_dummy_data()  # Run once to populate; comment out after
+#import_from_excel()  # Run to import real picks; comment out after
 
 def update_picks(week_num=None):
     weeks = range(1, 19) if not week_num else [week_num]
