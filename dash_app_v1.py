@@ -1,13 +1,9 @@
 import dash
-from dash import dcc, html, Input, Output, dash_table, State, callback_context
+from dash import dcc, html, Input, Output, dash_table
 import dash_bootstrap_components as dbc
 import pandas as pd
 from nfl_picks_automator import update_picks
 import sqlite3
-import base64
-import io
-import os
-from datetime import datetime
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
@@ -33,37 +29,8 @@ app.layout = dbc.Container([
     
     dbc.Row([
         dbc.Col([
-            dbc.Card([
-                dbc.CardHeader("Upload New Picks"),
-                dbc.CardBody([
-                    dcc.Upload(
-                        id='upload-picks',
-                        children=dbc.Button([
-                            html.I(className="fas fa-upload me-2"),
-                            "Upload Excel File"
-                        ], color="primary", size="lg"),
-                        multiple=False,
-                        accept='.xlsx,.xlsm'
-                    ),
-                    html.Div(id='upload-status', className="mt-3")
-                ])
-            ], className="mb-4")
-        ], width=6),
-        dbc.Col([
-            dbc.Card([
-                dbc.CardHeader("Update Results"),
-                dbc.CardBody([
-                    dbc.Button("🔄 Update with Latest Results", id='update-btn', color='success', size="lg", className="w-100"),
-                    html.Div(id='update-status', className="mt-3")
-                ])
-            ], className="mb-4")
-        ], width=6)
-    ]),
-    
-    # Last updated info
-    dbc.Row([
-        dbc.Col([
-            html.Div(id='last-updated-info', className="text-muted mb-3")
+            dbc.Button("🔄 Update with Latest Results", id='update-btn', color='success', size="lg", className="mb-4 w-100"),
+            html.Div(id='status', className="mb-4")
         ], width=12)
     ]),
     
@@ -77,48 +44,7 @@ app.layout = dbc.Container([
 ], fluid=True)
 
 @app.callback(
-    Output('upload-status', 'children'),
-    Input('upload-picks', 'contents'),
-    State('upload-picks', 'filename')
-)
-def upload_file(contents, filename):
-    if contents is None:
-        return ""
-    
-    try:
-        # Decode the uploaded file
-        content_type, content_string = contents.split(',')
-        decoded = base64.b64decode(content_string)
-        
-        # Save the uploaded file temporarily
-        temp_filename = f"temp_{filename}"
-        with open(temp_filename, 'wb') as f:
-            f.write(decoded)
-        
-        # Import the data using our existing function
-        from nfl_picks_automator import import_from_excel
-        import_from_excel(temp_filename)
-        
-        # Clean up temp file
-        os.remove(temp_filename)
-        
-        # Record upload time
-        with open('last_upload.txt', 'w') as f:
-            f.write(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-        
-        return dbc.Alert([
-            html.I(className="fas fa-check-circle me-2"),
-            f"Successfully uploaded and processed {filename}!"
-        ], color="success", dismissable=True, duration=5000)
-        
-    except Exception as e:
-        return dbc.Alert([
-            html.I(className="fas fa-exclamation-triangle me-2"),
-            f"Error processing file: {str(e)}"
-        ], color="danger", dismissable=True)
-
-@app.callback(
-    Output('update-status', 'children'),
+    Output('status', 'children'),
     Input('update-btn', 'n_clicks')
 )
 def update_status(n_clicks):
@@ -127,14 +53,9 @@ def update_status(n_clicks):
     
     try:
         update_picks()
-        
-        # Record update time
-        with open('last_results_update.txt', 'w') as f:
-            f.write(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-        
         return dbc.Alert([
             html.I(className="fas fa-check-circle me-2"),
-            "Game results updated successfully!"
+            "Data updated successfully!"
         ], color="success", dismissable=True, duration=4000)
     except Exception as e:
         return dbc.Alert([
@@ -143,38 +64,10 @@ def update_status(n_clicks):
         ], color="danger", dismissable=True)
 
 @app.callback(
-    Output('last-updated-info', 'children'),
-    [Input('upload-status', 'children'), Input('update-status', 'children'), Input('main-tabs', 'active_tab')]
-)
-def show_last_updated(upload_status, update_status, active_tab):
-    try:
-        info_cards = []
-        
-        # Check last upload time
-        if os.path.exists('last_upload.txt'):
-            with open('last_upload.txt', 'r') as f:
-                last_upload = f.read().strip()
-            info_cards.append(
-                dbc.Badge(f"Picks last uploaded: {last_upload}", color="info", className="me-2")
-            )
-        
-        # Check last results update time
-        if os.path.exists('last_results_update.txt'):
-            with open('last_results_update.txt', 'r') as f:
-                last_update = f.read().strip()
-            info_cards.append(
-                dbc.Badge(f"Results last updated: {last_update}", color="secondary")
-            )
-        
-        return info_cards
-    except:
-        return []
-
-@app.callback(
     Output("tab-content", "children"),
-    [Input("main-tabs", "active_tab"), Input('update-btn', 'n_clicks'), Input('upload-status', 'children')]
+    [Input("main-tabs", "active_tab"), Input('update-btn', 'n_clicks')]
 )
-def render_tab_content(active_tab, n_clicks, upload_status):
+def render_tab_content(active_tab, n_clicks):
     if active_tab == "cumulative":
         return render_cumulative_tab()
     elif active_tab == "weekly":
@@ -191,7 +84,7 @@ def render_cumulative_tab():
         if df.empty:
             return dbc.Alert([
                 html.I(className="fas fa-info-circle me-2"),
-                "No data available. Upload your picks Excel file to get started."
+                "No data available. Click 'Update with Latest Results' to load your picks data."
             ], color="info")
         
         return dbc.Card([
@@ -243,7 +136,7 @@ def render_weekly_tab():
         conn.close()
         
         if df.empty:
-            return dbc.Alert("No weekly picks data available. Upload your Excel file first.", color="info")
+            return dbc.Alert("No weekly picks data available.", color="info")
         
         weeks = sorted(df['week'].unique())
         
@@ -278,22 +171,6 @@ def create_week_content(week_df, week_num):
     if week_df.empty:
         return html.P(f"No data for Week {week_num}")
     
-    # Find the tiebreaker game (last game with tiebreaker predictions)
-    tiebreaker_game_id = None
-    tiebreaker_predictions = {}
-    people_names = ['bobby', 'chet', 'clyde', 'henry', 'riley', 'nick']
-    
-    for _, row in week_df.iterrows():
-        # Check if this game has tiebreaker predictions
-        has_tiebreaker = any(pd.notna(row[f'{person}_total_guess']) for person in people_names)
-        if has_tiebreaker:
-            tiebreaker_game_id = row['game_id']
-            for person in people_names:
-                guess = row[f'{person}_total_guess']
-                if pd.notna(guess):
-                    tiebreaker_predictions[person] = int(guess)
-            break
-    
     # Create picks table
     display_data = []
     people_cols = ['bobby_pick', 'chet_pick', 'clyde_pick', 'henry_pick', 'riley_pick', 'nick_pick']
@@ -304,117 +181,37 @@ def create_week_content(week_df, week_num):
             'Home Team': row['home_team']
         }
         
-        # Check if this is the tiebreaker game
-        is_tiebreaker_game = (row['game_id'] == tiebreaker_game_id)
-        
-        for i, col in enumerate(people_cols):
+        for col in people_cols:
             person_name = col.replace('_pick', '').title()
-            person_key = col.replace('_pick', '')
             pick = row[col]
-            
             if pick == 'Away':
-                pick_display = f"✓ {row['away_team']}"
+                game_row[person_name] = f"✓ {row['away_team']}"
             elif pick == 'Home':
-                pick_display = f"✓ {row['home_team']}"
+                game_row[person_name] = f"✓ {row['home_team']}"
             else:
-                pick_display = '-'
-            
-            # Add tiebreaker prediction if this is the tiebreaker game
-            if is_tiebreaker_game and person_key in tiebreaker_predictions:
-                pick_display += f" ({tiebreaker_predictions[person_key]})"
-            
-            game_row[person_name] = pick_display
+                game_row[person_name] = '-'
         
-        # Add actual winner and total points
+        # Add actual winner
         if pd.notna(row['actual_winner']):
             if row['actual_winner'] == 'Away':
-                winner_display = row['away_team']
+                game_row['🏆 Winner'] = row['away_team']
             elif row['actual_winner'] == 'Home':
-                winner_display = row['home_team']
+                game_row['🏆 Winner'] = row['home_team']
             else:
-                winner_display = row['actual_winner']
-            
-            # If this game has tiebreaker predictions AND actual total points, show just the total
-            has_any_tiebreaker = any(pd.notna(row[f'{person}_total_guess']) for person in people_names)
-            if has_any_tiebreaker and pd.notna(row.get('actual_total_points')):
-                game_row['🏆 Winner'] = str(int(row['actual_total_points']))
-            else:
-                game_row['🏆 Winner'] = winner_display
+                game_row['🏆 Winner'] = row['actual_winner']
         else:
-            # Show tiebreaker prediction totals for pending games
-            has_any_tiebreaker = any(pd.notna(row[f'{person}_total_guess']) for person in people_names)
-            if has_any_tiebreaker:
-                predictions = []
-                for person in people_names:
-                    guess = row[f'{person}_total_guess']
-                    if pd.notna(guess):
-                        predictions.append(f"{person.title()}: {int(guess)}")
-                if predictions:
-                    predictions_text = ", ".join(predictions)
-                    game_row['🏆 Winner'] = f"TBD ({predictions_text})"
-                else:
-                    game_row['🏆 Winner'] = 'TBD'
-            else:
-                game_row['🏆 Winner'] = 'TBD'
+            game_row['🏆 Winner'] = 'TBD'
         
         display_data.append(game_row)
     
     picks_df = pd.DataFrame(display_data)
     
-    # Create conditional formatting rules for correct/incorrect picks
-    style_data_conditional = [
-        {
-            'if': {'row_index': 'odd'},
-            'backgroundColor': '#f8f9fa'
-        }
-    ]
-    
-    # Add color coding for each person's picks
-    for _, row in week_df.iterrows():
-        if pd.notna(row['actual_winner']):
-            row_index = row['game_id'] - 1  # game_id starts at 1, row_index at 0
-            
-            for col in people_cols:
-                person_name = col.replace('_pick', '').title()
-                person_pick = row[col]
-                actual_winner = row['actual_winner']
-                
-                if person_pick == actual_winner:
-                    # Correct pick - green
-                    style_data_conditional.append({
-                        'if': {
-                            'row_index': row_index,
-                            'column_id': person_name
-                        },
-                        'backgroundColor': '#d4edda',
-                        'color': '#155724',
-                        'fontWeight': 'bold'
-                    })
-                elif person_pick and person_pick != actual_winner:
-                    # Incorrect pick - red
-                    style_data_conditional.append({
-                        'if': {
-                            'row_index': row_index,
-                            'column_id': person_name
-                        },
-                        'backgroundColor': '#f8d7da',
-                        'color': '#721c24',
-                        'fontWeight': 'bold'
-                    })
-    
-    # Create more specific tiebreaker info
-    if tiebreaker_predictions:
-        tiebreaker_info = dbc.Alert([
-            html.I(className="fas fa-info-circle me-2"),
-            html.Strong("Tiebreaker: "),
-            f"Numbers in parentheses show each person's total points prediction for the tiebreaker game. "
-            f"Green = correct pick, Red = incorrect pick."
-        ], color="info", className="mb-3")
-    else:
-        tiebreaker_info = dbc.Alert([
-            html.I(className="fas fa-info-circle me-2"),
-            "No tiebreaker predictions available for this week. Green = correct pick, Red = incorrect pick."
-        ], color="info", className="mb-3")
+    # Add tiebreaker info note
+    tiebreaker_info = dbc.Alert([
+        html.I(className="fas fa-info-circle me-2"),
+        html.Strong("Tiebreaker: "),
+        "The number below each person's name represents their guess for the total points in the final game of the week."
+    ], color="info", className="mb-3")
     
     picks_table = dash_table.DataTable(
         data=picks_df.to_dict('records'),
@@ -431,7 +228,21 @@ def create_week_content(week_df, week_num):
             'fontWeight': 'bold',
             'border': '1px solid #138496'
         },
-        style_data_conditional=style_data_conditional,
+        style_data_conditional=[
+            {
+                'if': {'row_index': 'odd'},
+                'backgroundColor': '#f8f9fa'
+            },
+            # Highlight correct picks in green
+            {
+                'if': {
+                    'filter_query': '{🏆 Winner} contains "✓"',
+                    'column_id': ['Bobby', 'Chet', 'Clyde', 'Henry', 'Riley', 'Nick']
+                },
+                'backgroundColor': '#d4edda',
+                'color': '#155724'
+            }
+        ],
         style_data={
             'border': '1px solid #dee2e6'
         },
@@ -447,7 +258,7 @@ def render_teams_tab():
         conn.close()
         
         if df.empty:
-            return dbc.Alert("No picks data available. Upload your Excel file first.", color="info")
+            return dbc.Alert("No picks data available.", color="info")
         
         # Calculate team breakdown for all 32 teams
         people = ['bobby', 'chet', 'clyde', 'henry', 'riley', 'nick']
