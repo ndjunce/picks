@@ -1,5 +1,5 @@
 import dash
-from dash import dcc, html, Input, Output, dash_table, callback
+from dash import dcc, html, Input, Output, dash_table
 import dash_bootstrap_components as dbc
 import pandas as pd
 from nfl_picks_automator import update_picks
@@ -23,38 +23,37 @@ app.layout = html.Div([
         dbc.Tab(label="Team Breakdown", tab_id="team-tab")
     ], id="tabs", active_tab="cumulative-tab"),
     
-    html.Div(id="tab-content", className="mt-4"),
-    
-    # Hidden divs for storing data
-    html.Div(id='hidden-trigger', style={'display': 'none'})
+    html.Div(id="tab-content", className="mt-4")
 ])
 
-@callback(
-    Output('status', 'children'),
-    Input('update-btn', 'n_clicks'),
-    prevent_initial_call=True
+@app.callback(
+    [Output('status', 'children'), Output("tab-content", "children")],
+    [Input('update-btn', 'n_clicks'), Input("tabs", "active_tab")]
 )
-def run_update(n_clicks):
-    try:
-        update_picks()
-        return dbc.Alert("Updated successfully!", color="success", dismissable=True)
-    except Exception as e:
-        return dbc.Alert(f"Error: {str(e)}", color="danger", dismissable=True)
-
-@callback(
-    Output("tab-content", "children"),
-    [Input("tabs", "active_tab"), Input('update-btn', 'n_clicks')]
-)
-def update_tab_content(active_tab, n_clicks):
+def update_content(n_clicks, active_tab):
+    # Handle update button
+    status_msg = ""
+    if n_clicks and n_clicks > 0:
+        try:
+            update_picks()
+            status_msg = dbc.Alert("Updated successfully!", color="success", dismissable=True)
+        except Exception as e:
+            status_msg = dbc.Alert(f"Error: {str(e)}", color="danger", dismissable=True)
+    
+    # Handle tab content
     try:
         if active_tab == "cumulative-tab":
-            return get_cumulative_content()
+            content = get_cumulative_content()
         elif active_tab == "weekly-tab":
-            return get_weekly_content()
+            content = get_weekly_content()
         elif active_tab == "team-tab":
-            return get_team_breakdown_content()
+            content = get_team_breakdown_content()
+        else:
+            content = html.Div("Loading...")
     except Exception as e:
-        return html.Div(f"Error loading content: {str(e)}")
+        content = html.Div(f"Error loading content: {str(e)}")
+    
+    return status_msg, content
 
 def get_cumulative_content():
     try:
@@ -68,20 +67,18 @@ def get_cumulative_content():
         columns = [{"name": col.title(), "id": col} for col in df.columns]
         data = df.to_dict('records')
         
-        return dcc.Loading(
-            dash_table.DataTable(
-                data=data,
-                columns=columns,
-                page_size=20,
-                style_cell={'textAlign': 'center'},
-                style_header={'backgroundColor': 'rgb(230, 230, 230)', 'fontWeight': 'bold'},
-                style_data_conditional=[
-                    {
-                        'if': {'row_index': 'odd'},
-                        'backgroundColor': 'rgb(248, 248, 248)'
-                    }
-                ]
-            )
+        return dash_table.DataTable(
+            data=data,
+            columns=columns,
+            page_size=20,
+            style_cell={'textAlign': 'center'},
+            style_header={'backgroundColor': 'rgb(230, 230, 230)', 'fontWeight': 'bold'},
+            style_data_conditional=[
+                {
+                    'if': {'row_index': 'odd'},
+                    'backgroundColor': 'rgb(248, 248, 248)'
+                }
+            ]
         )
     except Exception as e:
         return html.Div(f"Error loading cumulative data: {str(e)}")
@@ -100,19 +97,62 @@ def get_weekly_content():
         if not weeks:
             return html.Div("No weekly data available.")
         
+        # Show Week 1 by default
+        selected_week = weeks[0]
+        week_df = df[df['week'] == selected_week]
+        
+        display_data = []
+        people_cols = ['bobby_pick', 'chet_pick', 'clyde_pick', 'henry_pick', 'riley_pick', 'nick_pick']
+        
+        for _, row in week_df.iterrows():
+            game_display = f"{row['away_team']} @ {row['home_team']}"
+            game_row = {'Game': game_display}
+            
+            for col in people_cols:
+                person_name = col.replace('_pick', '').title()
+                pick = row[col]
+                if pick == 'Away':
+                    game_row[person_name] = row['away_team']
+                elif pick == 'Home':
+                    game_row[person_name] = row['home_team']
+                else:
+                    game_row[person_name] = '-'
+            
+            if pd.notna(row['actual_winner']):
+                if row['actual_winner'] == 'Away':
+                    game_row['Winner'] = row['away_team']
+                elif row['actual_winner'] == 'Home':
+                    game_row['Winner'] = row['home_team']
+                else:
+                    game_row['Winner'] = row['actual_winner']
+            else:
+                game_row['Winner'] = 'TBD'
+            
+            display_data.append(game_row)
+        
+        display_df = pd.DataFrame(display_data)
+        
+        if display_df.empty:
+            return html.Div(f"No data for Week {selected_week}")
+        
+        columns = [{"name": col, "id": col} for col in display_df.columns]
+        
         return html.Div([
-            dbc.Row([
-                dbc.Col([
-                    html.Label("Select Week:", className="fw-bold"),
-                    dcc.Dropdown(
-                        id='week-dropdown',
-                        options=[{'label': f'Week {week}', 'value': week} for week in weeks],
-                        value=weeks[0] if weeks else None,
-                        clearable=False
-                    )
-                ], width=6)
-            ], className="mb-3"),
-            html.Div(id='weekly-picks-display')
+            html.H4(f"Week {selected_week} Picks"),
+            html.P(f"Available weeks: {', '.join([str(w) for w in weeks])}"),
+            dash_table.DataTable(
+                data=display_df.to_dict('records'),
+                columns=columns,
+                style_cell={'textAlign': 'center', 'fontSize': '12px'},
+                style_header={'backgroundColor': 'rgb(230, 230, 230)', 'fontWeight': 'bold'},
+                style_data_conditional=[
+                    {
+                        'if': {'row_index': 'odd'},
+                        'backgroundColor': 'rgb(248, 248, 248)'
+                    }
+                ],
+                page_size=20
+            )
         ])
     except Exception as e:
         return html.Div(f"Error loading weekly data: {str(e)}")
@@ -153,146 +193,6 @@ def get_team_breakdown_content():
                     team_breakdown.append({
                         'Person': person.title(),
                         'Team': team,
-                        'Wins': wins,
-                        'Losses': losses,
-                        'Total': total_games,
-                        'Win %': f"{win_pct:.1f}%"
-                    })
-        
-        if not team_breakdown:
-            return html.Div("No team breakdown data available.")
-        
-        breakdown_df = pd.DataFrame(team_breakdown)
-        breakdown_df = breakdown_df.sort_values(['Person', 'Total'], ascending=[True, False])
-        
-        return html.Div([
-            dbc.Row([
-                dbc.Col([
-                    html.Label("Filter by Person:", className="fw-bold"),
-                    dcc.Dropdown(
-                        id='person-filter',
-                        options=[{'label': 'All', 'value': 'All'}] + 
-                               [{'label': person, 'value': person} for person in breakdown_df['Person'].unique()],
-                        value='All',
-                        clearable=False
-                    )
-                ], width=6)
-            ], className="mb-3"),
-            html.Div(id='team-breakdown-display')
-        ])
-    except Exception as e:
-        return html.Div(f"Error loading team breakdown: {str(e)}")
-
-# Separate callback for weekly picks dropdown
-@callback(
-    Output('weekly-picks-display', 'children'),
-    Input('week-dropdown', 'value'),
-    prevent_initial_call=True
-)
-def update_weekly_picks_display(selected_week):
-    if selected_week is None:
-        return html.Div()
-    
-    try:
-        conn = sqlite3.connect('picks.db', check_same_thread=False)
-        df = pd.read_sql_query(f"SELECT * FROM picks WHERE week = {selected_week}", conn)
-        conn.close()
-        
-        if df.empty:
-            return html.Div(f"No data for Week {selected_week}")
-        
-        display_data = []
-        people_cols = ['bobby_pick', 'chet_pick', 'clyde_pick', 'henry_pick', 'riley_pick', 'nick_pick']
-        
-        for _, row in df.iterrows():
-            game_display = f"{row['away_team']} @ {row['home_team']}"
-            game_row = {'Game': game_display}
-            
-            for col in people_cols:
-                person_name = col.replace('_pick', '').title()
-                pick = row[col]
-                if pick == 'Away':
-                    game_row[person_name] = row['away_team']
-                elif pick == 'Home':
-                    game_row[person_name] = row['home_team']
-                else:
-                    game_row[person_name] = '-'
-            
-            if pd.notna(row['actual_winner']):
-                if row['actual_winner'] == 'Away':
-                    game_row['Winner'] = row['away_team']
-                elif row['actual_winner'] == 'Home':
-                    game_row['Winner'] = row['home_team']
-                else:
-                    game_row['Winner'] = row['actual_winner']
-            else:
-                game_row['Winner'] = 'TBD'
-            
-            display_data.append(game_row)
-        
-        display_df = pd.DataFrame(display_data)
-        columns = [{"name": col, "id": col} for col in display_df.columns]
-        
-        return dash_table.DataTable(
-            data=display_df.to_dict('records'),
-            columns=columns,
-            style_cell={'textAlign': 'center', 'fontSize': '12px'},
-            style_header={'backgroundColor': 'rgb(230, 230, 230)', 'fontWeight': 'bold'},
-            style_data_conditional=[
-                {
-                    'if': {'row_index': 'odd'},
-                    'backgroundColor': 'rgb(248, 248, 248)'
-                }
-            ],
-            page_size=20
-        )
-    except Exception as e:
-        return html.Div(f"Error: {str(e)}")
-
-# Separate callback for team breakdown filter
-@callback(
-    Output('team-breakdown-display', 'children'),
-    Input('person-filter', 'value'),
-    prevent_initial_call=True
-)
-def update_team_breakdown_display(selected_person):
-    try:
-        conn = sqlite3.connect('picks.db', check_same_thread=False)
-        df = pd.read_sql_query("SELECT * FROM picks WHERE actual_winner IS NOT NULL", conn)
-        conn.close()
-        
-        if df.empty:
-            return html.Div("No completed games data available.")
-        
-        people = ['bobby', 'chet', 'clyde', 'henry', 'riley', 'nick']
-        team_breakdown = []
-        
-        for person in people:
-            if selected_person != 'All' and person.title() != selected_person:
-                continue
-                
-            person_pick_col = f'{person}_pick'
-            if person_pick_col not in df.columns:
-                continue
-                
-            person_df = df[df[person_pick_col].notna()].copy()
-            all_teams = set(person_df['away_team'].tolist() + person_df['home_team'].tolist())
-            
-            for team in all_teams:
-                team_picks = person_df[
-                    ((person_df['away_team'] == team) & (person_df[person_pick_col] == 'Away')) |
-                    ((person_df['home_team'] == team) & (person_df[person_pick_col] == 'Home'))
-                ]
-                
-                if len(team_picks) > 0:
-                    wins = len(team_picks[team_picks['actual_winner'] == team_picks[person_pick_col]])
-                    total_games = len(team_picks)
-                    losses = total_games - wins
-                    win_pct = (wins / total_games * 100) if total_games > 0 else 0
-                    
-                    team_breakdown.append({
-                        'Person': person.title(),
-                        'Team': team,
                         'Record': f"{wins}-{losses}",
                         'Win %': f"{win_pct:.1f}%",
                         'Total': total_games
@@ -306,22 +206,27 @@ def update_team_breakdown_display(selected_person):
         
         columns = [{"name": col, "id": col} for col in breakdown_df.columns]
         
-        return dash_table.DataTable(
-            data=breakdown_df.to_dict('records'),
-            columns=columns,
-            style_cell={'textAlign': 'center'},
-            style_header={'backgroundColor': 'rgb(230, 230, 230)', 'fontWeight': 'bold'},
-            style_data_conditional=[
-                {
-                    'if': {'row_index': 'odd'},
-                    'backgroundColor': 'rgb(248, 248, 248)'
-                }
-            ],
-            page_size=25,
-            sort_action="native"
-        )
+        return html.Div([
+            html.H4("Team Performance Breakdown"),
+            html.P("Shows each person's record when picking specific teams"),
+            dash_table.DataTable(
+                data=breakdown_df.to_dict('records'),
+                columns=columns,
+                style_cell={'textAlign': 'center'},
+                style_header={'backgroundColor': 'rgb(230, 230, 230)', 'fontWeight': 'bold'},
+                style_data_conditional=[
+                    {
+                        'if': {'row_index': 'odd'},
+                        'backgroundColor': 'rgb(248, 248, 248)'
+                    }
+                ],
+                page_size=25,
+                sort_action="native",
+                filter_action="native"
+            )
+        ])
     except Exception as e:
-        return html.Div(f"Error: {str(e)}")
+        return html.Div(f"Error loading team breakdown: {str(e)}")
 
 server = app.server
 
