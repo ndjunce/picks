@@ -1,4 +1,5 @@
 pandas
-openpyxl
 requests
-streamlit
+dash
+dash-bootstrap-components
+gunicorn
