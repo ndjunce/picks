@@ -1,5 +1,5 @@
 import dash
-from dash import dcc, html, Input, Output, dash_table
+from dash import dcc, html, Input, Output, dash_table, callback
 import dash_bootstrap_components as dbc
 import pandas as pd
 from nfl_picks_automator import update_picks
@@ -23,33 +23,38 @@ app.layout = html.Div([
         dbc.Tab(label="Team Breakdown", tab_id="team-tab")
     ], id="tabs", active_tab="cumulative-tab"),
     
-    html.Div(id="tab-content", className="mt-4")
+    html.Div(id="tab-content", className="mt-4"),
+    
+    # Hidden divs for storing data
+    html.Div(id='hidden-trigger', style={'display': 'none'})
 ])
 
-@app.callback(
-    Output("tab-content", "children"),
-    [Input("tabs", "active_tab"), Input('update-btn', 'n_clicks')]
-)
-def update_tab_content(active_tab, n_clicks):
-    if active_tab == "cumulative-tab":
-        return get_cumulative_content()
-    elif active_tab == "weekly-tab":
-        return get_weekly_content()
-    elif active_tab == "team-tab":
-        return get_team_breakdown_content()
-
-@app.callback(
+@callback(
     Output('status', 'children'),
-    Input('update-btn', 'n_clicks')
+    Input('update-btn', 'n_clicks'),
+    prevent_initial_call=True
 )
 def run_update(n_clicks):
-    if n_clicks is None:
-        return ""
     try:
         update_picks()
         return dbc.Alert("Updated successfully!", color="success", dismissable=True)
     except Exception as e:
         return dbc.Alert(f"Error: {str(e)}", color="danger", dismissable=True)
+
+@callback(
+    Output("tab-content", "children"),
+    [Input("tabs", "active_tab"), Input('update-btn', 'n_clicks')]
+)
+def update_tab_content(active_tab, n_clicks):
+    try:
+        if active_tab == "cumulative-tab":
+            return get_cumulative_content()
+        elif active_tab == "weekly-tab":
+            return get_weekly_content()
+        elif active_tab == "team-tab":
+            return get_team_breakdown_content()
+    except Exception as e:
+        return html.Div(f"Error loading content: {str(e)}")
 
 def get_cumulative_content():
     try:
@@ -65,7 +70,6 @@ def get_cumulative_content():
         
         return dcc.Loading(
             dash_table.DataTable(
-                id='cumulative-table',
                 data=data,
                 columns=columns,
                 page_size=20,
@@ -91,7 +95,6 @@ def get_weekly_content():
         if df.empty:
             return html.Div("No picks data available. Click 'Update with Latest Results' to load data.")
         
-        # Get available weeks
         weeks = sorted(df['week'].unique()) if 'week' in df.columns else []
         
         if not weeks:
@@ -109,7 +112,7 @@ def get_weekly_content():
                     )
                 ], width=6)
             ], className="mb-3"),
-            html.Div(id='weekly-picks-table')
+            html.Div(id='weekly-picks-display')
         ])
     except Exception as e:
         return html.Div(f"Error loading weekly data: {str(e)}")
@@ -123,7 +126,7 @@ def get_team_breakdown_content():
         if df.empty:
             return html.Div("No completed games data available. Click 'Update with Latest Results' to load data.")
         
-        # Calculate team breakdown for each person
+        # Calculate team breakdown
         people = ['bobby', 'chet', 'clyde', 'henry', 'riley', 'nick']
         team_breakdown = []
         
@@ -133,12 +136,9 @@ def get_team_breakdown_content():
                 continue
                 
             person_df = df[df[person_pick_col].notna()].copy()
-            
-            # Get all unique teams
             all_teams = set(person_df['away_team'].tolist() + person_df['home_team'].tolist())
             
             for team in all_teams:
-                # Find games where this person picked this team
                 team_picks = person_df[
                     ((person_df['away_team'] == team) & (person_df[person_pick_col] == 'Away')) |
                     ((person_df['home_team'] == team) & (person_df[person_pick_col] == 'Home'))
@@ -146,19 +146,16 @@ def get_team_breakdown_content():
                 
                 if len(team_picks) > 0:
                     wins = len(team_picks[team_picks['actual_winner'] == team_picks[person_pick_col]])
-                    losses = len(team_picks[team_picks['actual_winner'] != team_picks[person_pick_col]]) - \
-                            len(team_picks[team_picks['actual_winner'] == 'Tie'])
-                    ties = len(team_picks[team_picks['actual_winner'] == 'Tie'])
-                    total = wins + losses + ties
-                    win_pct = (wins / total * 100) if total > 0 else 0
+                    total_games = len(team_picks)
+                    losses = total_games - wins
+                    win_pct = (wins / total_games * 100) if total_games > 0 else 0
                     
                     team_breakdown.append({
                         'Person': person.title(),
                         'Team': team,
                         'Wins': wins,
                         'Losses': losses,
-                        'Ties': ties,
-                        'Total': total,
+                        'Total': total_games,
                         'Win %': f"{win_pct:.1f}%"
                     })
         
@@ -181,16 +178,18 @@ def get_team_breakdown_content():
                     )
                 ], width=6)
             ], className="mb-3"),
-            html.Div(id='team-breakdown-table')
+            html.Div(id='team-breakdown-display')
         ])
     except Exception as e:
         return html.Div(f"Error loading team breakdown: {str(e)}")
 
-@app.callback(
-    Output('weekly-picks-table', 'children'),
-    Input('week-dropdown', 'value')
+# Separate callback for weekly picks dropdown
+@callback(
+    Output('weekly-picks-display', 'children'),
+    Input('week-dropdown', 'value'),
+    prevent_initial_call=True
 )
-def update_weekly_picks(selected_week):
+def update_weekly_picks_display(selected_week):
     if selected_week is None:
         return html.Div()
     
@@ -202,7 +201,6 @@ def update_weekly_picks(selected_week):
         if df.empty:
             return html.Div(f"No data for Week {selected_week}")
         
-        # Prepare display data
         display_data = []
         people_cols = ['bobby_pick', 'chet_pick', 'clyde_pick', 'henry_pick', 'riley_pick', 'nick_pick']
         
@@ -220,7 +218,6 @@ def update_weekly_picks(selected_week):
                 else:
                     game_row[person_name] = '-'
             
-            # Add actual winner
             if pd.notna(row['actual_winner']):
                 if row['actual_winner'] == 'Away':
                     game_row['Winner'] = row['away_team']
@@ -252,11 +249,13 @@ def update_weekly_picks(selected_week):
     except Exception as e:
         return html.Div(f"Error: {str(e)}")
 
-@app.callback(
-    Output('team-breakdown-table', 'children'),
-    Input('person-filter', 'value')
+# Separate callback for team breakdown filter
+@callback(
+    Output('team-breakdown-display', 'children'),
+    Input('person-filter', 'value'),
+    prevent_initial_call=True
 )
-def update_team_breakdown(selected_person):
+def update_team_breakdown_display(selected_person):
     try:
         conn = sqlite3.connect('picks.db', check_same_thread=False)
         df = pd.read_sql_query("SELECT * FROM picks WHERE actual_winner IS NOT NULL", conn)
@@ -287,25 +286,23 @@ def update_team_breakdown(selected_person):
                 
                 if len(team_picks) > 0:
                     wins = len(team_picks[team_picks['actual_winner'] == team_picks[person_pick_col]])
-                    losses = len(team_picks[team_picks['actual_winner'] != team_picks[person_pick_col]]) - \
-                            len(team_picks[team_picks['actual_winner'] == 'Tie'])
-                    ties = len(team_picks[team_picks['actual_winner'] == 'Tie'])
-                    total = wins + losses + ties
-                    win_pct = (wins / total * 100) if total > 0 else 0
+                    total_games = len(team_picks)
+                    losses = total_games - wins
+                    win_pct = (wins / total_games * 100) if total_games > 0 else 0
                     
                     team_breakdown.append({
                         'Person': person.title(),
                         'Team': team,
-                        'Record': f"{wins}-{losses}-{ties}",
+                        'Record': f"{wins}-{losses}",
                         'Win %': f"{win_pct:.1f}%",
-                        'Total Picks': total
+                        'Total': total_games
                     })
         
         if not team_breakdown:
             return html.Div("No team breakdown data available.")
         
         breakdown_df = pd.DataFrame(team_breakdown)
-        breakdown_df = breakdown_df.sort_values(['Person', 'Total Picks'], ascending=[True, False])
+        breakdown_df = breakdown_df.sort_values(['Person', 'Total'], ascending=[True, False])
         
         columns = [{"name": col, "id": col} for col in breakdown_df.columns]
         
@@ -326,7 +323,7 @@ def update_team_breakdown(selected_person):
     except Exception as e:
         return html.Div(f"Error: {str(e)}")
 
-server = app.server  # Expose for Gunicorn
+server = app.server
 
 if __name__ == '__main__':
     app.run(debug=True)
