@@ -3,3 +3,4 @@ requests
 dash
 dash-bootstrap-components
 gunicorn
+openpyxl
