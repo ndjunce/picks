@@ -23,7 +23,7 @@ def run_update(n_clicks):
         return "", [], []
     try:
         update_picks()
-        conn = sqlite3.connect('picks.db')
+        conn = sqlite3.connect('picks.db', check_same_thread=False)
         df = pd.read_sql_query("SELECT * FROM cumulative", conn)
         conn.close()
         columns = [{"name": i, "id": i} for i in df.columns]
@@ -31,6 +31,8 @@ def run_update(n_clicks):
         return "Updated!", data, columns
     except Exception as e:
         return f"Error: {str(e)} (Check picks.db or update_picks() for issues)", [], []
+
+server = app.server  # Expose for Gunicorn
 
 if __name__ == '__main__':
     app.run(debug=True)
