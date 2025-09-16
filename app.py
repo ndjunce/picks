@@ -71,7 +71,114 @@ app.layout = dbc.Container([
     html.Div(id="tab-content")
 ], fluid=True)
 
-# Database helper functions
+# Team logo mapping for ESPN URLs
+def get_team_logo_mapping():
+    """Map team names to ESPN team IDs for logo URLs"""
+    return {
+        'Arizona Cardinals': 22,
+        'Atlanta Falcons': 1,
+        'Baltimore Ravens': 33,
+        'Buffalo Bills': 2,
+        'Carolina Panthers': 29,
+        'Chicago Bears': 3,
+        'Cincinnati Bengals': 4,
+        'Cleveland Browns': 5,
+        'Dallas Cowboys': 6,
+        'Denver Broncos': 7,
+        'Detroit Lions': 8,
+        'Green Bay Packers': 9,
+        'Houston Texans': 34,
+        'Indianapolis Colts': 11,
+        'Jacksonville Jaguars': 30,
+        'Kansas City Chiefs': 12,
+        'Las Vegas Raiders': 13,
+        'Los Angeles Chargers': 24,
+        'Los Angeles Rams': 14,
+        'Miami Dolphins': 15,
+        'Minnesota Vikings': 16,
+        'New England Patriots': 17,
+        'New Orleans Saints': 18,
+        'New York Giants': 19,
+        'New York Jets': 20,
+        'Philadelphia Eagles': 21,
+        'Pittsburgh Steelers': 23,
+        'San Francisco 49ers': 25,
+        'Seattle Seahawks': 26,
+        'Tampa Bay Buccaneers': 27,
+        'Tennessee Titans': 10,
+        'Washington Commanders': 28
+    }
+
+def get_team_logo_url(team_name):
+    """Get ESPN logo URL for a team"""
+    if not team_name or team_name == "TIE":
+        return None
+    
+    team_mapping = get_team_logo_mapping()
+    
+    # Try exact match first
+    if team_name in team_mapping:
+        team_id = team_mapping[team_name]
+        return f"https://a.espncdn.com/i/teamlogos/nfl/500/{team_id}.png"
+    
+    # Try partial matches
+    team_lower = team_name.lower()
+    for full_name, team_id in team_mapping.items():
+        if (full_name.lower() in team_lower or 
+            any(word in team_lower for word in full_name.lower().split())):
+            return f"https://a.espncdn.com/i/teamlogos/nfl/500/{team_id}.png"
+    
+    return None
+
+def get_player_favorite_team_logo(player_name):
+    """Get the logo of a player's most frequently picked team"""
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return None
+        
+        # Get player's picks
+        df = pd.read_sql_query(f"SELECT {player_name}_pick FROM picks WHERE {player_name}_pick IS NOT NULL", conn)
+        conn.close()
+        
+        if df.empty:
+            return None
+        
+        # Count team picks
+        pick_counts = df[f'{player_name}_pick'].value_counts()
+        if len(pick_counts) > 0:
+            most_picked_team = pick_counts.index[0]
+            return get_team_logo_url(most_picked_team)
+        
+        return None
+    except:
+        return None
+
+def create_team_display(team_name, show_logo=True, logo_size="30px"):
+    """Create a display element with team logo and name"""
+    if not team_name:
+        return "-"
+    
+    if not show_logo:
+        return team_name
+    
+    logo_url = get_team_logo_url(team_name)
+    
+    if logo_url:
+        return html.Div([
+            html.Img(
+                src=logo_url,
+                style={
+                    'height': logo_size,
+                    'width': logo_size,
+                    'marginRight': '8px',
+                    'verticalAlign': 'middle'
+                }
+            ),
+            html.Span(team_name, style={'verticalAlign': 'middle'})
+        ], style={'display': 'inline-flex', 'alignItems': 'center'})
+    else:
+        return team_name
 def init_database():
     """Initialize the database with required tables"""
     try:
@@ -608,7 +715,7 @@ def get_current_standings():
         print(f"Error getting standings: {e}")
         return pd.DataFrame()
 
-# Enhanced Leaderboard tab with charts
+# Enhanced Leaderboard tab with logos in podium
 def render_leaderboard_tab():
     standings_df = get_current_standings()
     
@@ -619,7 +726,7 @@ def render_leaderboard_tab():
     win_pct_chart = create_win_percentage_chart(standings_df)
     wins_chart = create_wins_comparison_chart(standings_df)
     
-    # Create podium visualization for top 3
+    # Create podium visualization for top 3 with recent favorite teams
     top_3 = standings_df.head(3)
     
     podium_cards = []
@@ -627,15 +734,29 @@ def render_leaderboard_tab():
     colors = ["warning", "secondary", "dark"]
     
     for i, (_, player) in enumerate(top_3.iterrows()):
+        # Get player's most picked team for logo display
+        favorite_team_logo = get_player_favorite_team_logo(player['Player'].lower())
+        
+        podium_card_content = [
+            html.H2(medals[i], className="text-center mb-2"),
+            html.H4(player['Player'], className="text-center mb-2")
+        ]
+        
+        # Add favorite team logo if available
+        if favorite_team_logo:
+            podium_card_content.insert(1, html.Div([
+                html.Img(src=favorite_team_logo, style={'height': '40px', 'marginBottom': '10px'})
+            ], className="text-center"))
+        
+        podium_card_content.extend([
+            html.H5(f"{player['Wins']}-{player['Losses']}", className="text-center mb-1"),
+            html.P(player['Win %'], className="text-center text-muted mb-0")
+        ])
+        
         podium_cards.append(
             dbc.Col([
                 dbc.Card([
-                    dbc.CardBody([
-                        html.H2(medals[i], className="text-center mb-2"),
-                        html.H4(player['Player'], className="text-center mb-2"),
-                        html.H5(f"{player['Wins']}-{player['Losses']}", className="text-center mb-1"),
-                        html.P(player['Win %'], className="text-center text-muted mb-0")
-                    ], className="py-4")
+                    dbc.CardBody(podium_card_content, className="py-4")
                 ], color=colors[i], outline=True, className="h-100")
             ], width=12, md=4)
         )
@@ -827,7 +948,7 @@ def update_weekly_picks_content(selected_week):
         if df.empty:
             return dbc.Alert(f"No games found for Week {selected_week}.", color="info")
         
-        # Create picks table data
+        # Create picks table data (simplified for DataTable compatibility)
         picks_data = []
         people = ['bobby', 'chet', 'clyde', 'henry', 'nick', 'riley']
         
@@ -846,54 +967,119 @@ def update_weekly_picks_content(selected_week):
             
             picks_data.append(pick_row)
         
-        # Create the data table
+        # Create the data table with enhanced styling
         columns = [{"name": "Game", "id": "Game"}, {"name": "Winner", "id": "Result"}]
         columns.extend([{"name": person.title(), "id": person.title()} for person in people])
         
-        # Create conditional styling for correct/incorrect picks
-        style_data_conditional = []
-        
-        # Add styling for each person's column
-        for person in people:
-            person_title = person.title()
-            
-            # Correct picks - green background
-            style_data_conditional.append({
-                'if': {
-                    'filter_query': f'{{{person_title}}} = {{Result}}',
-                    'column_id': person_title
-                },
-                'backgroundColor': '#d4edda',
-                'color': '#155724',
-                'fontWeight': 'bold'
-            })
-            
-            # Check for incorrect picks (when Result is not TBD and pick doesn't match)
-            for _, row in df.iterrows():
-                if pd.notna(row['actual_winner']) and row['actual_winner'] != 'TBD':
-                    person_pick = row[f'{person}_pick']
-                    if pd.notna(person_pick) and person_pick != row['actual_winner']:
-                        # We'll handle this with a broader condition below
-                        pass
-        
-        # Add incorrect picks styling - this is a bit complex due to DataTable limitations
-        # We'll use a different approach - row index based conditions
+        # Create individual game cards with logos instead of a single table
+        game_cards = []
         for i, row_data in enumerate(picks_data):
-            if row_data['Result'] != 'TBD':
-                for person in people:
-                    person_title = person.title()
-                    if (row_data[person_title] != '-' and 
-                        row_data[person_title] != row_data['Result'] and
-                        row_data['Result'] != 'TBD'):
-                        style_data_conditional.append({
-                            'if': {
-                                'row_index': i,
-                                'column_id': person_title
-                            },
-                            'backgroundColor': '#f8d7da',
-                            'color': '#721c24',
-                            'fontWeight': 'bold'
-                        })
+            game_row = df.iloc[i]
+            
+            # Create team displays with logos
+            away_logo_url = get_team_logo_url(game_row['away_team'])
+            home_logo_url = get_team_logo_url(game_row['home_team'])
+            winner_logo_url = get_team_logo_url(game_row['actual_winner']) if pd.notna(game_row['actual_winner']) else None
+            
+            # Game header with logos
+            game_header = html.Div([
+                html.Div([
+                    html.Img(src=away_logo_url, style={'height': '30px', 'marginRight': '8px'}) if away_logo_url else "",
+                    html.Strong(game_row['away_team'])
+                ], style={'display': 'flex', 'alignItems': 'center', 'flex': '1'}),
+                
+                html.Div("@", style={'margin': '0 15px', 'fontSize': '18px', 'fontWeight': 'bold'}),
+                
+                html.Div([
+                    html.Img(src=home_logo_url, style={'height': '30px', 'marginRight': '8px'}) if home_logo_url else "",
+                    html.Strong(game_row['home_team'])
+                ], style={'display': 'flex', 'alignItems': 'center', 'flex': '1', 'justifyContent': 'flex-end'})
+            ], style={'display': 'flex', 'alignItems': 'center', 'marginBottom': '15px', 'padding': '10px', 'backgroundColor': '#f8f9fa', 'borderRadius': '5px'})
+            
+            # Winner display
+            if pd.notna(game_row['actual_winner']) and game_row['actual_winner'] != 'TBD':
+                winner_display = html.Div([
+                    html.Img(src=winner_logo_url, style={'height': '25px', 'marginRight': '8px'}) if winner_logo_url else "",
+                    html.Span(f"Winner: {game_row['actual_winner']}", style={'fontWeight': 'bold', 'color': '#28a745'})
+                ], style={'display': 'flex', 'alignItems': 'center', 'marginBottom': '10px'})
+            else:
+                winner_display = html.Div("Game not completed", style={'fontStyle': 'italic', 'color': '#6c757d', 'marginBottom': '10px'})
+            
+            # Picks display with logos
+            picks_display = []
+            for person in people:
+                person_pick = row_data[person.title()]
+                if person_pick != '-':
+                    pick_logo_url = get_team_logo_url(person_pick)
+                    
+                    # Determine pick correctness for styling
+                    is_correct = (pd.notna(game_row['actual_winner']) and 
+                                person_pick == game_row['actual_winner'])
+                    is_incorrect = (pd.notna(game_row['actual_winner']) and 
+                                  game_row['actual_winner'] != 'TBD' and 
+                                  person_pick != game_row['actual_winner'])
+                    
+                    if is_correct:
+                        bg_color = '#d4edda'
+                        text_color = '#155724'
+                        border_color = '#c3e6cb'
+                    elif is_incorrect:
+                        bg_color = '#f8d7da'
+                        text_color = '#721c24'
+                        border_color = '#f5c6cb'
+                    else:
+                        bg_color = '#ffffff'
+                        text_color = '#495057'
+                        border_color = '#dee2e6'
+                    
+                    pick_card = html.Div([
+                        html.Div([
+                            html.Img(src=pick_logo_url, style={'height': '20px', 'marginRight': '5px'}) if pick_logo_url else "",
+                            html.Span(person_pick)
+                        ], style={'display': 'flex', 'alignItems': 'center'})
+                    ], style={
+                        'backgroundColor': bg_color,
+                        'color': text_color,
+                        'border': f'1px solid {border_color}',
+                        'borderRadius': '3px',
+                        'padding': '5px 8px',
+                        'margin': '2px',
+                        'fontSize': '12px',
+                        'minWidth': '120px',
+                        'textAlign': 'center'
+                    })
+                else:
+                    pick_card = html.Div("No pick", style={
+                        'backgroundColor': '#f8f9fa',
+                        'color': '#6c757d',
+                        'border': '1px solid #dee2e6',
+                        'borderRadius': '3px',
+                        'padding': '5px 8px',
+                        'margin': '2px',
+                        'fontSize': '12px',
+                        'fontStyle': 'italic',
+                        'minWidth': '120px',
+                        'textAlign': 'center'
+                    })
+                
+                picks_display.append(
+                    html.Div([
+                        html.Strong(person.title(), style={'fontSize': '11px', 'marginBottom': '3px', 'display': 'block'}),
+                        pick_card
+                    ], style={'margin': '5px'})
+                )
+            
+            # Combine everything into a game card
+            game_card = dbc.Card([
+                dbc.CardBody([
+                    game_header,
+                    winner_display,
+                    html.Div("Picks:", style={'fontWeight': 'bold', 'marginBottom': '8px'}),
+                    html.Div(picks_display, style={'display': 'flex', 'flexWrap': 'wrap', 'gap': '5px'})
+                ])
+            ], className="mb-3")
+            
+            game_cards.append(game_card)
         
         return [
             dbc.Card([
@@ -905,26 +1091,7 @@ def update_weekly_picks_content(selected_week):
                         html.Span("Red = Incorrect Pick", style={'color': '#721c24', 'backgroundColor': '#f8d7da', 'padding': '2px 8px', 'borderRadius': '3px'})
                     ], color="light", className="mb-3"),
                     
-                    dash_table.DataTable(
-                        data=picks_data,
-                        columns=columns,
-                        style_cell={
-                            'textAlign': 'center',
-                            'padding': '12px',
-                            'fontFamily': 'Arial, sans-serif',
-                            'fontSize': '13px',
-                            'whiteSpace': 'normal',
-                            'height': 'auto'
-                        },
-                        style_header={
-                            'backgroundColor': '#6f42c1',
-                            'color': 'white',
-                            'fontWeight': 'bold'
-                        },
-                        style_data_conditional=style_data_conditional,
-                        style_table={'overflowX': 'auto'},
-                        page_size=20
-                    )
+                    html.Div(game_cards)
                 ])
             ])
         ]
