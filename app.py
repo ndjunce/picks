@@ -218,13 +218,179 @@ def process_excel_file(contents, filename):
         return f"Error processing file: {str(e)}", False
 
 def update_results_from_api():
-    """Placeholder for updating results from NFL API or manual entry"""
+    """Update game results from ESPN API"""
     try:
-        # This would typically fetch from an NFL API
-        # For now, we'll just return a success message
-        return "Results update feature coming soon. Use manual entry for now.", True
+        import requests
+        import json
+        
+        conn = get_db_connection()
+        if not conn:
+            return "Database connection failed", False
+        
+        # Get current season (2025)
+        current_year = 2025
+        updated_games = 0
+        
+        # Check each week for completed games
+        for week in range(1, 19):  # Weeks 1-18
+            try:
+                # ESPN API endpoint for NFL scoreboard
+                url = f"https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?seasontype=2&week={week}&dates={current_year}"
+                
+                response = requests.get(url, timeout=10)
+                if response.status_code != 200:
+                    continue
+                
+                data = response.json()
+                
+                # Process each game in the week
+                if 'events' in data:
+                    for game in data['events']:
+                        try:
+                            # Extract game information
+                            if 'competitions' not in game or not game['competitions']:
+                                continue
+                            
+                            competition = game['competitions'][0]
+                            
+                            # Check if game is completed
+                            status = competition.get('status', {})
+                            if status.get('type', {}).get('name') != 'STATUS_FINAL':
+                                continue  # Skip if game not finished
+                            
+                            # Get team information
+                            competitors = competition.get('competitors', [])
+                            if len(competitors) != 2:
+                                continue
+                            
+                            # Determine home and away teams
+                            home_team = None
+                            away_team = None
+                            home_score = 0
+                            away_score = 0
+                            
+                            for team in competitors:
+                                team_name = team.get('team', {}).get('displayName', '')
+                                team_score = int(team.get('score', 0))
+                                
+                                if team.get('homeAway') == 'home':
+                                    home_team = team_name
+                                    home_score = team_score
+                                else:
+                                    away_team = team_name
+                                    away_score = team_score
+                            
+                            if not home_team or not away_team:
+                                continue
+                            
+                            # Determine winner
+                            if home_score > away_score:
+                                winner = home_team
+                            elif away_score > home_score:
+                                winner = away_team
+                            else:
+                                winner = "TIE"  # Handle ties (rare in NFL)
+                            
+                            # Clean team names to match your database format
+                            home_team_clean = clean_team_name(home_team)
+                            away_team_clean = clean_team_name(away_team)
+                            winner_clean = clean_team_name(winner) if winner != "TIE" else "TIE"
+                            
+                            # Update database - find matching games
+                            cursor = conn.cursor()
+                            cursor.execute('''
+                                UPDATE picks 
+                                SET actual_winner = ? 
+                                WHERE week = ? 
+                                AND (
+                                    (LOWER(away_team) LIKE ? AND LOWER(home_team) LIKE ?) OR
+                                    (LOWER(away_team) LIKE ? AND LOWER(home_team) LIKE ?)
+                                )
+                                AND actual_winner IS NULL
+                            ''', (
+                                winner_clean,
+                                week,
+                                f'%{away_team_clean.lower()}%',
+                                f'%{home_team_clean.lower()}%',
+                                f'%{home_team_clean.lower()}%',
+                                f'%{away_team_clean.lower()}%'
+                            ))
+                            
+                            if cursor.rowcount > 0:
+                                updated_games += cursor.rowcount
+                                
+                        except Exception as e:
+                            print(f"Error processing game: {e}")
+                            continue
+                            
+            except Exception as e:
+                print(f"Error processing week {week}: {e}")
+                continue
+        
+        conn.commit()
+        conn.close()
+        
+        if updated_games > 0:
+            return f"Successfully updated {updated_games} games with results!", True
+        else:
+            return "No new completed games found to update.", True
+            
     except Exception as e:
         return f"Update failed: {str(e)}", False
+
+def clean_team_name(team_name):
+    """Clean team names to match database format"""
+    if not team_name or team_name == "TIE":
+        return team_name
+    
+    # Common team name mappings
+    name_mappings = {
+        'Arizona Cardinals': 'Arizona Cardinals',
+        'Atlanta Falcons': 'Atlanta Falcons', 
+        'Baltimore Ravens': 'Baltimore Ravens',
+        'Buffalo Bills': 'Buffalo Bills',
+        'Carolina Panthers': 'Carolina Panthers',
+        'Chicago Bears': 'Chicago Bears',
+        'Cincinnati Bengals': 'Cincinnati Bengals',
+        'Cleveland Browns': 'Cleveland Browns',
+        'Dallas Cowboys': 'Dallas Cowboys',
+        'Denver Broncos': 'Denver Broncos',
+        'Detroit Lions': 'Detroit Lions',
+        'Green Bay Packers': 'Green Bay Packers',
+        'Houston Texans': 'Houston Texans',
+        'Indianapolis Colts': 'Indianapolis Colts',
+        'Jacksonville Jaguars': 'Jacksonville Jaguars',
+        'Kansas City Chiefs': 'Kansas City Chiefs',
+        'Las Vegas Raiders': 'Las Vegas Raiders',
+        'Los Angeles Chargers': 'Los Angeles Chargers',
+        'Los Angeles Rams': 'Los Angeles Rams',
+        'Miami Dolphins': 'Miami Dolphins',
+        'Minnesota Vikings': 'Minnesota Vikings',
+        'New England Patriots': 'New England Patriots',
+        'New Orleans Saints': 'New Orleans Saints',
+        'New York Giants': 'New York Giants',
+        'New York Jets': 'New York Jets',
+        'Philadelphia Eagles': 'Philadelphia Eagles',
+        'Pittsburgh Steelers': 'Pittsburgh Steelers',
+        'San Francisco 49ers': 'San Francisco 49ers',
+        'Seattle Seahawks': 'Seattle Seahawks',
+        'Tampa Bay Buccaneers': 'Tampa Bay Buccaneers',
+        'Tennessee Titans': 'Tennessee Titans',
+        'Washington Commanders': 'Washington Commanders'
+    }
+    
+    # Try exact match first
+    if team_name in name_mappings:
+        return name_mappings[team_name]
+    
+    # Try partial matches for common variations
+    team_lower = team_name.lower()
+    for full_name, clean_name in name_mappings.items():
+        if full_name.lower() in team_lower or any(word in team_lower for word in full_name.lower().split()):
+            return clean_name
+    
+    # Return original if no match found
+    return team_name
 
 # Upload callback
 @app.callback(
