@@ -1,4 +1,38 @@
-import dash
+# Leaderboard tab with enhanced charts
+def render_leaderboard_tab():
+    standings_df = get_current_standings()
+    
+    if standings_df.empty:
+        return dbc.Alert("No game results available. Upload picks and update results first.", color="info")
+    
+    # Create charts
+    win_pct_chart = create_win_percentage_chart(standings_df)
+    wins_chart = create_wins_comparison_chart(standings_df)
+    
+    # Create podium visualization for top 3
+    top_3 = standings_df.head(3)
+    
+    podium_cards = []
+    medals = ["🥇", "🥈", "🥉"]
+    colors = ["warning", "secondary", "dark"]
+    
+    for i, (_, player) in enumerate(top_3.iterrows()):
+        podium_cards.append(
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardBody([
+                        html.H2(medals[i], className="text-center mb-2"),
+                        html.H4(player['Player'], className="text-center mb-2"),
+                        html.H5(f"{player['Wins']}-{player['Losses']}", className="text-center mb-1"),
+                        html.P(player['Win %'], className="text-center text-muted mb-0")
+                    ], className="py-4")
+                ], color=colors[i], outline=True, className="h-100")
+            ], width=12, md=4)
+        )
+    
+    return [
+        # Championship Podium
+        dbc.Rowimport dash
 from dash import dcc, html, Input, Output, dash_table, State
 import dash_bootstrap_components as dbc
 import pandas as pd
@@ -170,31 +204,155 @@ def get_current_standings():
         print(f"Error getting standings: {e}")
         return pd.DataFrame()
 
-# Leaderboard tab
+# Leaderboard tab with enhanced charts
 def render_leaderboard_tab():
     standings_df = get_current_standings()
     
     if standings_df.empty:
         return dbc.Alert("No game results available. Upload picks and update results first.", color="info")
     
-    return dbc.Card([
-        dbc.CardHeader("Current Standings"),
-        dbc.CardBody([
-            dash_table.DataTable(
-                data=standings_df.to_dict('records'),
-                columns=[
-                    {"name": "Rank", "id": "Rank"},
-                    {"name": "Player", "id": "Player"},
-                    {"name": "Wins", "id": "Wins"},
-                    {"name": "Losses", "id": "Losses"},
-                    {"name": "Total", "id": "Total"},
-                    {"name": "Win %", "id": "Win %"}
-                ],
-                style_cell={'textAlign': 'center', 'padding': '12px'},
-                style_header={'backgroundColor': '#2c3e50', 'color': 'white', 'fontWeight': 'bold'}
-            )
+    # Create charts
+    win_pct_chart = create_win_percentage_chart(standings_df)
+    wins_chart = create_wins_comparison_chart(standings_df)
+    
+    # Create podium visualization for top 3
+    top_3 = standings_df.head(3)
+    
+    podium_cards = []
+    medals = ["🥇", "🥈", "🥉"]
+    colors = ["warning", "secondary", "dark"]
+    
+    for i, (_, player) in enumerate(top_3.iterrows()):
+        podium_cards.append(
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardBody([
+                        html.H2(medals[i], className="text-center mb-2"),
+                        html.H4(player['Player'], className="text-center mb-2"),
+                        html.H5(f"{player['Wins']}-{player['Losses']}", className="text-center mb-1"),
+                        html.P(player['Win %'], className="text-center text-muted mb-0")
+                    ], className="py-4")
+                ], color=colors[i], outline=True, className="h-100")
+            ], width=12, md=4)
+        )
+    
+    return [
+        # Championship Podium
+        dbc.Row([
+            dbc.Col([
+                html.H3("🏆 Championship Podium", className="text-center mb-4")
+            ], width=12)
+        ]),
+        dbc.Row(podium_cards, className="mb-5"),
+        
+        # Charts row
+        dbc.Row([
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader("📊 Win Percentage Comparison"),
+                    dbc.CardBody([
+                        dcc.Graph(figure=win_pct_chart, style={'height': '400px'})
+                    ])
+                ])
+            ], width=12, lg=6),
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader("🏆 Total Wins Comparison"),
+                    dbc.CardBody([
+                        dcc.Graph(figure=wins_chart, style={'height': '400px'})
+                    ])
+                ])
+            ], width=12, lg=6)
+        ], className="mb-4"),
+        
+        # Original standings table
+        dbc.Card([
+            dbc.CardHeader("Complete Standings"),
+            dbc.CardBody([
+                dash_table.DataTable(
+                    data=standings_df.to_dict('records'),
+                    columns=[
+                        {"name": "Rank", "id": "Rank"},
+                        {"name": "Player", "id": "Player"},
+                        {"name": "Wins", "id": "Wins"},
+                        {"name": "Losses", "id": "Losses"},
+                        {"name": "Total", "id": "Total"},
+                        {"name": "Win %", "id": "Win %"}
+                    ],
+                    style_cell={'textAlign': 'center', 'padding': '12px'},
+                    style_header={'backgroundColor': '#2c3e50', 'color': 'white', 'fontWeight': 'bold'},
+                    style_data_conditional=[
+                        {
+                            'if': {'row_index': 0},
+                            'backgroundColor': '#fff3cd',
+                            'color': '#856404',
+                            'fontWeight': 'bold'
+                        }
+                    ]
+                )
+            ])
         ])
-    ])
+    ]
+
+def create_win_percentage_chart(standings_df):
+    """Create a horizontal bar chart showing win percentages"""
+    import plotly.express as px
+    
+    fig = px.bar(
+        standings_df.sort_values('Wins', ascending=True),
+        x=[float(pct.rstrip('%')) for pct in standings_df.sort_values('Wins', ascending=True)['Win %']],
+        y='Player',
+        orientation='h',
+        title='Win Percentage by Player',
+        text='Win %',
+        color=[float(pct.rstrip('%')) for pct in standings_df.sort_values('Wins', ascending=True)['Win %']],
+        color_continuous_scale='RdYlGn'
+    )
+    
+    fig.update_traces(textposition='inside')
+    fig.update_layout(
+        showlegend=False,
+        margin=dict(l=0, r=0, t=40, b=0),
+        font=dict(size=12),
+        coloraxis_showscale=False
+    )
+    fig.update_xaxes(title='Win Percentage (%)')
+    fig.update_yaxes(title='')
+    
+    return fig
+
+def create_wins_comparison_chart(standings_df):
+    """Create a stacked bar chart comparing total wins and losses"""
+    fig = go.Figure()
+    
+    fig.add_trace(go.Bar(
+        x=standings_df['Player'],
+        y=standings_df['Wins'],
+        name='Wins',
+        marker_color='lightgreen',
+        text=standings_df['Wins'],
+        textposition='auto'
+    ))
+    
+    fig.add_trace(go.Bar(
+        x=standings_df['Player'],
+        y=standings_df['Losses'],
+        name='Losses',
+        marker_color='lightcoral',
+        text=standings_df['Losses'],
+        textposition='auto'
+    ))
+    
+    fig.update_layout(
+        title='Wins vs Losses by Player',
+        barmode='stack',
+        margin=dict(l=0, r=0, t=40, b=0),
+        font=dict(size=12)
+    )
+    fig.update_xaxes(title='Player')
+    fig.update_yaxes(title='Games')
+    
+    return fig
 
 # Weekly records placeholder
 def render_weekly_records_tab():
