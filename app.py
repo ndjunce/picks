@@ -617,10 +617,241 @@ def render_weekly_records_tab():
                 dbc.Col([
                     dbc.Card([
                         dbc.CardHeader([
-                            html.H4([
-                                html.I(className="fas fa-users me-2"),
-                                "Head-to-Head Records"
-                            ], className="mb-0")
+                            html.H4("Weekly Records", className="mb-0")
+                        ]),
+                        dbc.CardBody([
+                            dbc.Alert([
+                                html.Strong("Format: "),
+                                "Wins-Losses (Win Percentage) for each week"
+                            ], color="info", className="mb-3"),
+                            
+                            dash_table.DataTable(
+                                data=weekly_df.to_dict('records'),
+                                columns=[{"name": col, "id": col} for col in weekly_df.columns],
+                                style_cell={
+                                    'textAlign': 'center',
+                                    'padding': '12px',
+                                    'fontFamily': 'Arial, sans-serif',
+                                    'fontSize': '13px',
+                                    'minWidth': '100px'
+                                },
+                                style_header={
+                                    'backgroundColor': '#17a2b8',
+                                    'color': 'white',
+                                    'fontWeight': 'bold'
+                                },
+                                style_data_conditional=[
+                                    {
+                                        'if': {'row_index': 'odd'},
+                                        'backgroundColor': '#f8f9fa'
+                                    }
+                                ],
+                                style_table={'overflowX': 'auto'},
+                                page_size=20
+                            )
+                        ])
+                    ])
+                ], width=12)
+            ])
+        ]
+        
+    except Exception as e:
+        return dbc.Alert(f"Error loading weekly records: {str(e)}", color="danger")
+
+def get_weekly_records_data():
+    """Get weekly records data"""
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return pd.DataFrame()
+        
+        df = pd.read_sql_query("SELECT * FROM picks WHERE actual_winner IS NOT NULL", conn)
+        conn.close()
+        
+        if df.empty:
+            return pd.DataFrame()
+        
+        people = ['bobby', 'chet', 'clyde', 'henry', 'nick', 'riley']
+        weeks = sorted(df['week'].unique())
+        
+        weekly_records = []
+        
+        for week in weeks:
+            week_df = df[df['week'] == week]
+            week_record = {'Week': f"Week {week}"}
+            
+            for person in people:
+                person_pick_col = f'{person}_pick'
+                person_week_picks = week_df[week_df[person_pick_col].notna()]
+                
+                if len(person_week_picks) > 0:
+                    wins = 0
+                    for _, row in person_week_picks.iterrows():
+                        # Handle pick comparison
+                        if row[person_pick_col] == 'away':
+                            person_team_pick = row['away_team']
+                        elif row[person_pick_col] == 'home':
+                            person_team_pick = row['home_team']
+                        else:
+                            person_team_pick = row[person_pick_col]
+                        
+                        # Handle actual winner
+                        if row['actual_winner'] == 'away':
+                            actual_team_winner = row['away_team']
+                        elif row['actual_winner'] == 'home':
+                            actual_team_winner = row['home_team']
+                        else:
+                            actual_team_winner = row['actual_winner']
+                        
+                        if person_team_pick == actual_team_winner:
+                            wins += 1
+                    
+                    total = len(person_week_picks)
+                    losses = total - wins
+                    win_pct = (wins / total * 100) if total > 0 else 0
+                    
+                    week_record[person.title()] = f"{wins}-{losses} ({win_pct:.0f}%)"
+                else:
+                    week_record[person.title()] = "0-0 (0%)"
+            
+            weekly_records.append(week_record)
+        
+        return pd.DataFrame(weekly_records)
+        
+    except Exception as e:
+        print(f"Error in get_weekly_records_data: {e}")
+        return pd.DataFrame()
+
+def create_weekly_trends_chart():
+    """Create a line chart showing weekly win percentage trends"""
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return go.Figure()
+        
+        df = pd.read_sql_query("SELECT * FROM picks WHERE actual_winner IS NOT NULL", conn)
+        conn.close()
+        
+        if df.empty:
+            return go.Figure()
+        
+        people = ['bobby', 'chet', 'clyde', 'henry', 'nick', 'riley']
+        weeks = sorted(df['week'].unique())
+        
+        fig = go.Figure()
+        
+        colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b']
+        
+        for i, person in enumerate(people):
+            person_pick_col = f'{person}_pick'
+            weekly_percentages = []
+            
+            for week in weeks:
+                week_df = df[df['week'] == week]
+                person_week_picks = week_df[week_df[person_pick_col].notna()]
+                
+                if len(person_week_picks) > 0:
+                    wins = 0
+                    for _, row in person_week_picks.iterrows():
+                        # Handle pick comparison
+                        if row[person_pick_col] == 'away':
+                            person_team_pick = row['away_team']
+                        elif row[person_pick_col] == 'home':
+                            person_team_pick = row['home_team']
+                        else:
+                            person_team_pick = row[person_pick_col]
+                        
+                        # Handle actual winner
+                        if row['actual_winner'] == 'away':
+                            actual_team_winner = row['away_team']
+                        elif row['actual_winner'] == 'home':
+                            actual_team_winner = row['home_team']
+                        else:
+                            actual_team_winner = row['actual_winner']
+                        
+                        if person_team_pick == actual_team_winner:
+                            wins += 1
+                    
+                    total = len(person_week_picks)
+                    win_pct = (wins / total * 100) if total > 0 else 0
+                    weekly_percentages.append(win_pct)
+                else:
+                    weekly_percentages.append(0)
+            
+            fig.add_trace(go.Scatter(
+                x=[f"Week {w}" for w in weeks],
+                y=weekly_percentages,
+                mode='lines+markers',
+                name=person.title(),
+                line=dict(color=colors[i % len(colors)], width=3),
+                marker=dict(size=8)
+            ))
+        
+        fig.update_layout(
+            title='Weekly Win Percentage Trends',
+            xaxis_title='Week',
+            yaxis_title='Win Percentage (%)',
+            hovermode='x unified',
+            margin=dict(l=0, r=0, t=40, b=0),
+            font=dict(size=12)
+        )
+        
+        return fig
+        
+    except Exception as e:
+        print(f"Error creating weekly trends chart: {e}")
+        return go.Figure()
+
+# Statistics Dashboard Tab
+def render_stats_dashboard_tab():
+    """Comprehensive statistics dashboard with streaks and advanced analytics"""
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return dbc.Alert("Database temporarily unavailable.", color="warning")
+        
+        df = pd.read_sql_query("SELECT * FROM picks WHERE actual_winner IS NOT NULL ORDER BY week, game_id", conn)
+        conn.close()
+        
+        if df.empty:
+            return dbc.Alert("No completed games available for statistics.", color="info")
+        
+        # Calculate various statistics
+        streak_data = calculate_streaks(df)
+        best_worst_weeks = calculate_best_worst_weeks(df)
+        head_to_head = calculate_head_to_head_records(df)
+        
+        return [
+            # Current Streaks Section
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader([
+                            html.H4("Current Streaks", className="mb-0")
+                        ]),
+                        dbc.CardBody([
+                            create_streaks_display(streak_data)
+                        ])
+                    ])
+                ], width=12)
+            ], className="mb-4"),
+            
+            # Best/Worst Weeks
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader([
+                            html.H4("Best & Worst Week Performances", className="mb-0")
+                        ]),
+                        dbc.CardBody([
+                            create_best_worst_weeks_display(best_worst_weeks)
+                        ])
+                    ])
+                ], width=12, lg=6),
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader([
+                            html.H4("Head-to-Head Records", className="mb-0")
                         ]),
                         dbc.CardBody([
                             create_head_to_head_display(head_to_head)
@@ -970,247 +1201,3 @@ server = app.server
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
     app.run(debug=False, host='0.0.0.0', port=port)
-                                html.I(className="fas fa-calendar-week me-2"),
-                                "Weekly Records"
-                            ], className="mb-0")
-                        ]),
-                        dbc.CardBody([
-                            dbc.Alert([
-                                html.I(className="fas fa-info-circle me-2"),
-                                html.Strong("Format: "),
-                                "Wins-Losses (Win Percentage) for each week"
-                            ], color="info", className="mb-3"),
-                            
-                            dash_table.DataTable(
-                                data=weekly_df.to_dict('records'),
-                                columns=[{"name": col, "id": col} for col in weekly_df.columns],
-                                style_cell={
-                                    'textAlign': 'center',
-                                    'padding': '12px',
-                                    'fontFamily': 'Arial, sans-serif',
-                                    'fontSize': '13px',
-                                    'minWidth': '100px'
-                                },
-                                style_header={
-                                    'backgroundColor': '#17a2b8',
-                                    'color': 'white',
-                                    'fontWeight': 'bold'
-                                },
-                                style_data_conditional=[
-                                    {
-                                        'if': {'row_index': 'odd'},
-                                        'backgroundColor': '#f8f9fa'
-                                    }
-                                ],
-                                style_table={'overflowX': 'auto'},
-                                page_size=20
-                            )
-                        ])
-                    ])
-                ], width=12)
-            ])
-        ]
-        
-    except Exception as e:
-        return dbc.Alert(f"Error loading weekly records: {str(e)}", color="danger")
-
-def get_weekly_records_data():
-    """Get weekly records data"""
-    try:
-        conn = get_db_connection()
-        if not conn:
-            return pd.DataFrame()
-        
-        df = pd.read_sql_query("SELECT * FROM picks WHERE actual_winner IS NOT NULL", conn)
-        conn.close()
-        
-        if df.empty:
-            return pd.DataFrame()
-        
-        people = ['bobby', 'chet', 'clyde', 'henry', 'nick', 'riley']
-        weeks = sorted(df['week'].unique())
-        
-        weekly_records = []
-        
-        for week in weeks:
-            week_df = df[df['week'] == week]
-            week_record = {'Week': f"Week {week}"}
-            
-            for person in people:
-                person_pick_col = f'{person}_pick'
-                person_week_picks = week_df[week_df[person_pick_col].notna()]
-                
-                if len(person_week_picks) > 0:
-                    wins = 0
-                    for _, row in person_week_picks.iterrows():
-                        # Handle pick comparison
-                        if row[person_pick_col] == 'away':
-                            person_team_pick = row['away_team']
-                        elif row[person_pick_col] == 'home':
-                            person_team_pick = row['home_team']
-                        else:
-                            person_team_pick = row[person_pick_col]
-                        
-                        # Handle actual winner
-                        if row['actual_winner'] == 'away':
-                            actual_team_winner = row['away_team']
-                        elif row['actual_winner'] == 'home':
-                            actual_team_winner = row['home_team']
-                        else:
-                            actual_team_winner = row['actual_winner']
-                        
-                        if person_team_pick == actual_team_winner:
-                            wins += 1
-                    
-                    total = len(person_week_picks)
-                    losses = total - wins
-                    win_pct = (wins / total * 100) if total > 0 else 0
-                    
-                    week_record[person.title()] = f"{wins}-{losses} ({win_pct:.0f}%)"
-                else:
-                    week_record[person.title()] = "0-0 (0%)"
-            
-            weekly_records.append(week_record)
-        
-        return pd.DataFrame(weekly_records)
-        
-    except Exception as e:
-        print(f"Error in get_weekly_records_data: {e}")
-        return pd.DataFrame()
-
-def create_weekly_trends_chart():
-    """Create a line chart showing weekly win percentage trends"""
-    try:
-        conn = get_db_connection()
-        if not conn:
-            return go.Figure()
-        
-        df = pd.read_sql_query("SELECT * FROM picks WHERE actual_winner IS NOT NULL", conn)
-        conn.close()
-        
-        if df.empty:
-            return go.Figure()
-        
-        people = ['bobby', 'chet', 'clyde', 'henry', 'nick', 'riley']
-        weeks = sorted(df['week'].unique())
-        
-        fig = go.Figure()
-        
-        colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b']
-        
-        for i, person in enumerate(people):
-            person_pick_col = f'{person}_pick'
-            weekly_percentages = []
-            
-            for week in weeks:
-                week_df = df[df['week'] == week]
-                person_week_picks = week_df[week_df[person_pick_col].notna()]
-                
-                if len(person_week_picks) > 0:
-                    wins = 0
-                    for _, row in person_week_picks.iterrows():
-                        # Handle pick comparison
-                        if row[person_pick_col] == 'away':
-                            person_team_pick = row['away_team']
-                        elif row[person_pick_col] == 'home':
-                            person_team_pick = row['home_team']
-                        else:
-                            person_team_pick = row[person_pick_col]
-                        
-                        # Handle actual winner
-                        if row['actual_winner'] == 'away':
-                            actual_team_winner = row['away_team']
-                        elif row['actual_winner'] == 'home':
-                            actual_team_winner = row['home_team']
-                        else:
-                            actual_team_winner = row['actual_winner']
-                        
-                        if person_team_pick == actual_team_winner:
-                            wins += 1
-                    
-                    total = len(person_week_picks)
-                    win_pct = (wins / total * 100) if total > 0 else 0
-                    weekly_percentages.append(win_pct)
-                else:
-                    weekly_percentages.append(0)
-            
-            fig.add_trace(go.Scatter(
-                x=[f"Week {w}" for w in weeks],
-                y=weekly_percentages,
-                mode='lines+markers',
-                name=person.title(),
-                line=dict(color=colors[i % len(colors)], width=3),
-                marker=dict(size=8)
-            ))
-        
-        fig.update_layout(
-            title='Weekly Win Percentage Trends',
-            xaxis_title='Week',
-            yaxis_title='Win Percentage (%)',
-            hovermode='x unified',
-            margin=dict(l=0, r=0, t=40, b=0),
-            font=dict(size=12)
-        )
-        
-        return fig
-        
-    except Exception as e:
-        print(f"Error creating weekly trends chart: {e}")
-        return go.Figure()
-
-# Statistics Dashboard Tab
-def render_stats_dashboard_tab():
-    """Comprehensive statistics dashboard with streaks and advanced analytics"""
-    try:
-        conn = get_db_connection()
-        if not conn:
-            return dbc.Alert("Database temporarily unavailable.", color="warning")
-        
-        df = pd.read_sql_query("SELECT * FROM picks WHERE actual_winner IS NOT NULL ORDER BY week, game_id", conn)
-        conn.close()
-        
-        if df.empty:
-            return dbc.Alert("No completed games available for statistics.", color="info")
-        
-        # Calculate various statistics
-        streak_data = calculate_streaks(df)
-        best_worst_weeks = calculate_best_worst_weeks(df)
-        head_to_head = calculate_head_to_head_records(df)
-        
-        return [
-            # Current Streaks Section
-            dbc.Row([
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardHeader([
-                            html.H4([
-                                html.I(className="fas fa-fire me-2"),
-                                "Current Streaks"
-                            ], className="mb-0")
-                        ]),
-                        dbc.CardBody([
-                            create_streaks_display(streak_data)
-                        ])
-                    ])
-                ], width=12)
-            ], className="mb-4"),
-            
-            # Best/Worst Weeks
-            dbc.Row([
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardHeader([
-                            html.H4([
-                                html.I(className="fas fa-chart-line me-2"),
-                                "Best & Worst Week Performances"
-                            ], className="mb-0")
-                        ]),
-                        dbc.CardBody([
-                            create_best_worst_weeks_display(best_worst_weeks)
-                        ])
-                    ])
-                ], width=12, lg=6),
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardHeader([
-                            html.H4([
