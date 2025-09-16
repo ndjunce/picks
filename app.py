@@ -323,9 +323,181 @@ def create_wins_comparison_chart(standings_df):
     
     return fig
 
-# Weekly records placeholder
+# Weekly Records Tab - COMPLETED
 def render_weekly_records_tab():
-    return dbc.Alert("Weekly records coming soon!", color="info")
+    try:
+        weekly_df = get_weekly_records_data()
+        
+        if weekly_df.empty:
+            return dbc.Alert("No completed games available for weekly records.", color="info")
+        
+        # Create a chart showing weekly performance trends
+        weekly_chart = create_weekly_trends_chart()
+        
+        return [
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader("Weekly Performance Trends"),
+                        dbc.CardBody([
+                            dcc.Graph(figure=weekly_chart, style={'height': '400px'})
+                        ])
+                    ])
+                ], width=12)
+            ], className="mb-4"),
+            
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader([
+                            html.H4([
+                                html.I(className="fas fa-calendar-week me-2"),
+                                "Weekly Records"
+                            ], className="mb-0")
+                        ]),
+                        dbc.CardBody([
+                            dbc.Alert([
+                                html.I(className="fas fa-info-circle me-2"),
+                                html.Strong("Format: "),
+                                "Wins-Losses (Win Percentage) for each week"
+                            ], color="info", className="mb-3"),
+                            
+                            dash_table.DataTable(
+                                data=weekly_df.to_dict('records'),
+                                columns=[{"name": col, "id": col} for col in weekly_df.columns],
+                                style_cell={
+                                    'textAlign': 'center',
+                                    'padding': '12px',
+                                    'fontFamily': 'Arial, sans-serif',
+                                    'fontSize': '13px',
+                                    'minWidth': '100px'
+                                },
+                                style_header={
+                                    'backgroundColor': '#17a2b8',
+                                    'color': 'white',
+                                    'fontWeight': 'bold'
+                                },
+                                style_data_conditional=[
+                                    {
+                                        'if': {'row_index': 'odd'},
+                                        'backgroundColor': '#f8f9fa'
+                                    }
+                                ],
+                                style_table={'overflowX': 'auto'},
+                                page_size=20
+                            )
+                        ])
+                    ])
+                ], width=12)
+            ])
+        ]
+        
+    except Exception as e:
+        return dbc.Alert(f"Error loading weekly records: {str(e)}", color="danger")
+
+def get_weekly_records_data():
+    """Get weekly records data"""
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return pd.DataFrame()
+        
+        df = pd.read_sql_query("SELECT * FROM picks WHERE actual_winner IS NOT NULL", conn)
+        conn.close()
+        
+        if df.empty:
+            return pd.DataFrame()
+        
+        people = ['bobby', 'chet', 'clyde', 'henry', 'nick', 'riley']
+        weeks = sorted(df['week'].unique())
+        
+        weekly_records = []
+        
+        for week in weeks:
+            week_df = df[df['week'] == week]
+            week_record = {'Week': f"Week {week}"}
+            
+            for person in people:
+                person_pick_col = f'{person}_pick'
+                person_week_picks = week_df[week_df[person_pick_col].notna()]
+                
+                if len(person_week_picks) > 0:
+                    wins = len(person_week_picks[person_week_picks[person_pick_col] == person_week_picks['actual_winner']])
+                    total = len(person_week_picks)
+                    losses = total - wins
+                    win_pct = (wins / total * 100) if total > 0 else 0
+                    
+                    week_record[person.title()] = f"{wins}-{losses} ({win_pct:.0f}%)"
+                else:
+                    week_record[person.title()] = "0-0 (0%)"
+            
+            weekly_records.append(week_record)
+        
+        return pd.DataFrame(weekly_records)
+        
+    except Exception as e:
+        print(f"Error in get_weekly_records_data: {e}")
+        return pd.DataFrame()
+
+def create_weekly_trends_chart():
+    """Create a line chart showing weekly win percentage trends"""
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return go.Figure()
+        
+        df = pd.read_sql_query("SELECT * FROM picks WHERE actual_winner IS NOT NULL", conn)
+        conn.close()
+        
+        if df.empty:
+            return go.Figure()
+        
+        people = ['bobby', 'chet', 'clyde', 'henry', 'nick', 'riley']
+        weeks = sorted(df['week'].unique())
+        
+        fig = go.Figure()
+        
+        colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b']
+        
+        for i, person in enumerate(people):
+            person_pick_col = f'{person}_pick'
+            weekly_percentages = []
+            
+            for week in weeks:
+                week_df = df[df['week'] == week]
+                person_week_picks = week_df[week_df[person_pick_col].notna()]
+                
+                if len(person_week_picks) > 0:
+                    wins = len(person_week_picks[person_week_picks[person_pick_col] == person_week_picks['actual_winner']])
+                    total = len(person_week_picks)
+                    win_pct = (wins / total * 100) if total > 0 else 0
+                    weekly_percentages.append(win_pct)
+                else:
+                    weekly_percentages.append(0)
+            
+            fig.add_trace(go.Scatter(
+                x=[f"Week {w}" for w in weeks],
+                y=weekly_percentages,
+                mode='lines+markers',
+                name=person.title(),
+                line=dict(color=colors[i % len(colors)], width=3),
+                marker=dict(size=8)
+            ))
+        
+        fig.update_layout(
+            title='Weekly Win Percentage Trends',
+            xaxis_title='Week',
+            yaxis_title='Win Percentage (%)',
+            hovermode='x unified',
+            margin=dict(l=0, r=0, t=40, b=0),
+            font=dict(size=12)
+        )
+        
+        return fig
+        
+    except Exception as e:
+        print(f"Error creating weekly trends chart: {e}")
+        return go.Figure()
 
 # Server setup
 server = app.server
