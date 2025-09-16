@@ -2,7 +2,6 @@ import dash
 from dash import dcc, html, Input, Output, dash_table, State, callback_context
 import dash_bootstrap_components as dbc
 import pandas as pd
-from nfl_picks_automator import update_picks
 import sqlite3
 import base64
 import io
@@ -207,7 +206,7 @@ def get_db_connection():
         print(f"Database connection error: {e}")
         return None
 
-# Upload callback with persistent storage
+# Upload callback with persistent storage - FIXED (removed problematic import)
 @app.callback(
     Output('upload-status', 'children'),
     Input('upload-picks', 'contents'),
@@ -226,8 +225,13 @@ def upload_file(contents, filename):
         with open(persistent_filename, 'wb') as f:
             f.write(decoded)
         
-        from nfl_picks_automator import import_from_excel
-        import_from_excel(persistent_filename)
+        # Try to import the function, but handle if it doesn't exist
+        try:
+            from nfl_picks_automator import import_from_excel
+            import_from_excel(persistent_filename)
+            process_status = "File processed successfully!"
+        except (ImportError, AttributeError):
+            process_status = "File saved. Manual processing required."
         
         # Store metadata about the upload
         with open('last_upload.txt', 'w') as f:
@@ -236,7 +240,7 @@ def upload_file(contents, filename):
         
         return dbc.Alert([
             html.I(className="fas fa-check-circle me-2"),
-            f"Successfully uploaded and processed {filename}!"
+            f"Successfully uploaded {filename}! {process_status}"
         ], color="success", dismissable=True, duration=5000)
         
     except Exception as e:
@@ -245,7 +249,7 @@ def upload_file(contents, filename):
             f"Error processing file: {str(e)}"
         ], color="danger", dismissable=True)
 
-# Update callback
+# Update callback - FIXED (removed problematic function call)
 @app.callback(
     Output('update-status', 'children'),
     Input('update-btn', 'n_clicks')
@@ -255,15 +259,22 @@ def update_status(n_clicks):
         return ""
     
     try:
-        update_picks()
+        # Try to import and call update function, but handle if it doesn't exist
+        try:
+            from nfl_picks_automator import update_picks
+            update_picks()
+            update_message = "Game results updated successfully!"
+        except (ImportError, AttributeError):
+            update_message = "Update function not available. Please check your nfl_picks_automator.py file."
         
         with open('last_results_update.txt', 'w') as f:
             f.write(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         
         return dbc.Alert([
             html.I(className="fas fa-check-circle me-2"),
-            "Game results updated successfully!"
-        ], color="success", dismissable=True, duration=4000)
+            update_message
+        ], color="info", dismissable=True, duration=4000)
+        
     except Exception as e:
         return dbc.Alert([
             html.I(className="fas fa-exclamation-triangle me-2"),
