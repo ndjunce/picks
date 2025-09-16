@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Allow all web crawlers access to all content
+# This enables web scraping tools and search engines
+# to access your NFL picks tracker application
+
+Sitemap: https://your-new-domain.onrender.com/sitemap.xml
+
+# This file allows web crawlers and tools to access your site
+# Place this file in the same directory as your dash_app.py file
