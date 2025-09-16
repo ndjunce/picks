@@ -199,9 +199,56 @@ def init_database():
                 nick_pick TEXT,
                 riley_pick TEXT,
                 actual_winner TEXT,
-                game_date TEXT
+                game_date TEXT,
+                away_score INTEGER,
+                home_score INTEGER,
+                bobby_tiebreaker INTEGER,
+                chet_tiebreaker INTEGER,
+                clyde_tiebreaker INTEGER,
+                henry_tiebreaker INTEGER,
+                nick_tiebreaker INTEGER,
+                riley_tiebreaker INTEGER,
+                is_tiebreaker_game BOOLEAN DEFAULT 0
             )
         ''')
+        
+        # Add new columns to existing table if they don't exist
+        try:
+            cursor.execute("ALTER TABLE picks ADD COLUMN away_score INTEGER")
+        except:
+            pass
+        try:
+            cursor.execute("ALTER TABLE picks ADD COLUMN home_score INTEGER")
+        except:
+            pass
+        try:
+            cursor.execute("ALTER TABLE picks ADD COLUMN bobby_tiebreaker INTEGER")
+        except:
+            pass
+        try:
+            cursor.execute("ALTER TABLE picks ADD COLUMN chet_tiebreaker INTEGER")
+        except:
+            pass
+        try:
+            cursor.execute("ALTER TABLE picks ADD COLUMN clyde_tiebreaker INTEGER")
+        except:
+            pass
+        try:
+            cursor.execute("ALTER TABLE picks ADD COLUMN henry_tiebreaker INTEGER")
+        except:
+            pass
+        try:
+            cursor.execute("ALTER TABLE picks ADD COLUMN nick_tiebreaker INTEGER")
+        except:
+            pass
+        try:
+            cursor.execute("ALTER TABLE picks ADD COLUMN riley_tiebreaker INTEGER")
+        except:
+            pass
+        try:
+            cursor.execute("ALTER TABLE picks ADD COLUMN is_tiebreaker_game BOOLEAN DEFAULT 0")
+        except:
+            pass
         
         conn.commit()
         conn.close()
@@ -326,7 +373,7 @@ def process_excel_file(contents, filename):
         return f"Error processing file: {str(e)}", False
 
 def update_results_from_api():
-    """Update game results from ESPN API"""
+    """Update game results with scores from ESPN API"""
     try:
         import requests
         import json
@@ -334,6 +381,17 @@ def update_results_from_api():
         conn = get_db_connection()
         if not conn:
             return "Database connection failed", False
+        
+        # Add score columns if they don't exist
+        cursor = conn.cursor()
+        try:
+            cursor.execute("ALTER TABLE picks ADD COLUMN away_score INTEGER")
+        except:
+            pass  # Column already exists
+        try:
+            cursor.execute("ALTER TABLE picks ADD COLUMN home_score INTEGER")
+        except:
+            pass  # Column already exists
         
         # Get current season (2025)
         current_year = 2025
@@ -371,7 +429,7 @@ def update_results_from_api():
                             if len(competitors) != 2:
                                 continue
                             
-                            # Determine home and away teams
+                            # Determine home and away teams with scores
                             home_team = None
                             away_team = None
                             home_score = 0
@@ -404,11 +462,11 @@ def update_results_from_api():
                             away_team_clean = clean_team_name(away_team)
                             winner_clean = clean_team_name(winner) if winner != "TIE" else "TIE"
                             
-                            # Update database - find matching games
+                            # Update database with scores and winner
                             cursor = conn.cursor()
                             cursor.execute('''
                                 UPDATE picks 
-                                SET actual_winner = ? 
+                                SET actual_winner = ?, away_score = ?, home_score = ?
                                 WHERE week = ? 
                                 AND (
                                     (LOWER(away_team) LIKE ? AND LOWER(home_team) LIKE ?) OR
@@ -416,7 +474,7 @@ def update_results_from_api():
                                 )
                                 AND actual_winner IS NULL
                             ''', (
-                                winner_clean,
+                                winner_clean, away_score, home_score,
                                 week,
                                 f'%{away_team_clean.lower()}%',
                                 f'%{home_team_clean.lower()}%',
@@ -439,7 +497,7 @@ def update_results_from_api():
         conn.close()
         
         if updated_games > 0:
-            return f"Successfully updated {updated_games} games with results!", True
+            return f"Successfully updated {updated_games} games with scores and results!", True
         else:
             return "No new completed games found to update.", True
             
