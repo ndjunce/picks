@@ -64,6 +64,7 @@ app.layout = dbc.Container([
     dbc.Tabs([
         dbc.Tab(label="Leaderboard", tab_id="leaderboard"),
         dbc.Tab(label="Weekly Records", tab_id="weekly_records"),
+        dbc.Tab(label="Weekly Picks", tab_id="weekly_picks"),
         dbc.Tab(label="Statistics Dashboard", tab_id="stats_dashboard")
     ], id="main-tabs", active_tab="leaderboard", className="mb-4"),
     
@@ -537,6 +538,8 @@ def render_tab_content(active_tab):
         return render_leaderboard_tab()
     elif active_tab == "weekly_records":
         return render_weekly_records_tab()
+    elif active_tab == "weekly_picks":
+        return render_weekly_picks_tab()
     elif active_tab == "stats_dashboard":
         return render_stats_dashboard_tab()
 
@@ -756,7 +759,178 @@ def create_wins_comparison_chart(standings_df):
     
     return fig
 
-# Weekly Records Tab
+# Weekly Picks Tab - NEW
+def render_weekly_picks_tab():
+    """Show all picks by week with color coding for correct/incorrect"""
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return dbc.Alert("Database temporarily unavailable.", color="warning")
+        
+        df = pd.read_sql_query("SELECT * FROM picks ORDER BY week, game_id", conn)
+        conn.close()
+        
+        if df.empty:
+            return dbc.Alert("No picks data available.", color="info")
+        
+        # Get available weeks
+        weeks = sorted(df['week'].unique())
+        
+        # Create dropdown for week selection
+        week_options = [{"label": f"Week {week}", "value": week} for week in weeks]
+        
+        return [
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader("Select Week to View Picks"),
+                        dbc.CardBody([
+                            dcc.Dropdown(
+                                id='week-selector',
+                                options=week_options,
+                                value=weeks[0] if weeks else None,
+                                placeholder="Select a week"
+                            )
+                        ])
+                    ])
+                ], width=12, md=4)
+            ], className="mb-4"),
+            
+            html.Div(id='weekly-picks-content')
+        ]
+        
+    except Exception as e:
+        return dbc.Alert(f"Error loading weekly picks: {str(e)}", color="danger")
+
+# Add callback for weekly picks
+@app.callback(
+    Output('weekly-picks-content', 'children'),
+    Input('week-selector', 'value')
+)
+def update_weekly_picks_content(selected_week):
+    if not selected_week:
+        return dbc.Alert("Please select a week to view picks.", color="info")
+    
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return dbc.Alert("Database connection failed.", color="danger")
+        
+        # Get picks for selected week
+        df = pd.read_sql_query(
+            "SELECT * FROM picks WHERE week = ? ORDER BY game_id", 
+            conn, 
+            params=(selected_week,)
+        )
+        conn.close()
+        
+        if df.empty:
+            return dbc.Alert(f"No games found for Week {selected_week}.", color="info")
+        
+        # Create picks table data
+        picks_data = []
+        people = ['bobby', 'chet', 'clyde', 'henry', 'nick', 'riley']
+        
+        for _, row in df.iterrows():
+            game_info = f"{row['away_team']} @ {row['home_team']}"
+            
+            pick_row = {
+                'Game': game_info,
+                'Result': row['actual_winner'] if pd.notna(row['actual_winner']) else 'TBD'
+            }
+            
+            # Add each person's pick
+            for person in people:
+                person_pick_col = f'{person}_pick'
+                pick_row[person.title()] = row[person_pick_col] if pd.notna(row[person_pick_col]) else '-'
+            
+            picks_data.append(pick_row)
+        
+        # Create the data table
+        columns = [{"name": "Game", "id": "Game"}, {"name": "Winner", "id": "Result"}]
+        columns.extend([{"name": person.title(), "id": person.title()} for person in people])
+        
+        # Create conditional styling for correct/incorrect picks
+        style_data_conditional = []
+        
+        # Add styling for each person's column
+        for person in people:
+            person_title = person.title()
+            
+            # Correct picks - green background
+            style_data_conditional.append({
+                'if': {
+                    'filter_query': f'{{{person_title}}} = {{Result}}',
+                    'column_id': person_title
+                },
+                'backgroundColor': '#d4edda',
+                'color': '#155724',
+                'fontWeight': 'bold'
+            })
+            
+            # Check for incorrect picks (when Result is not TBD and pick doesn't match)
+            for _, row in df.iterrows():
+                if pd.notna(row['actual_winner']) and row['actual_winner'] != 'TBD':
+                    person_pick = row[f'{person}_pick']
+                    if pd.notna(person_pick) and person_pick != row['actual_winner']:
+                        # We'll handle this with a broader condition below
+                        pass
+        
+        # Add incorrect picks styling - this is a bit complex due to DataTable limitations
+        # We'll use a different approach - row index based conditions
+        for i, row_data in enumerate(picks_data):
+            if row_data['Result'] != 'TBD':
+                for person in people:
+                    person_title = person.title()
+                    if (row_data[person_title] != '-' and 
+                        row_data[person_title] != row_data['Result'] and
+                        row_data['Result'] != 'TBD'):
+                        style_data_conditional.append({
+                            'if': {
+                                'row_index': i,
+                                'column_id': person_title
+                            },
+                            'backgroundColor': '#f8d7da',
+                            'color': '#721c24',
+                            'fontWeight': 'bold'
+                        })
+        
+        return [
+            dbc.Card([
+                dbc.CardHeader(f"Week {selected_week} Picks & Results"),
+                dbc.CardBody([
+                    dbc.Alert([
+                        html.Strong("Legend: "),
+                        html.Span("Green = Correct Pick", style={'color': '#155724', 'backgroundColor': '#d4edda', 'padding': '2px 8px', 'marginRight': '10px', 'borderRadius': '3px'}),
+                        html.Span("Red = Incorrect Pick", style={'color': '#721c24', 'backgroundColor': '#f8d7da', 'padding': '2px 8px', 'borderRadius': '3px'})
+                    ], color="light", className="mb-3"),
+                    
+                    dash_table.DataTable(
+                        data=picks_data,
+                        columns=columns,
+                        style_cell={
+                            'textAlign': 'center',
+                            'padding': '12px',
+                            'fontFamily': 'Arial, sans-serif',
+                            'fontSize': '13px',
+                            'whiteSpace': 'normal',
+                            'height': 'auto'
+                        },
+                        style_header={
+                            'backgroundColor': '#6f42c1',
+                            'color': 'white',
+                            'fontWeight': 'bold'
+                        },
+                        style_data_conditional=style_data_conditional,
+                        style_table={'overflowX': 'auto'},
+                        page_size=20
+                    )
+                ])
+            ])
+        ]
+        
+    except Exception as e:
+        return dbc.Alert(f"Error loading picks for week {selected_week}: {str(e)}", color="danger")
 def render_weekly_records_tab():
     try:
         weekly_df = get_weekly_records_data()
@@ -810,6 +984,23 @@ def render_weekly_records_tab():
                                     {
                                         'if': {'row_index': 'odd'},
                                         'backgroundColor': '#f8f9fa'
+                                    },
+                                    {
+                                        'if': {
+                                            'filter_query': '{Week} = TOTALS',
+                                            'column_id': 'Week'
+                                        },
+                                        'backgroundColor': '#343a40',
+                                        'color': 'white',
+                                        'fontWeight': 'bold'
+                                    },
+                                    {
+                                        'if': {
+                                            'filter_query': '{Week} = TOTALS'
+                                        },
+                                        'backgroundColor': '#343a40',
+                                        'color': 'white',
+                                        'fontWeight': 'bold'
                                     }
                                 ],
                                 style_table={'overflowX': 'auto'},
@@ -825,7 +1016,7 @@ def render_weekly_records_tab():
         return dbc.Alert(f"Error loading weekly records: {str(e)}", color="danger")
 
 def get_weekly_records_data():
-    """Get weekly records data"""
+    """Get weekly records data with totals row"""
     try:
         conn = get_db_connection()
         if not conn:
@@ -841,6 +1032,7 @@ def get_weekly_records_data():
         weeks = sorted(df['week'].unique())
         
         weekly_records = []
+        totals = {'Week': 'TOTALS'}
         
         for week in weeks:
             week_df = df[df['week'] == week]
@@ -877,10 +1069,31 @@ def get_weekly_records_data():
                     win_pct = (wins / total * 100) if total > 0 else 0
                     
                     week_record[person.title()] = f"{wins}-{losses} ({win_pct:.0f}%)"
+                    
+                    # Add to totals
+                    if person.title() not in totals:
+                        totals[person.title()] = {'wins': 0, 'total': 0}
+                    totals[person.title()]['wins'] += wins
+                    totals[person.title()]['total'] += total
                 else:
                     week_record[person.title()] = "0-0 (0%)"
             
             weekly_records.append(week_record)
+        
+        # Calculate totals row
+        for person in people:
+            person_title = person.title()
+            if person_title in totals and isinstance(totals[person_title], dict):
+                total_wins = totals[person_title]['wins']
+                total_games = totals[person_title]['total']
+                total_losses = total_games - total_wins
+                total_win_pct = (total_wins / total_games * 100) if total_games > 0 else 0
+                totals[person_title] = f"{total_wins}-{total_losses} ({total_win_pct:.1f}%)"
+            else:
+                totals[person_title] = "0-0 (0%)"
+        
+        # Add totals row
+        weekly_records.append(totals)
         
         return pd.DataFrame(weekly_records)
         
@@ -1017,9 +1230,14 @@ def render_stats_dashboard_tab():
                 dbc.Col([
                     dbc.Card([
                         dbc.CardHeader([
-                            html.H4("Head-to-Head Records", className="mb-0")
+                            html.H4("Head-to-Head Records", className="mb-0"),
+                            html.Small("Shows who makes better picks when players disagree", className="text-muted")
                         ]),
                         dbc.CardBody([
+                            dbc.Alert([
+                                html.Strong("Explanation: "),
+                                "When two players pick different teams for the same game, whoever picked the winning team gets a head-to-head win. This measures individual game decision-making skill."
+                            ], color="info", className="mb-3"),
                             create_head_to_head_display(head_to_head)
                         ])
                     ])
