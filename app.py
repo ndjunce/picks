@@ -1,38 +1,4 @@
-# Leaderboard tab with enhanced charts
-def render_leaderboard_tab():
-    standings_df = get_current_standings()
-    
-    if standings_df.empty:
-        return dbc.Alert("No game results available. Upload picks and update results first.", color="info")
-    
-    # Create charts
-    win_pct_chart = create_win_percentage_chart(standings_df)
-    wins_chart = create_wins_comparison_chart(standings_df)
-    
-    # Create podium visualization for top 3
-    top_3 = standings_df.head(3)
-    
-    podium_cards = []
-    medals = ["🥇", "🥈", "🥉"]
-    colors = ["warning", "secondary", "dark"]
-    
-    for i, (_, player) in enumerate(top_3.iterrows()):
-        podium_cards.append(
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardBody([
-                        html.H2(medals[i], className="text-center mb-2"),
-                        html.H4(player['Player'], className="text-center mb-2"),
-                        html.H5(f"{player['Wins']}-{player['Losses']}", className="text-center mb-1"),
-                        html.P(player['Win %'], className="text-center text-muted mb-0")
-                    ], className="py-4")
-                ], color=colors[i], outline=True, className="h-100")
-            ], width=12, md=4)
-        )
-    
-    return [
-        # Championship Podium
-        dbc.Rowimport dash
+import dash
 from dash import dcc, html, Input, Output, dash_table, State
 import dash_bootstrap_components as dbc
 import pandas as pd
@@ -40,6 +6,8 @@ import sqlite3
 import base64
 import os
 from datetime import datetime
+import plotly.express as px
+import plotly.graph_objects as go
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
@@ -204,7 +172,7 @@ def get_current_standings():
         print(f"Error getting standings: {e}")
         return pd.DataFrame()
 
-# Leaderboard tab with enhanced charts
+# Enhanced Leaderboard tab with charts
 def render_leaderboard_tab():
     standings_df = get_current_standings()
     
@@ -296,16 +264,17 @@ def render_leaderboard_tab():
 
 def create_win_percentage_chart(standings_df):
     """Create a horizontal bar chart showing win percentages"""
-    import plotly.express as px
+    # Extract numeric values from percentage strings
+    win_percentages = [float(pct.rstrip('%')) for pct in standings_df['Win %']]
     
     fig = px.bar(
         standings_df.sort_values('Wins', ascending=True),
-        x=[float(pct.rstrip('%')) for pct in standings_df.sort_values('Wins', ascending=True)['Win %']],
-        y='Player',
+        x=sorted(win_percentages),
+        y=standings_df.sort_values('Wins', ascending=True)['Player'],
         orientation='h',
         title='Win Percentage by Player',
-        text='Win %',
-        color=[float(pct.rstrip('%')) for pct in standings_df.sort_values('Wins', ascending=True)['Win %']],
+        text=standings_df.sort_values('Wins', ascending=True)['Win %'],
+        color=sorted(win_percentages),
         color_continuous_scale='RdYlGn'
     )
     
