@@ -1,11 +1,44 @@
+﻿import os
+from dotenv import load_dotenv
+import logging
+from datetime import datetime
+
+# Load environment variables
+load_dotenv()
+
+# Configuration from .env file
+class Config:
+    DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///picks.db')
+    ESPN_API_TIMEOUT = int(os.getenv('ESPN_API_TIMEOUT', '10'))
+    UPDATE_INTERVAL_MINUTES = int(os.getenv('UPDATE_INTERVAL_MINUTES', '120'))
+    DEBUG_MODE = os.getenv('DEBUG_MODE', 'False').lower() == 'true'
+    PORT = int(os.getenv('PORT', '10000'))
+    HOST = os.getenv('HOST', '0.0.0.0')
+    PLAYERS = os.getenv('PLAYERS', 'bobby,chet,clyde,henry,nick,riley').split(',')
+    CURRENT_SEASON = int(os.getenv('CURRENT_SEASON', '2025'))
+    ENABLE_AUTO_REFRESH = os.getenv('ENABLE_AUTO_REFRESH', 'True').lower() == 'true'
+    ENABLE_TEAM_LOGOS = os.getenv('ENABLE_TEAM_LOGOS', 'True').lower() == 'true'
+    ENABLE_SCORE_DISPLAY = os.getenv('ENABLE_SCORE_DISPLAY', 'True').lower() == 'true'
+    LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')
+    LOG_FILE = os.getenv('LOG_FILE', 'nfl_picks.log')
+
+# Setup logging
+logging.basicConfig(
+    level=getattr(logging, Config.LOG_LEVEL),
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler(Config.LOG_FILE),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
 import dash
 from dash import dcc, html, Input, Output, dash_table, State
 import dash_bootstrap_components as dbc
 import pandas as pd
 import sqlite3
 import base64
-import os
-from datetime import datetime
 import plotly.express as px
 import plotly.graph_objects as go
 import io
@@ -15,11 +48,14 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.layout = dbc.Container([
     # Header
     dbc.Row([
-        dbc.Col([
-            html.H1("NFL Picks Tracker", className="text-center mb-4 text-primary"),
-            html.Hr()
-        ], width=12)
-    ]),
+    dbc.Col([
+        html.H1("NFL Picks Tracker", className="text-center mb-2 text-primary"),
+        html.P(id="last-updated-display", className="text-center text-muted mb-2"),
+        dbc.Button("Update Now", id="manual-update-btn", color="success", size="sm", className="mb-3"),
+        html.Div(id="manual-update-status"),
+        html.Hr()
+    ], width=12)
+]),
     
     # Upload Controls
     dbc.Row([
@@ -557,6 +593,25 @@ def clean_team_name(team_name):
     
     # Return original if no match found
     return team_name
+
+def get_last_updated():
+    """Get timestamp of last data update"""
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return "Unknown"
+        
+        cursor = conn.cursor()
+        # Get the most recent game with a result
+        cursor.execute("SELECT MAX(game_id) FROM picks WHERE actual_winner IS NOT NULL")
+        result = cursor.fetchone()
+        conn.close()
+        
+        if result and result[0]:
+            return datetime.now().strftime("%m/%d/%Y at %I:%M %p")
+        return "No completed games"
+    except:
+        return "Unknown"
 
 # Upload callback
 @app.callback(
@@ -1801,12 +1856,37 @@ def create_head_to_head_display(h2h_data):
         style_table={'overflowX': 'auto'}
     )
 
-# Initialize database on startup
+
+@app.callback(
+    Output('last-updated-display', 'children'),
+    Input('last-updated-display', 'id')
+)
+def display_last_updated(_):
+    return f"Last Updated: {get_last_updated()}"
+
+@app.callback(
+    [Output('manual-update-status', 'children'),
+     Output('last-updated-display', 'children', allow_duplicate=True)],
+    Input('manual-update-btn', 'n_clicks'),
+    prevent_initial_call=True
+)
+def manual_update(n_clicks):
+    if n_clicks:
+        try:
+            message, success = update_results_from_api()
+            color = "success" if success else "warning"
+            status = dbc.Alert(message, color=color, dismissable=True, duration=4000)
+            updated_time = f"Last Updated: {get_last_updated()}"
+            return status, updated_time
+        except Exception as e:
+            error_alert = dbc.Alert(f"Update failed: {str(e)}", color="danger", dismissable=True, duration=4000)
+            return error_alert, f"Last Updated: {get_last_updated()}"
+    return "", f"Last Updated: {get_last_updated()}"
 init_database()
 
 # Server setup
 server = app.server
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 10000))
-    app.run(debug=False, host='0.0.0.0', port=port)
+    logger.info(f"Starting NFL Picks Tracker on {Config.HOST}:{Config.PORT}")
+    app.run(debug=Config.DEBUG_MODE, host=Config.HOST, port=Config.PORT)
