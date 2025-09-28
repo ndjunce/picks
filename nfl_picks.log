@@ -1,0 +1,83 @@
+2025-09-20 10:05:01,223 - __main__ - INFO - Starting NFL Picks Tracker on 0.0.0.0:10000
+2025-09-20 10:05:01,232 - dash.dash - INFO - Dash is running on http://0.0.0.0:10000/
+
+2025-09-20 10:05:01,244 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.14:10000
+2025-09-20 10:05:01,244 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-09-20 10:05:05,770 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:05] "GET / HTTP/1.1" 200 -
+2025-09-20 10:05:05,796 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:05] "GET /_dash-component-suites/dash/deps/polyfill@7.v3_2_0m1757464944.12.1.min.js HTTP/1.1" 200 -
+2025-09-20 10:05:05,798 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:05] "GET /_dash-component-suites/dash/deps/react@18.v3_2_0m1757464944.3.1.min.js HTTP/1.1" 200 -
+2025-09-20 10:05:05,801 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:05] "GET /_dash-component-suites/dash/deps/react-dom@18.v3_2_0m1757464944.3.1.min.js HTTP/1.1" 200 -
+2025-09-20 10:05:05,802 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:05] "GET /_dash-component-suites/dash/deps/prop-types@15.v3_2_0m1757464944.8.1.min.js HTTP/1.1" 200 -
+2025-09-20 10:05:05,804 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:05] "GET /_dash-component-suites/dash_bootstrap_components/_components/dash_bootstrap_components.v2_0_4m1757464949.min.js HTTP/1.1" 200 -
+2025-09-20 10:05:05,812 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:05] "GET /_dash-component-suites/dash/dash-renderer/build/dash_renderer.v3_2_0m1757464944.min.js HTTP/1.1" 200 -
+2025-09-20 10:05:05,818 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:05] "GET /_dash-component-suites/dash/dcc/dash_core_components.v3_2_0m1757464944.js HTTP/1.1" 200 -
+2025-09-20 10:05:05,823 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:05] "GET /_dash-component-suites/dash/dcc/dash_core_components-shared.v3_2_0m1757464944.js HTTP/1.1" 200 -
+2025-09-20 10:05:05,826 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:05] "GET /_dash-component-suites/dash/html/dash_html_components.v3_0_4m1757464944.min.js HTTP/1.1" 200 -
+2025-09-20 10:05:05,828 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:05] "GET /_dash-component-suites/dash/dash_table/bundle.v6_0_4m1757464944.js HTTP/1.1" 200 -
+2025-09-20 10:05:06,096 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:06] "GET /_dash-dependencies HTTP/1.1" 200 -
+2025-09-20 10:05:06,096 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:06] "GET /_dash-layout HTTP/1.1" 200 -
+2025-09-20 10:05:06,138 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:06] "GET /_dash-component-suites/dash/dcc/async-upload.js HTTP/1.1" 200 -
+2025-09-20 10:05:06,161 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:06] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:05:06,161 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:06] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:05:06,163 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:06] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:05:06,168 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:06] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:05:06,173 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:06] "GET /_favicon.ico?v=3.2.0 HTTP/1.1" 200 -
+2025-09-20 10:05:06,356 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:06] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:05:06,371 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:06] "GET /_dash-component-suites/dash/dcc/async-graph.js HTTP/1.1" 200 -
+2025-09-20 10:05:06,373 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:06] "GET /_dash-component-suites/dash/dash_table/async-highlight.js HTTP/1.1" 200 -
+2025-09-20 10:05:06,373 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:06] "GET /_dash-component-suites/dash/dash_table/async-table.js HTTP/1.1" 200 -
+2025-09-20 10:05:06,376 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:06] "GET /_dash-component-suites/plotly/package_data/plotly.min.js HTTP/1.1" 200 -
+2025-09-20 10:05:26,368 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:05:26] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:20:46,804 - __main__ - INFO - Starting NFL Picks Tracker on 0.0.0.0:10000
+2025-09-20 10:20:46,804 - dash.dash - INFO - Dash is running on http://0.0.0.0:10000/
+
+2025-09-20 10:20:46,825 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.14:10000
+2025-09-20 10:20:46,825 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-09-20 10:20:51,797 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:51] "GET / HTTP/1.1" 200 -
+2025-09-20 10:20:52,036 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:52] "GET /_dash-layout HTTP/1.1" 200 -
+2025-09-20 10:20:52,037 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:52] "GET /_dash-dependencies HTTP/1.1" 200 -
+2025-09-20 10:20:52,094 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:52] "[36mGET /_dash-component-suites/dash/dcc/async-upload.js HTTP/1.1[0m" 304 -
+2025-09-20 10:20:52,110 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:52] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:20:52,114 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:52] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:20:52,114 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:52] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:20:52,114 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:52] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:20:52,304 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:52] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:20:52,312 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:52] "[36mGET /_dash-component-suites/dash/dcc/async-graph.js HTTP/1.1[0m" 304 -
+2025-09-20 10:20:52,316 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:52] "[36mGET /_dash-component-suites/dash/dash_table/async-highlight.js HTTP/1.1[0m" 304 -
+2025-09-20 10:20:52,316 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:52] "[36mGET /_dash-component-suites/dash/dash_table/async-table.js HTTP/1.1[0m" 304 -
+2025-09-20 10:20:52,320 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:52] "[36mGET /_dash-component-suites/plotly/package_data/plotly.min.js HTTP/1.1[0m" 304 -
+2025-09-20 10:20:56,201 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:56] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:20:56,845 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:56] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:20:56,890 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:56] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:20:56,916 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:56] "GET /_dash-component-suites/dash/dcc/async-dropdown.js HTTP/1.1" 200 -
+2025-09-20 10:20:58,956 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:58] "GET / HTTP/1.1" 200 -
+2025-09-20 10:20:59,067 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:59] "GET /_dash-layout HTTP/1.1" 200 -
+2025-09-20 10:20:59,068 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:59] "GET /_dash-dependencies HTTP/1.1" 200 -
+2025-09-20 10:20:59,093 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:59] "[36mGET /_dash-component-suites/dash/dcc/async-upload.js HTTP/1.1[0m" 304 -
+2025-09-20 10:20:59,103 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:59] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:20:59,105 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:59] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:20:59,107 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:59] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:20:59,109 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:59] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:20:59,117 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:59] "GET /_favicon.ico?v=3.2.0 HTTP/1.1" 200 -
+2025-09-20 10:20:59,161 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:59] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:20:59,173 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:59] "[36mGET /_dash-component-suites/dash/dcc/async-graph.js HTTP/1.1[0m" 304 -
+2025-09-20 10:20:59,174 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:59] "[36mGET /_dash-component-suites/dash/dash_table/async-highlight.js HTTP/1.1[0m" 304 -
+2025-09-20 10:20:59,181 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:59] "[36mGET /_dash-component-suites/dash/dash_table/async-table.js HTTP/1.1[0m" 304 -
+2025-09-20 10:20:59,183 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:20:59] "[36mGET /_dash-component-suites/plotly/package_data/plotly.min.js HTTP/1.1[0m" 304 -
+2025-09-20 10:21:02,279 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:21:02] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:21:02,339 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:21:02] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:21:02,348 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:21:02] "[36mGET /_dash-component-suites/dash/dcc/async-dropdown.js HTTP/1.1[0m" 304 -
+2025-09-20 10:21:17,980 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:21:17] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:21:26,923 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:21:26] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:21:29,906 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:21:29] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:21:33,056 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:21:33] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:22:03,518 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:22:03] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:22:04,005 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:22:04] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:22:04,058 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:22:04] "POST /_dash-update-component HTTP/1.1" 200 -
+2025-09-20 10:22:18,530 - werkzeug - INFO - 192.168.1.14 - - [20/Sep/2025 10:22:18] "POST /_dash-update-component HTTP/1.1" 200 -

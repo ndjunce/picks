@@ -528,7 +528,7 @@ def update_results_from_api():
             except Exception as e:
                 print(f"Error processing week {week}: {e}")
                 continue
-        
+        mark_tiebreaker_games()
         conn.commit()
         conn.close()
         
@@ -612,6 +612,42 @@ def get_last_updated():
         return "No completed games"
     except:
         return "Unknown"
+
+def mark_tiebreaker_games():
+    """Mark the last game of each week as the tiebreaker game"""
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return
+        
+        cursor = conn.cursor()
+        
+        # Get all weeks that have games
+        cursor.execute("SELECT DISTINCT week FROM picks ORDER BY week")
+        weeks = cursor.fetchall()
+        
+        for (week,) in weeks:
+            # Reset all games in week to not be tiebreakers
+            cursor.execute("""
+                UPDATE picks 
+                SET is_tiebreaker_game = 0 
+                WHERE week = ?
+            """, (week,))
+            
+            # Mark the last game_id in each week as tiebreaker
+            cursor.execute("""
+                UPDATE picks 
+                SET is_tiebreaker_game = 1 
+                WHERE week = ? AND game_id = (
+                    SELECT MAX(game_id) FROM picks WHERE week = ?
+                )
+            """, (week, week))
+        
+        conn.commit()
+        conn.close()
+        
+    except Exception as e:
+        print(f"Error marking tiebreaker games: {e}")
 
 # Upload callback
 @app.callback(
@@ -1109,6 +1145,10 @@ def update_weekly_picks_content(selected_week):
                 ], style={'display': 'flex', 'alignItems': 'center', 'flex': '1', 'justifyContent': 'flex-end'})
             ], style={'display': 'flex', 'alignItems': 'center', 'marginBottom': '15px', 'padding': '10px', 'backgroundColor': '#f8f9fa', 'borderRadius': '5px'})
             
+            
+            
+            
+            
             # Winner display
             if pd.notna(game_row['actual_winner']) and game_row['actual_winner'] != 'TBD':
                 winner_display = html.Div([
@@ -1181,7 +1221,49 @@ def update_weekly_picks_content(selected_week):
                         pick_card
                     ], style={'margin': '5px'})
                 )
-            
+            # Add tiebreaker display if this is a tiebreaker game
+            if game_row.get('is_tiebreaker_game', False):
+                 tiebreaker_display = []
+                 for person in people:
+                    tiebreaker_col = f'{person}_tiebreaker'
+                    tiebreaker_pred = game_row.get(tiebreaker_col)
+                    if pd.notna(tiebreaker_pred):
+                        accuracy_text = f"TB: {tiebreaker_pred}"
+                        tiebreaker_card = html.Div(accuracy_text, style={
+                          'backgroundColor': '#fff3cd',
+                         'border': '2px solid #ffc107',
+                         'borderRadius': '3px',
+                        'padding': '5px 8px',
+                        'margin': '2px',
+                        'fontSize': '12px',
+                        'minWidth': '120px',
+                        'textAlign': 'center'
+                        })
+                    else:
+                         tiebreaker_card = html.Div("No TB", style={
+                        'backgroundColor': '#f8f9fa',
+                         'border': '2px solid #ffc107',
+                         'borderRadius': '3px',
+                          'padding': '5px 8px',
+                         'margin': '2px',
+                         'fontSize': '12px',
+                         'minWidth': '120px',
+                         'textAlign': 'center'
+            })
+        
+                 tiebreaker_display.append(
+                    html.Div([
+                       html.Strong(person.title(), style={'fontSize': '11px', 'marginBottom': '3px', 'display': 'block'}),
+                        tiebreaker_card
+                   ], style={'margin': '5px'})
+        )
+    
+    # Add tiebreaker section to picks display
+                 picks_display.extend([
+                   html.Hr(),
+                    html.Div("Tiebreaker Predictions (Total Points):", style={'fontWeight': 'bold', 'marginBottom': '8px', 'color': '#ffc107'}),
+                   html.Div(tiebreaker_display, style={'display': 'flex', 'flexWrap': 'wrap', 'gap': '5px'})
+    ])
             # Combine everything into a game card
             game_card = dbc.Card([
                 dbc.CardBody([
