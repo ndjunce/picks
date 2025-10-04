@@ -98,11 +98,12 @@ app.layout = dbc.Container([
     
     # Main Content with Statistics Dashboard added
     dbc.Tabs([
-        dbc.Tab(label="Leaderboard", tab_id="leaderboard"),
-        dbc.Tab(label="Weekly Records", tab_id="weekly_records"),
-        dbc.Tab(label="Weekly Picks", tab_id="weekly_picks"),
-        dbc.Tab(label="Statistics Dashboard", tab_id="stats_dashboard")
-    ], id="main-tabs", active_tab="leaderboard", className="mb-4"),
+    dbc.Tab(label="Leaderboard", tab_id="leaderboard"),
+    dbc.Tab(label="Weekly Records", tab_id="weekly_records"),
+    dbc.Tab(label="Weekly Picks", tab_id="weekly_picks"),
+    dbc.Tab(label="Statistics Dashboard", tab_id="stats_dashboard"),
+    dbc.Tab(label="Team Breakdown", tab_id="team_breakdown")
+], id="main-tabs", active_tab="leaderboard", className="mb-4"),
     
     html.Div(id="tab-content")
 ], fluid=True)
@@ -798,6 +799,8 @@ def render_tab_content(active_tab):
         return render_weekly_picks_tab()
     elif active_tab == "stats_dashboard":
         return render_stats_dashboard_tab()
+    elif active_tab == "team_breakdown":
+        return render_teams_tab()
 
 # Helper function to get standings
 def get_current_standings():
@@ -1937,6 +1940,112 @@ def create_head_to_head_display(h2h_data):
         ],
         style_table={'overflowX': 'auto'}
     )
+
+def render_teams_tab():
+    """Show team-by-team breakdown of each person's picks"""
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return dbc.Alert("Database temporarily unavailable.", color="warning")
+
+        df = pd.read_sql_query("SELECT * FROM picks WHERE actual_winner IS NOT NULL", conn)
+        conn.close()
+
+        if df.empty:
+            return dbc.Alert("No completed games available for team breakdown.", color="info")
+
+        # Get all unique teams
+        all_teams = set()
+        for _, row in df.iterrows():
+            if pd.notna(row['away_team']):
+                all_teams.add(row['away_team'])
+            if pd.notna(row['home_team']):
+                all_teams.add(row['home_team'])
+        
+        all_teams = sorted(list(all_teams))
+        people = ['bobby', 'chet', 'clyde', 'henry', 'nick', 'riley']
+        
+        # Build team breakdown data
+        team_breakdown = []
+        
+        for team in all_teams:
+            team_row = {'Team': team}
+            
+            for person in people:
+                person_pick_col = f'{person}_pick'
+                
+                # Get all games where this person picked this team
+                team_picks = df[df[person_pick_col] == team]
+                
+                if len(team_picks) == 0:
+                    team_row[person.title()] = "-"
+                    continue
+                
+                wins = 0
+                total = len(team_picks)
+                
+                for _, row in team_picks.iterrows():
+                    if row['actual_winner'] == team:
+                        wins += 1
+                
+                losses = total - wins
+                win_pct = (wins / total * 100) if total > 0 else 0
+                
+                team_row[person.title()] = f"{wins}-{losses} ({win_pct:.0f}%)"
+            
+            team_breakdown.append(team_row)
+        
+        picks_df = pd.DataFrame(team_breakdown)
+        
+        content = []
+        content.append(html.H3("Team Performance Breakdown", className="mt-3 mb-3"))
+        content.append(dbc.Alert([
+            html.Strong("What this shows: "),
+            "Each person's win-loss record when picking specific teams. This reveals which teams each player has success (or struggles) with."
+        ], color="info", className="mb-3"))
+        
+        picks_table = dash_table.DataTable(
+            data=picks_df.to_dict('records'),
+            columns=[{"name": col, "id": col} for col in picks_df.columns],
+            style_cell={
+                'textAlign': 'center',
+                'padding': '10px',
+                'fontSize': '12px',
+                'fontFamily': 'Arial, sans-serif',
+                'minWidth': '80px'
+            },
+            style_header={
+                'backgroundColor': '#17a2b8',
+                'color': 'white',
+                'fontWeight': 'bold',
+                'border': '1px solid #138496'
+            },
+            style_data_conditional=[
+                {
+                    'if': {'row_index': 'odd'},
+                    'backgroundColor': '#f8f9fa'
+                },
+                {
+                    'if': {'column_id': 'Team'},
+                    'fontWeight': 'bold',
+                    'textAlign': 'left'
+                }
+            ],
+            style_data={
+                'border': '1px solid #dee2e6'
+            },
+            style_table={'overflowX': 'auto'},
+            page_size=20,
+            sort_action='native',
+            filter_action='native'
+        )
+        
+        content.append(dbc.Card([dbc.CardBody([picks_table])]))
+        
+        return content
+
+    except Exception as e:
+        return dbc.Alert(f"Error loading team breakdown: {str(e)}", color="danger")
 
 
 @app.callback(
