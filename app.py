@@ -51,39 +51,41 @@ app.layout = dbc.Container([
     dbc.Col([
         html.H1("NFL Picks Tracker", className="text-center mb-2 text-primary"),
         html.P(id="last-updated-display", className="text-center text-muted mb-2"),
-        dbc.Button("Update Now", id="manual-update-btn", color="success", size="sm", className="mb-3"),
-        html.Div(id="manual-update-status"),
         html.Hr()
     ], width=12)
 ]),
     
-    # Upload Controls
-    dbc.Row([
-        dbc.Col([
-            dbc.Card([
-                dbc.CardHeader("Upload New Picks"),
-                dbc.CardBody([
+    ## Upload Controls - CONSOLIDATED
+dbc.Row([
+    dbc.Col([
+        dbc.Card([
+            dbc.CardHeader("Manage Picks & Results"),
+            dbc.CardBody([
+                html.Div([
+                    html.H6("Step 1: Upload Picks", className="mb-2"),
                     dcc.Upload(
                         id='upload-picks',
-                        children=dbc.Button("Upload Excel File", color="primary", size="lg"),
+                        children=dbc.Button("📁 Upload Excel File", color="primary", className="w-100 mb-3"),
                         multiple=False,
                         accept='.xlsx,.xlsm'
                     ),
-                    html.Div(id='upload-status', className="mt-3")
+                    html.Div(id='upload-status', className="mb-3"),
+                    
+                    html.Hr(),
+                    
+                    html.H6("Step 2: Update Game Results", className="mb-2"),
+                    dbc.Button("🔄 Update Results from ESPN", id='update-btn', color='success', className="w-100 mb-3"),
+                    html.Div(id='update-status', className="mb-3"),
+                    
+                    html.Hr(),
+                    
+                    html.H6("Alternative: Manual Entry", className="mb-2"),
+                    dbc.Button("✏️ Enter Picks Manually", id='manual-entry-btn', color='info', className="w-100")
                 ])
-            ], className="mb-4")
-        ], width=12, md=6),
-        dbc.Col([
-            dbc.Card([
-                dbc.CardHeader("Manual Data Entry"),
-                dbc.CardBody([
-                    dbc.Button("Enter Picks Manually", id='manual-entry-btn', color='info', size="lg", className="w-100 mb-2"),
-                    dbc.Button("Update Results", id='update-btn', color='success', size="lg", className="w-100"),
-                    html.Div(id='update-status', className="mt-3")
-                ])
-            ], className="mb-4")
-        ], width=12, md=6)
-    ]),
+            ])
+        ], className="mb-4")
+    ], width=12, md=6, lg=4)
+]),
     
     # Manual Entry Modal
     dbc.Modal([
@@ -2212,30 +2214,15 @@ def render_teams_tab():
 def display_last_updated(_):
     return f"Last Updated: {get_last_updated()}"
 
-@app.callback(
-    [Output('manual-update-status', 'children'),
-     Output('last-updated-display', 'children', allow_duplicate=True)],
-    Input('manual-update-btn', 'n_clicks'),
-    prevent_initial_call=True
-)
-def manual_update(n_clicks):
-    if n_clicks:
-        try:
-            message, success = update_results_from_api()
-            color = "success" if success else "warning"
-            status = dbc.Alert(message, color=color, dismissable=True, duration=4000)
-            updated_time = f"Last Updated: {get_last_updated()}"
-            return status, updated_time
-        except Exception as e:
-            error_alert = dbc.Alert(f"Update failed: {str(e)}", color="danger", dismissable=True, duration=4000)
-            return error_alert, f"Last Updated: {get_last_updated()}"
-    return "", f"Last Updated: {get_last_updated()}"
+
 init_database()
 
 # Server setup
 server = app.server
 
+# Auto-load picks on startup - runs regardless of how the app starts
+auto_load_picks_on_startup()
+
 if __name__ == '__main__':
-    auto_load_picks_on_startup()
     logger.info(f"Starting NFL Picks Tracker on {Config.HOST}:{Config.PORT}")
     app.run(host=Config.HOST, port=Config.PORT, debug=Config.DEBUG_MODE)
