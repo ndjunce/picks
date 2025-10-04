@@ -2241,7 +2241,3 @@ auto_load_picks_on_startup()
 if __name__ == '__main__':
     logger.info(f"Starting NFL Picks Tracker on {Config.HOST}:{Config.PORT}")
     app.run_server(host=Config.HOST, port=Config.PORT, debug=Config.DEBUG_MODE)
-
-if __name__ == '__main__':
-    logger.info(f"Starting NFL Picks Tracker on {Config.HOST}:{Config.PORT}")
-    app.run(debug=Config.DEBUG_MODE, host=Config.HOST, port=Config.PORT)
