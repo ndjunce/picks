@@ -2000,16 +2000,13 @@ def create_grid_week_content(week_df, week_num):
             'Home Team': row['home_team']
         }
         
-        # Add each person's pick with checkmark/x
         for person in people:
             person_pick_col = f'{person}_pick'
             pick = row[person_pick_col]
             
             if pd.notna(pick):
-                # Check if pick was correct
                 if pd.notna(row['actual_winner']):
                     is_correct = pick == row['actual_winner']
-                    
                     if is_correct:
                         game_row[person.title()] = f"✓ {pick}"
                     else:
@@ -2019,13 +2016,11 @@ def create_grid_week_content(week_df, week_num):
             else:
                 game_row[person.title()] = '-'
             
-            # Add tiebreaker if this is a tiebreaker game
             if row.get('is_tiebreaker_game', False):
                 tiebreaker_col = f'{person}_tiebreaker'
                 if pd.notna(row.get(tiebreaker_col)):
                     game_row[person.title()] += f" ({int(row[tiebreaker_col])})"
         
-        # Add winner column
         if pd.notna(row['actual_winner']):
             game_row['🏆 Winner'] = row['actual_winner']
         else:
@@ -2035,7 +2030,25 @@ def create_grid_week_content(week_df, week_num):
     
     picks_df = pd.DataFrame(display_data)
     
-    # Create the table with conditional styling
+    # Build style conditions separately to avoid syntax error
+    style_conditions = [{'if': {'row_index': 'odd'}, 'backgroundColor': '#f8f9fa'}]
+    
+    # Green for correct picks
+    for col in ['Bobby', 'Chet', 'Clyde', 'Henry', 'Nick', 'Riley']:
+        style_conditions.append({
+            'if': {'filter_query': '{{{col}}} contains "✓"'.format(col=col), 'column_id': col},
+            'backgroundColor': '#d4edda',
+            'color': '#155724'
+        })
+    
+    # Red for incorrect picks
+    for col in ['Bobby', 'Chet', 'Clyde', 'Henry', 'Nick', 'Riley']:
+        style_conditions.append({
+            'if': {'filter_query': '{{{col}}} contains "✗"'.format(col=col), 'column_id': col},
+            'backgroundColor': '#f8d7da',
+            'color': '#721c24'
+        })
+    
     return dash_table.DataTable(
         data=picks_df.to_dict('records'),
         columns=[{"name": col, "id": col} for col in picks_df.columns],
@@ -2053,34 +2066,10 @@ def create_grid_week_content(week_df, week_num):
             'fontWeight': 'bold',
             'border': '1px solid white'
         },
-        style_data_conditional=[
-            # Alternate row colors
-            {
-                'if': {'row_index': 'odd'},
-                'backgroundColor': '#f8f9fa'
-            },
-            # Green for correct picks
-            {
-                'if': {
-                    'filter_query': '{{{col}}} contains "✓"'.format(col=col),
-                    'column_id': col
-                },
-                'backgroundColor': '#d4edda',
-                'color': '#155724'
-            } for col in ['Bobby', 'Chet', 'Clyde', 'Henry', 'Nick', 'Riley']
-        ] + [
-            # Red for incorrect picks
-            {
-                'if': {
-                    'filter_query': '{{{col}}} contains "✗"'.format(col=col),
-                    'column_id': col
-                },
-                'backgroundColor': '#f8d7da',
-                'color': '#721c24'
-            } for col in ['Bobby', 'Chet', 'Clyde', 'Henry', 'Nick', 'Riley']
-        ],
+        style_data_conditional=style_conditions,
         style_table={'overflowX': 'auto'}
     )
+    
 
 def render_teams_tab():
     """Show team-by-team breakdown of each person's picks"""
