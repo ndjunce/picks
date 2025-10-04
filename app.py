@@ -2235,9 +2235,7 @@ init_database()
 # Server setup
 server = app.server
 
-# Auto-load picks on startup
-auto_load_picks_on_startup()
-
 if __name__ == '__main__':
+    auto_load_picks_on_startup()
     logger.info(f"Starting NFL Picks Tracker on {Config.HOST}:{Config.PORT}")
-    app.run_server(host=Config.HOST, port=Config.PORT, debug=Config.DEBUG_MODE)
+    app.run(host=Config.HOST, port=Config.PORT, debug=Config.DEBUG_MODE)
