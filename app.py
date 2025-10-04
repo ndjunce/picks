@@ -295,6 +295,33 @@ def init_database():
         print(f"Database initialization error: {e}")
         return False
 
+def auto_load_picks_on_startup():
+    """Auto-load picks from Excel file if database is empty"""
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM picks")
+        count = cursor.fetchone()[0]
+        conn.close()
+        
+        if count == 0:
+            logger.info("Database is empty, attempting to auto-load picks from Excel...")
+            excel_file = 'nfl_picks_2025.xlsx'
+            
+            if os.path.exists(excel_file):
+                with open(excel_file, 'rb') as f:
+                    file_content = base64.b64encode(f.read()).decode()
+                    contents = f"data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{file_content}"
+                    message, success = process_excel_file(contents, excel_file)
+                    if success:
+                        logger.info(f"Successfully auto-loaded picks: {message}")
+                    else:
+                        logger.error(f"Failed to auto-load picks: {message}")
+            else:
+                logger.warning(f"Excel file {excel_file} not found")
+    except Exception as e:
+        logger.error(f"Auto-load failed: {e}")
+
 def get_db_connection():
     try:
         # Initialize database if needed
@@ -2207,6 +2234,13 @@ init_database()
 
 # Server setup
 server = app.server
+
+# Auto-load picks on startup
+auto_load_picks_on_startup()
+
+if __name__ == '__main__':
+    logger.info(f"Starting NFL Picks Tracker on {Config.HOST}:{Config.PORT}")
+    app.run_server(host=Config.HOST, port=Config.PORT, debug=Config.DEBUG_MODE)
 
 if __name__ == '__main__':
     logger.info(f"Starting NFL Picks Tracker on {Config.HOST}:{Config.PORT}")
