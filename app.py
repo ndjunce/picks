@@ -97,10 +97,11 @@ app.layout = dbc.Container([
     ], id="manual-entry-modal", size="lg"),
     
     # Main Content with Statistics Dashboard added
-    dbc.Tabs([
+dbc.Tabs([
     dbc.Tab(label="Leaderboard", tab_id="leaderboard"),
     dbc.Tab(label="Weekly Records", tab_id="weekly_records"),
     dbc.Tab(label="Weekly Picks", tab_id="weekly_picks"),
+    dbc.Tab(label="Grid", tab_id="grid"),
     dbc.Tab(label="Statistics Dashboard", tab_id="stats_dashboard"),
     dbc.Tab(label="Team Breakdown", tab_id="team_breakdown")
 ], id="main-tabs", active_tab="leaderboard", className="mb-4"),
@@ -797,6 +798,8 @@ def render_tab_content(active_tab):
         return render_weekly_records_tab()
     elif active_tab == "weekly_picks":
         return render_weekly_picks_tab()
+    elif active_tab == "grid":
+        return render_grid_tab()
     elif active_tab == "stats_dashboard":
         return render_stats_dashboard_tab()
     elif active_tab == "team_breakdown":
@@ -1937,6 +1940,144 @@ def create_head_to_head_display(h2h_data):
                 'if': {'row_index': 'odd'},
                 'backgroundColor': '#f8f9fa'
             }
+        ],
+        style_table={'overflowX': 'auto'}
+    )
+
+def render_grid_tab():
+    """Show all weeks in a grid format with color-coded picks"""
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return dbc.Alert("Database temporarily unavailable.", color="warning")
+
+        df = pd.read_sql_query("SELECT * FROM picks ORDER BY week, game_id", conn)
+        conn.close()
+
+        if df.empty:
+            return dbc.Alert("No picks data available.", color="info")
+
+        weeks = sorted(df['week'].unique())
+        
+        # Create tabs for each week
+        week_tabs = []
+        for week in weeks:
+            week_df = df[df['week'] == week]
+            week_content = create_grid_week_content(week_df, week)
+            
+            week_tabs.append(
+                dbc.Tab(label=f"Week {week}", tab_id=f"grid-week-{week}", children=[
+                    html.Div(week_content, className="mt-3")
+                ])
+            )
+        
+        return dbc.Card([
+            dbc.CardHeader("Weekly Picks & Results"),
+            dbc.CardBody([
+                dbc.Alert([
+                    html.Strong("Tiebreaker: "),
+                    "Numbers in parentheses show each person's total points prediction for the tiebreaker game. Green = correct pick, Red = incorrect pick."
+                ], color="info", className="mb-3"),
+                dbc.Tabs(week_tabs, id="grid-week-tabs", active_tab=f"grid-week-{weeks[0]}" if weeks else None)
+            ])
+        ])
+
+    except Exception as e:
+        return dbc.Alert(f"Error loading grid: {str(e)}", color="danger")
+
+
+def create_grid_week_content(week_df, week_num):
+    """Create grid content for a specific week"""
+    if week_df.empty:
+        return html.P(f"No data for Week {week_num}")
+    
+    people = ['bobby', 'chet', 'clyde', 'henry', 'nick', 'riley']
+    display_data = []
+    
+    for _, row in week_df.iterrows():
+        game_row = {
+            'Away Team': row['away_team'],
+            'Home Team': row['home_team']
+        }
+        
+        # Add each person's pick with checkmark/x
+        for person in people:
+            person_pick_col = f'{person}_pick'
+            pick = row[person_pick_col]
+            
+            if pd.notna(pick):
+                # Check if pick was correct
+                if pd.notna(row['actual_winner']):
+                    is_correct = pick == row['actual_winner']
+                    
+                    if is_correct:
+                        game_row[person.title()] = f"✓ {pick}"
+                    else:
+                        game_row[person.title()] = f"✗ {pick}"
+                else:
+                    game_row[person.title()] = pick
+            else:
+                game_row[person.title()] = '-'
+            
+            # Add tiebreaker if this is a tiebreaker game
+            if row.get('is_tiebreaker_game', False):
+                tiebreaker_col = f'{person}_tiebreaker'
+                if pd.notna(row.get(tiebreaker_col)):
+                    game_row[person.title()] += f" ({int(row[tiebreaker_col])})"
+        
+        # Add winner column
+        if pd.notna(row['actual_winner']):
+            game_row['🏆 Winner'] = row['actual_winner']
+        else:
+            game_row['🏆 Winner'] = 'TBD'
+        
+        display_data.append(game_row)
+    
+    picks_df = pd.DataFrame(display_data)
+    
+    # Create the table with conditional styling
+    return dash_table.DataTable(
+        data=picks_df.to_dict('records'),
+        columns=[{"name": col, "id": col} for col in picks_df.columns],
+        style_cell={
+            'textAlign': 'center',
+            'padding': '10px',
+            'fontSize': '12px',
+            'fontFamily': 'Arial, sans-serif',
+            'whiteSpace': 'normal',
+            'height': 'auto'
+        },
+        style_header={
+            'backgroundColor': '#17a2b8',
+            'color': 'white',
+            'fontWeight': 'bold',
+            'border': '1px solid white'
+        },
+        style_data_conditional=[
+            # Alternate row colors
+            {
+                'if': {'row_index': 'odd'},
+                'backgroundColor': '#f8f9fa'
+            },
+            # Green for correct picks
+            {
+                'if': {
+                    'filter_query': '{{{col}}} contains "✓"'.format(col=col),
+                    'column_id': col
+                },
+                'backgroundColor': '#d4edda',
+                'color': '#155724'
+            } for col in ['Bobby', 'Chet', 'Clyde', 'Henry', 'Nick', 'Riley']
+        ] + [
+            # Red for incorrect picks
+            {
+                'if': {
+                    'filter_query': '{{{col}}} contains "✗"'.format(col=col),
+                    'column_id': col
+                },
+                'backgroundColor': '#f8d7da',
+                'color': '#721c24'
+            } for col in ['Bobby', 'Chet', 'Clyde', 'Henry', 'Nick', 'Riley']
         ],
         style_table={'overflowX': 'auto'}
     )
