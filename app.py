@@ -864,6 +864,111 @@ def get_team_logo_mapping():
         'Washington Commanders': 28
     }
 
+# --- Playoff data helpers ---
+def fetch_espn_standings(season=2025):
+    try:
+        url = f"https://site.api.espn.com/apis/v2/sports/football/nfl/standings?season={season}"
+        resp = requests.get(url, timeout=10)
+        if resp.status_code == 200:
+            return resp.json()
+    except Exception:
+        pass
+    return None
+
+def parse_playoff_picture(standings_json):
+    """Return conferences with seed order and team meta. Best-effort (approximate sorting by wins/points)."""
+    if not standings_json:
+        return {"AFC": [], "NFC": []}
+    conferences = {"AFC": [], "NFC": []}
+    try:
+        for child in standings_json.get('children', []):  # conferences
+            conf_name = child.get('name', '').upper()
+            if conf_name not in conferences:
+                continue
+            # Pull all team entries under divisions
+            teams = []
+            for div in child.get('children', []):
+                for t in div.get('standings', []):
+                    team = t.get('team', {})
+                    records = t.get('records', [])
+                    overall = next((r for r in records if r.get('type') == 'overall'), {})
+                    wins = int(overall.get('wins', 0))
+                    losses = int(overall.get('losses', 0))
+                    ties = int(overall.get('ties', 0))
+                    teams.append({
+                        'id': team.get('id'),
+                        'name': team.get('displayName') or team.get('name'),
+                        'abbrev': team.get('abbreviation'),
+                        'wins': wins,
+                        'losses': losses,
+                        'ties': ties,
+                        'clinched': bool(t.get('clincher')) if 'clincher' in t else False,
+                        'eliminated': bool(t.get('eliminated')) if 'eliminated' in t else False,
+                    })
+            # Approximate seed order by wins, then losses, then ties
+            teams.sort(key=lambda x: (-x['wins'], x['losses'], -x['ties'], x['name']))
+            conferences[conf_name] = teams
+    except Exception:
+        return {"AFC": [], "NFC": []}
+    return conferences
+
+def get_locked_and_bubble(conferences):
+    """Determine locked (clinched/top 7) vs bubble (rest not eliminated)."""
+    locked_ids = set()
+    bubble_ids = set()
+    for conf_name, teams in conferences.items():
+        top = teams[:7]
+        for i, t in enumerate(teams):
+            # Treat explicit clinched as locked; otherwise top 7 provisional
+            if t.get('clinched') or t in top:
+                locked_ids.add(str(t.get('id')))
+            elif not t.get('eliminated'):
+                bubble_ids.add(str(t.get('id')))
+    return locked_ids, bubble_ids
+
+def fetch_team_roster(team_id, season=2025):
+    try:
+        url = f"https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/teams/{team_id}/roster?season={season}"
+        r = requests.get(url, timeout=10)
+        if r.status_code != 200:
+            return []
+        j = r.json()
+        items = j.get('entries') or j.get('items') or []
+        players = []
+        for p in items:
+            # Follow player ref if needed
+            if isinstance(p, dict) and 'player' in p:
+                pref = p['player'].get('$ref')
+                if pref:
+                    pr = requests.get(pref, timeout=10)
+                    if pr.status_code == 200:
+                        pj = pr.json()
+                        players.append({
+                            'name': pj.get('fullName') or pj.get('displayName'),
+                            'position': pj.get('position', {}).get('abbreviation') or pj.get('position', {}).get('name') or '',
+                            'number': pj.get('jersey'),
+                            'teamId': str(team_id)
+                        })
+            elif isinstance(p, dict):
+                players.append({
+                    'name': p.get('fullName') or p.get('displayName') or p.get('name'),
+                    'position': p.get('position', {}).get('abbreviation') or p.get('position', {}).get('name') or '',
+                    'number': p.get('jersey'),
+                    'teamId': str(team_id)
+                })
+        return players
+    except Exception:
+        return []
+
+def build_players_pool(locked_ids, bubble_ids):
+    locked_players = []
+    bubble_players = []
+    for tid in locked_ids:
+        locked_players.extend(fetch_team_roster(tid))
+    for tid in bubble_ids:
+        bubble_players.extend(fetch_team_roster(tid))
+    return locked_players, bubble_players
+
 def get_team_logo_url(team_name):
     """Get ESPN logo URL for a team"""
     if not team_name or team_name == "TIE":
@@ -2207,7 +2312,7 @@ def update_weekly_picks_content(selected_week):
 
 
 def render_postseason_tab():
-    """Postseason Fantasy League template: 8 teams x 10 roster spots + generic player rankings."""
+    """Postseason Fantasy League template: 8 teams x 10 roster spots + player pools + rankings."""
     teams = [f"Team {i}" for i in range(1, 9)]
     slots = [f"Slot {i}" for i in range(1, 11)]
     data = [{"Team": t, **{s: "" for s in slots}} for t in teams]
@@ -2296,9 +2401,37 @@ def render_postseason_tab():
             dbc.Alert([
                 html.Strong("How to use: "),
                 "Edit the table to enter drafted players for each team (10 slots). ",
-                "We'll wire up scoring and persistence after the draft.",
+                "Click 'Fetch Playoff Pools' to load current playoff players and bubble players.",
             ], color="info", className="mb-3"),
             roster_table,
+            dbc.Button([html.I(className="fas fa-database me-2"), "Fetch Playoff Pools"], id="fetch-playoff", color="success", className="mt-3 btn-custom"),
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader("Locked-In Playoff Players"),
+                        dbc.CardBody([
+                            html.Div(id="locked-players")
+                        ])
+                    ])
+                ], md=6),
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader("Bubble Players (Not Yet Clinched)"),
+                        dbc.CardBody([
+                            html.Div(id="bubble-players")
+                        ])
+                    ])
+                ], md=6)
+            ], className="mt-3"),
+            dbc.Card([
+                dbc.CardHeader("Current Playoff Bracket (Approximate)"),
+                dbc.CardBody([
+                    html.Div(id="bracket-view"),
+                    html.Hr(),
+                    html.H6("Potential Outcomes (Simplified)"),
+                    html.Div(id="outcomes-list")
+                ])
+            ], className="mt-3"),
             dbc.Card([
                 dbc.CardHeader("Generic Playoff Rankings (Template)"),
                 dbc.CardBody([
@@ -2349,6 +2482,71 @@ def render_postseason_picks_tab():
             picks_table
         ])
     ])
+
+# Callbacks to populate playoff players, bracket, and outcomes
+@app.callback(
+    Output("locked-players", "children"),
+    Output("bubble-players", "children"),
+    Output("bracket-view", "children"),
+    Output("outcomes-list", "children"),
+    Input("fetch-playoff", "n_clicks")
+)
+def fetch_playoff_pools(n_clicks):
+    if not n_clicks:
+        return dbc.Alert("Click the button to load pools.", color="info"), dbc.Alert("Click the button to load pools.", color="info"), dbc.Alert("Bracket will appear here.", color="light"), dbc.Alert("Outcomes will appear here.", color="light")
+
+    standings = fetch_espn_standings(2025)
+    conferences = parse_playoff_picture(standings)
+    locked_ids, bubble_ids = get_locked_and_bubble(conferences)
+    locked_players, bubble_players = build_players_pool(locked_ids, bubble_ids)
+
+    # Tables
+    lp_df = pd.DataFrame(locked_players)
+    bp_df = pd.DataFrame(bubble_players)
+    lp_table = dash_table.DataTable(
+        data=lp_df.to_dict('records'),
+        columns=[{"name": c, "id": c} for c in lp_df.columns] if not lp_df.empty else [],
+        style_cell={'textAlign': 'center', 'padding': '8px'},
+        style_header={'backgroundColor': '#0d6efd', 'color': 'white', 'fontWeight': 'bold'},
+        style_data={'backgroundColor': 'white', 'color': '#1a202c'},
+        page_size=10
+    ) if not lp_df.empty else dbc.Alert("No data yet.", color="light")
+
+    bp_table = dash_table.DataTable(
+        data=bp_df.to_dict('records'),
+        columns=[{"name": c, "id": c} for c in bp_df.columns] if not bp_df.empty else [],
+        style_cell={'textAlign': 'center', 'padding': '8px'},
+        style_header={'backgroundColor': '#ffc107', 'color': '#000', 'fontWeight': 'bold'},
+        style_data={'backgroundColor': 'white', 'color': '#1a202c'},
+        page_size=10
+    ) if not bp_df.empty else dbc.Alert("No data yet.", color="light")
+
+    # Bracket view
+    def conference_block(name, teams):
+        seed_items = []
+        for idx, t in enumerate(teams[:7], start=1):
+            seed_items.append(html.Li(f"{idx}. {t.get('name')} ({t.get('wins')}-{t.get('losses')}-{t.get('ties')})"))
+        return dbc.Col([
+            html.H6(name),
+            html.Ul(seed_items)
+        ], md=6)
+
+    bracket_children = dbc.Row([
+        conference_block("AFC Seeds", conferences.get('AFC', [])),
+        conference_block("NFC Seeds", conferences.get('NFC', []))
+    ])
+
+    # Outcomes (simplified): list bubble teams with note
+    outcome_items = []
+    for conf_name, teams in conferences.items():
+        for t in teams[7:]:
+            tid = str(t.get('id'))
+            if tid in bubble_ids:
+                outcome_items.append(html.Li(f"{conf_name}: {t.get('name')} — Can still clinch; watch Week 17 MNF and Week 18 results."))
+
+    outcomes_children = html.Ul(outcome_items) if outcome_items else dbc.Alert("No bubble teams detected.", color="light")
+
+    return lp_table, bp_table, bracket_children, outcomes_children
 
 def render_live_tab():
     """Live NFL scoreboard and in-progress correctness for weekly picks."""
