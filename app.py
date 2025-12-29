@@ -944,6 +944,7 @@ def fetch_team_roster(team_id, season=2025):
                     if pr.status_code == 200:
                         pj = pr.json()
                         players.append({
+                            'id': str(pj.get('id')) if pj.get('id') is not None else None,
                             'name': pj.get('fullName') or pj.get('displayName'),
                             'position': pj.get('position', {}).get('abbreviation') or pj.get('position', {}).get('name') or '',
                             'number': pj.get('jersey'),
@@ -951,6 +952,7 @@ def fetch_team_roster(team_id, season=2025):
                         })
             elif isinstance(p, dict):
                 players.append({
+                    'id': str(p.get('id')) if p.get('id') is not None else None,
                     'name': p.get('fullName') or p.get('displayName') or p.get('name'),
                     'position': p.get('position', {}).get('abbreviation') or p.get('position', {}).get('name') or '',
                     'number': p.get('jersey'),
@@ -959,6 +961,69 @@ def fetch_team_roster(team_id, season=2025):
         return players
     except Exception:
         return []
+
+def fetch_player_stats(player_id, season=2025):
+    """Best-effort season stats fetch from ESPN core API. Returns a flat dict of key stats.
+    Fields: GP, PassYds, PassTD, RushYds, RushTD, RecYds, RecTD
+    """
+    try:
+        # Get athlete endpoint and find statistics ref
+        base = f"https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/athletes/{player_id}"
+        ar = requests.get(base, timeout=10)
+        if ar.status_code != 200:
+            return {}
+        aj = ar.json()
+        stats_ref = None
+        if isinstance(aj, dict):
+            stats = aj.get('statistics')
+            if isinstance(stats, dict) and '$ref' in stats:
+                stats_ref = stats['$ref']
+        # Fall back to athletes statistics listing if available
+        if not stats_ref:
+            stats_ref = base + f"/statistics?season={season}"
+        else:
+            # Ensure season parameter
+            if 'season=' not in stats_ref:
+                stats_ref = stats_ref + ("&" if "?" in stats_ref else "?") + f"season={season}"
+
+        sr = requests.get(stats_ref, timeout=10)
+        if sr.status_code != 200:
+            return {}
+        sj = sr.json()
+        items = sj.get('splits') or sj.get('items') or []
+        # Flatten known categories
+        out = {'GP': None, 'PassYds': None, 'PassTD': None, 'RushYds': None, 'RushTD': None, 'RecYds': None, 'RecTD': None}
+        def try_get(stat_dict, *keys):
+            for k in keys:
+                if k in stat_dict and stat_dict[k] is not None:
+                    return stat_dict[k]
+            return None
+        # Iterate over items looking for season totals
+        for it in items:
+            cat = (it.get('name') or it.get('type') or '').lower()
+            stats = it.get('stats') or it.get('statistics') or {}
+            if 'passing' in cat:
+                out['PassYds'] = try_get(stats, 'yards', 'passingYards', 'yds') or out['PassYds']
+                out['PassTD'] = try_get(stats, 'touchdowns', 'passingTouchdowns', 'td') or out['PassTD']
+            elif 'rushing' in cat:
+                out['RushYds'] = try_get(stats, 'yards', 'rushingYards', 'yds') or out['RushYds']
+                out['RushTD'] = try_get(stats, 'touchdowns', 'rushingTouchdowns', 'td') or out['RushTD']
+            elif 'receiving' in cat:
+                out['RecYds'] = try_get(stats, 'yards', 'receivingYards', 'yds') or out['RecYds']
+                out['RecTD'] = try_get(stats, 'touchdowns', 'receivingTouchdowns', 'td') or out['RecTD']
+            elif 'games' in cat or 'participation' in cat or 'general' in cat:
+                out['GP'] = try_get(stats, 'gamesPlayed', 'games', 'gp') or out['GP']
+        # Clean ints
+        for k, v in list(out.items()):
+            if v is None:
+                continue
+            try:
+                out[k] = int(float(v))
+            except Exception:
+                pass
+        return out
+    except Exception:
+        return {}
 
 def build_players_pool(locked_ids, bubble_ids):
     locked_players = []
@@ -2453,6 +2518,20 @@ def render_postseason_tab():
                     ])
                 ], md=6)
             ], className="mt-3"),
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader("Positional Breakdown — Locked"),
+                        dbc.CardBody([html.Div(id="locked-pos-breakdown")])
+                    ])
+                ], md=6),
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader("Positional Breakdown — Bubble"),
+                        dbc.CardBody([html.Div(id="bubble-pos-breakdown")])
+                    ])
+                ], md=6)
+            ], className="mt-3"),
             dbc.Card([
                 dbc.CardHeader("Current Playoff Bracket (Approximate)"),
                 dbc.CardBody([
@@ -2519,6 +2598,8 @@ def render_postseason_picks_tab():
     Output("bubble-players", "children"),
     Output("bracket-view", "children"),
     Output("outcomes-list", "children"),
+    Output("locked-pos-breakdown", "children"),
+    Output("bubble-pos-breakdown", "children"),
     Input("fetch-playoff", "n_clicks")
 )
 def fetch_playoff_pools(n_clicks):
@@ -2533,8 +2614,27 @@ def fetch_playoff_pools(n_clicks):
     locked_players, bubble_players = build_players_pool(locked_ids, bubble_ids)
 
     # Tables
-    lp_df = pd.DataFrame(locked_players)
-    bp_df = pd.DataFrame(bubble_players)
+    # Attach best-effort stats to players
+    def with_stats(players):
+        rows = []
+        for p in players:
+            row = dict(p)
+            pid = p.get('id')
+            stats = fetch_player_stats(pid) if pid else {}
+            row.update({
+                'GP': stats.get('GP'),
+                'PassYds': stats.get('PassYds'),
+                'PassTD': stats.get('PassTD'),
+                'RushYds': stats.get('RushYds'),
+                'RushTD': stats.get('RushTD'),
+                'RecYds': stats.get('RecYds'),
+                'RecTD': stats.get('RecTD'),
+            })
+            rows.append(row)
+        return pd.DataFrame(rows)
+
+    lp_df = with_stats(locked_players)
+    bp_df = with_stats(bubble_players)
     lp_table = dash_table.DataTable(
         data=lp_df.to_dict('records'),
         columns=[{"name": c, "id": c} for c in lp_df.columns] if not lp_df.empty else [],
@@ -2560,6 +2660,31 @@ def fetch_playoff_pools(n_clicks):
         export_format='csv',
         export_headers='display'
     ) if not bp_df.empty else dbc.Alert("No data yet.", color="light")
+
+    # Positional breakdown tables
+    def pos_breakdown(df):
+        if df.empty:
+            return dbc.Alert("No data yet.", color="light")
+        dfx = df.copy()
+        dfx['TDs'] = (dfx[['PassTD','RushTD','RecTD']].fillna(0).sum(axis=1))
+        agg = dfx.groupby('position').agg(
+            Players=('name','count'),
+            GP=('GP','sum'),
+            PassYds=('PassYds','sum'),
+            RushYds=('RushYds','sum'),
+            RecYds=('RecYds','sum'),
+            TDs=('TDs','sum')
+        ).reset_index().rename(columns={'position':'Position'})
+        return dash_table.DataTable(
+            data=agg.to_dict('records'),
+            columns=[{"name": c, "id": c} for c in agg.columns],
+            style_cell={'textAlign': 'center', 'padding': '8px'},
+            style_header={'backgroundColor': '#20c997', 'color': 'white', 'fontWeight': 'bold'},
+            style_data={'backgroundColor': 'white', 'color': '#1a202c'},
+        )
+
+    locked_pos = pos_breakdown(lp_df)
+    bubble_pos = pos_breakdown(bp_df)
 
     # Bracket view
     def conference_block(name, teams):
@@ -2594,7 +2719,7 @@ def fetch_playoff_pools(n_clicks):
     outcomes_children = html.Ul(outcome_items) if outcome_items else dbc.Alert("No bubble teams detected.", color="light")
 
     bracket_with_note = html.Div([bracket_children, overrides_note])
-    return lp_table, bp_table, bracket_with_note, outcomes_children
+    return lp_table, bp_table, bracket_with_note, outcomes_children, locked_pos, bubble_pos
 
 def render_live_tab():
     """Live NFL scoreboard and in-progress correctness for weekly picks."""
