@@ -969,6 +969,36 @@ def build_players_pool(locked_ids, bubble_ids):
         bubble_players.extend(fetch_team_roster(tid))
     return locked_players, bubble_players
 
+def apply_playoff_overrides(conferences, locked_ids, bubble_ids):
+        """Apply user-provided scenario overrides to correct clinch/bubble state.
+        Scenario per user: KC eliminated; two spots left:
+            - AFC: Ravens or Steelers
+            - NFC: Panthers or Buccaneers
+        """
+        # Map known IDs
+        TEAM_IDS = {
+                'Kansas City Chiefs': '12',
+                'Baltimore Ravens': '33',
+                'Pittsburgh Steelers': '23',
+                'Carolina Panthers': '29',
+                'Tampa Bay Buccaneers': '27',
+        }
+
+        # Remove Chiefs from any pool
+        chiefs_id = TEAM_IDS['Kansas City Chiefs']
+        locked_ids.discard(chiefs_id)
+        bubble_ids.discard(chiefs_id)
+
+        # Ensure AFC bubble includes Ravens and Steelers
+        bubble_ids.add(TEAM_IDS['Baltimore Ravens'])
+        bubble_ids.add(TEAM_IDS['Pittsburgh Steelers'])
+
+        # Ensure NFC bubble includes Panthers and Buccaneers
+        bubble_ids.add(TEAM_IDS['Carolina Panthers'])
+        bubble_ids.add(TEAM_IDS['Tampa Bay Buccaneers'])
+
+        return locked_ids, bubble_ids
+
 def get_team_logo_url(team_name):
     """Get ESPN logo URL for a team"""
     if not team_name or team_name == "TIE":
@@ -2498,6 +2528,8 @@ def fetch_playoff_pools(n_clicks):
     standings = fetch_espn_standings(2025)
     conferences = parse_playoff_picture(standings)
     locked_ids, bubble_ids = get_locked_and_bubble(conferences)
+    # Apply scenario overrides per user
+    locked_ids, bubble_ids = apply_playoff_overrides(conferences, locked_ids, bubble_ids)
     locked_players, bubble_players = build_players_pool(locked_ids, bubble_ids)
 
     # Tables
@@ -2536,6 +2568,13 @@ def fetch_playoff_pools(n_clicks):
         conference_block("NFC Seeds", conferences.get('NFC', []))
     ])
 
+    # Note overrides applied
+    overrides_note = dbc.Alert(
+        "Scenario overrides applied: KC removed; AFC spot = Ravens/Steelers; NFC spot = Panthers/Bucs.",
+        color="info",
+        className="mt-2"
+    )
+
     # Outcomes (simplified): list bubble teams with note
     outcome_items = []
     for conf_name, teams in conferences.items():
@@ -2546,7 +2585,8 @@ def fetch_playoff_pools(n_clicks):
 
     outcomes_children = html.Ul(outcome_items) if outcome_items else dbc.Alert("No bubble teams detected.", color="light")
 
-    return lp_table, bp_table, bracket_children, outcomes_children
+    bracket_with_note = html.Div([bracket_children, overrides_note])
+    return lp_table, bp_table, bracket_with_note, outcomes_children
 
 def render_live_tab():
     """Live NFL scoreboard and in-progress correctness for weekly picks."""
@@ -2772,7 +2812,8 @@ def render_weekly_records_tab():
                                     {"name": "Week", "id": "Week"},
                                     {"name": "Winner", "id": "Winner"},
                                     {"name": "Record", "id": "Record"},
-                                    {"name": "Tiebreaker", "id": "Tiebreaker"}
+                                    {"name": "Tiebreaker", "id": "Tiebreaker"},
+                                    {"name": "Status", "id": "Status"}
                                 ],
                                 style_cell={
                                     'textAlign': 'center',
@@ -3155,6 +3196,9 @@ def get_weekly_winners():
                     else:
                         tiebreaker_detail = "Tiebreaker unavailable (missing last-game setup)."
 
+            # Determine lock status (clinched) for the week based on remaining games and pick differences
+            clinched = is_week_clinched(df, week, people)
+
             winner_names = ", ".join([w.title() for w in winners]) if winners else "-"
             primary_winner = winners[0] if winners else contenders[0]
             rec = record_map.get(primary_winner, {'wins': 0, 'losses': 0})
@@ -3164,7 +3208,8 @@ def get_weekly_winners():
                 'Week': f"Week {week}",
                 'Winner': winner_names,
                 'Record': record_text,
-                'Tiebreaker': tiebreaker_detail
+                'Tiebreaker': tiebreaker_detail,
+                'Status': '🔒 Clinched' if clinched else '⏳ In Play'
             })
 
         return winners_rows
@@ -3172,6 +3217,65 @@ def get_weekly_winners():
     except Exception as e:
         print(f"Error computing weekly winners: {e}")
         return []
+
+def is_week_clinched(df_all, week, people):
+    """Approximate clinch detection: if no trailing player can catch the leader given remaining differing picks.
+    - Compute wins so far for each player.
+    - Identify current unique leader; if tie at top, not clinched.
+    - Count remaining games and for each trailing player, count games where their pick differs from leader's.
+    - If trailing player's wins + differing_remaining < leader_wins, they cannot catch; if true for all, clinched.
+    """
+    try:
+        week_df = df_all[df_all['week'] == week]
+        completed = week_df[week_df['actual_winner'].notna()]
+        remaining = week_df[week_df['actual_winner'].isna()]
+
+        # wins so far
+        wins_map = {}
+        for person in people:
+            col = f"{person}_pick"
+            wins = 0
+            for _, row in completed.iterrows():
+                pick_team = row['away_team'] if row[col] == 'away' else (row['home_team'] if row[col] == 'home' else row[col])
+                actual = row['away_team'] if row['actual_winner'] == 'away' else (row['home_team'] if row['actual_winner'] == 'home' else row['actual_winner'])
+                if pick_team == actual:
+                    wins += 1
+            wins_map[person] = wins
+
+        if not wins_map:
+            return False
+
+        # current leader(s)
+        max_wins = max(wins_map.values())
+        leaders = [p for p, w in wins_map.items() if w == max_wins]
+        if len(leaders) != 1:
+            return False  # tie at top, not clinched
+        leader = leaders[0]
+
+        # For each trailing player, can they catch or pass?
+        leader_wins = wins_map[leader]
+        for person in people:
+            if person == leader:
+                continue
+            person_wins = wins_map[person]
+            deficit = leader_wins - person_wins
+            if deficit <= 0:
+                return False
+            # Count remaining games with differing picks
+            diff_count = 0
+            lcol = f"{leader}_pick"
+            pcol = f"{person}_pick"
+            for _, row in remaining.iterrows():
+                lpick = row['away_team'] if row[lcol] == 'away' else (row['home_team'] if row[lcol] == 'home' else row[lcol])
+                ppick = row['away_team'] if row[pcol] == 'away' else (row['home_team'] if row[pcol] == 'home' else row[pcol])
+                if lpick != ppick:
+                    diff_count += 1
+            # If even sweeping all differing games can't erase deficit, person cannot catch
+            if person_wins + diff_count >= leader_wins:
+                return False
+        return True
+    except Exception:
+        return False
 
 
 def create_weekly_trends_chart():
