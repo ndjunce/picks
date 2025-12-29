@@ -438,6 +438,222 @@ app.index_string = '''
                 border: 4px solid #000000;
                 box-shadow: 5px 5px 0px #000000;
             }
+            
+            /* Mobile Responsive Styles */
+            @media (max-width: 768px) {
+                body {
+                    font-size: 12px !important;
+                }
+                
+                .main-header {
+                    padding: 15px 15px !important;
+                    border-bottom: 6px solid #00FFFF !important;
+                }
+                
+                .main-title {
+                    font-size: 1.8rem !important;
+                    letter-spacing: 1px !important;
+                    text-shadow: 
+                        2px 2px 0px #000000,
+                        3px 3px 0px #FF00FF,
+                        0 0 15px #00FFFF !important;
+                }
+                
+                .nav-pill {
+                    padding: 12px 15px !important;
+                    margin: 8px 0 !important;
+                    font-size: 13px !important;
+                    box-shadow: 3px 3px 0px #000000 !important;
+                    border: 3px solid #FFFF00 !important;
+                }
+                
+                .nav-pill:hover {
+                    box-shadow: 5px 5px 0px #000000 !important;
+                }
+                
+                .content-card {
+                    padding: 15px !important;
+                    margin: 10px 5px !important;
+                    border: 3px solid #FF00FF !important;
+                    box-shadow: 6px 6px 0px #000000 !important;
+                }
+                
+                .content-card h3, .content-card h4 {
+                    font-size: 1.3rem !important;
+                    margin-bottom: 15px !important;
+                    padding-bottom: 10px !important;
+                    border-bottom: 3px solid #00FFFF !important;
+                }
+                
+                .game-card {
+                    padding: 12px !important;
+                    margin: 10px 0 !important;
+                    border: 3px solid #000000 !important;
+                    box-shadow: 4px 4px 0px #000000 !important;
+                }
+                
+                .pick-card {
+                    padding: 10px !important;
+                    margin: 8px 0 !important;
+                    border: 2px solid #0066FF !important;
+                    box-shadow: 3px 3px 0px #000000 !important;
+                }
+                
+                .stat-badge, .stat-card {
+                    padding: 10px 15px !important;
+                    font-size: 1rem !important;
+                    border: 2px solid #FFFF00 !important;
+                    box-shadow: 4px 4px 0px #000000 !important;
+                }
+                
+                table {
+                    font-size: 11px !important;
+                    border: 3px solid #000000 !important;
+                    display: block;
+                    overflow-x: auto;
+                    -webkit-overflow-scrolling: touch;
+                }
+                
+                table th {
+                    padding: 8px 6px !important;
+                    font-size: 11px !important;
+                    border: 2px solid #000000 !important;
+                    white-space: nowrap;
+                }
+                
+                table td {
+                    padding: 8px 6px !important;
+                    font-size: 11px !important;
+                    border: 1px solid #000000 !important;
+                }
+                
+                .btn {
+                    padding: 10px 20px !important;
+                    font-size: 0.9rem !important;
+                    border: 3px solid #000000 !important;
+                    box-shadow: 4px 4px 0px #000000 !important;
+                }
+                
+                .btn-custom {
+                    padding: 10px 20px;
+                    font-size: 0.85rem;
+                    border: 3px solid #000000;
+                    box-shadow: 4px 4px 0px #000000;
+                }
+                
+                .nfl-logo {
+                    height: 60px !important;
+                    margin-bottom: 10px !important;
+                }
+                
+                .team-logo {
+                    max-width: 30px !important;
+                    height: auto !important;
+                }
+                
+                /* Make container full width on mobile */
+                .container-fluid {
+                    padding-left: 5px !important;
+                    padding-right: 5px !important;
+                }
+                
+                /* Stack columns on mobile */
+                .row > div[class*="col-"] {
+                    margin-bottom: 15px;
+                }
+                
+                /* Make DataTables scrollable */
+                .dash-table-container {
+                    overflow-x: auto !important;
+                    -webkit-overflow-scrolling: touch !important;
+                }
+                
+                /* Adjust card spacing */
+                .card {
+                    margin-bottom: 15px !important;
+                    border: 3px solid #FF00FF !important;
+                    box-shadow: 5px 5px 0px #000000 !important;
+                }
+                
+                .card-header {
+                    padding: 10px 15px !important;
+                    font-size: 1rem !important;
+                }
+                
+                .card-body {
+                    padding: 15px !important;
+                }
+                
+                /* Alert adjustments */
+                .alert {
+                    padding: 10px !important;
+                    margin-bottom: 10px !important;
+                    font-size: 0.9rem !important;
+                    border: 3px solid #000000 !important;
+                    box-shadow: 4px 4px 0px #000000 !important;
+                }
+                
+                /* Scrollbar for mobile */
+                ::-webkit-scrollbar {
+                    width: 10px;
+                    height: 10px;
+                }
+                
+                ::-webkit-scrollbar-track {
+                    background: #000080;
+                    border: 2px solid #00FFFF;
+                }
+                
+                ::-webkit-scrollbar-thumb {
+                    background: linear-gradient(180deg, #FF00FF 0%, #9900FF 100%);
+                    border: 2px solid #000000;
+                }
+            }
+            
+            /* Extra small devices */
+            @media (max-width: 480px) {
+                .main-title {
+                    font-size: 1.5rem !important;
+                }
+                
+                .content-card h3, .content-card h4 {
+                    font-size: 1.1rem !important;
+                }
+                
+                .nav-pill {
+                    font-size: 12px !important;
+                    padding: 10px 12px !important;
+                }
+                
+                table {
+                    font-size: 10px !important;
+                }
+                
+                table th, table td {
+                    padding: 6px 4px !important;
+                    font-size: 10px !important;
+                }
+            }
+            }
+            .leaderboard-row:hover {
+                background: #FFFF00 !important;
+                transform: scale(1.02);
+            }
+            .podium-1 { 
+                background: linear-gradient(180deg, #FFD700 0%, #FFA500 100%); 
+                border: 4px solid #000000;
+                box-shadow: 5px 5px 0px #000000;
+            }
+            .podium-2 { 
+                background: linear-gradient(180deg, #C0C0C0 0%, #A8A8A8 100%); 
+                border: 4px solid #000000;
+                box-shadow: 5px 5px 0px #000000;
+            }
+            .podium-3 { 
+                background: linear-gradient(180deg, #CD7F32 0%, #B87333 100%); 
+                border: 4px solid #000000;
+                box-shadow: 5px 5px 0px #000000;
+            }
             }
             .leaderboard-row:hover {
                 background: #FFFF00 !important;
