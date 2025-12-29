@@ -465,6 +465,51 @@ app.index_string = '''
                     font-size: 13px !important;
                     box-shadow: 3px 3px 0px #000000 !important;
                     border: 3px solid #FFFF00 !important;
+                    display: inline-block !important;
+                    width: auto !important;
+                }
+                
+                /* Horizontal scrollable navigation on mobile */
+                .card-body {
+                    padding: 10px !important;
+                }
+                
+                /* Make navigation horizontal on mobile */
+                #main-tabs {
+                    display: flex !important;
+                    flex-wrap: nowrap !important;
+                    overflow-x: auto !important;
+                    -webkit-overflow-scrolling: touch !important;
+                    gap: 8px !important;
+                    padding: 5px 0 !important;
+                }
+                
+                #main-tabs label {
+                    flex: 0 0 auto !important;
+                    margin: 0 !important;
+                }
+                
+                /* Hide navigation section titles and actions on mobile */
+                .content-card h5,
+                .content-card h6,
+                .content-card hr,
+                .content-card .btn-custom,
+                #upload-status,
+                #reload-status,
+                #update-status {
+                    display: none !important;
+                }
+                
+                /* Make sidebar take less space */
+                .row > [class*="col-lg-3"] {
+                    width: 100% !important;
+                    margin-bottom: 5px !important;
+                    padding: 0 5px !important;
+                }
+                
+                .sticky-top {
+                    position: relative !important;
+                    top: 0 !important;
                 }
                 
                 .nav-pill:hover {
@@ -612,8 +657,22 @@ app.index_string = '''
             
             /* Extra small devices */
             @media (max-width: 480px) {
+                /* Ultra compact for phones */
+                .main-header {
+                    padding: 10px 10px !important;
+                }
+                
+                .nfl-logo {
+                    height: 40px !important;
+                    margin-bottom: 5px !important;
+                }
+                
                 .main-title {
-                    font-size: 1.5rem !important;
+                    font-size: 1.3rem !important;
+                }
+                
+                .main-header p {
+                    display: none !important;
                 }
                 
                 .content-card h3, .content-card h4 {
@@ -621,8 +680,9 @@ app.index_string = '''
                 }
                 
                 .nav-pill {
-                    font-size: 12px !important;
-                    padding: 10px 12px !important;
+                    font-size: 10px !important;
+                    padding: 8px 10px !important;
+                    white-space: nowrap !important;
                 }
                 
                 table {
