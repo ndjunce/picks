@@ -784,7 +784,8 @@ app.layout = dbc.Container([
                             {'label': html.Div(['📋 Grid View'], className='nav-pill'), 'value': 'grid'},
                             {'label': html.Div(['📈 Statistics'], className='nav-pill'), 'value': 'stats_dashboard'},
                             {'label': html.Div(['🏈 Team Breakdown'], className='nav-pill'), 'value': 'team_breakdown'},
-                            {'label': html.Div(['⭐ Postseason'], className='nav-pill'), 'value': 'postseason'}
+                            {'label': html.Div(['⭐ Postseason Fantasy'], className='nav-pill'), 'value': 'postseason'},
+                            {'label': html.Div(['🏆 Postseason Picks'], className='nav-pill'), 'value': 'postseason_picks'}
                         ],
                         value='leaderboard',
                         labelStyle={'display': 'block'}
@@ -1659,6 +1660,8 @@ def render_tab_content(active_tab):
         return render_teams_tab()
     elif active_tab == "postseason":
         return render_postseason_tab()
+    elif active_tab == "postseason_picks":
+        return render_postseason_picks_tab()
 
 # Helper function to get standings
 def get_current_standings():
@@ -2204,30 +2207,89 @@ def update_weekly_picks_content(selected_week):
 
 
 def render_postseason_tab():
-    """Embed the postseason fantasy experience within the main site."""
+    """Postseason Fantasy League template: 8 teams x 10 roster spots."""
+    teams = [f"Team {i}" for i in range(1, 9)]
+    slots = [f"Slot {i}" for i in range(1, 11)]
+    data = [{"Team": t, **{s: "" for s in slots}} for t in teams]
+    columns = ([{"name": "Team", "id": "Team"}] +
+               [{"name": s, "id": s} for s in slots])
+
+    roster_table = dash_table.DataTable(
+        data=data,
+        columns=columns,
+        editable=True,
+        style_table={"overflowX": "auto"},
+        style_cell={
+            'textAlign': 'center',
+            'padding': '8px',
+            'minWidth': '100px', 'width': '100px', 'maxWidth': '140px'
+        },
+        style_header={
+            'backgroundColor': '#00FFFF',
+            'color': '#000000',
+            'fontWeight': '900',
+            'border': '4px solid #000000'
+        },
+        style_data={
+            'backgroundColor': 'white',
+            'color': '#1a202c',
+            'border': '1px solid #000000'
+        },
+    )
+
     return dbc.Card([
         dbc.CardHeader([
-            html.H4("Postseason Superflex Fantasy", className="mb-0"),
-            html.Small("Login, set rosters, and record scores — all in one place", className="text-muted")
+            html.H4("Postseason Fantasy League (Template)", className="mb-0"),
+            html.Small("8 teams • 10 roster spots each — fill in after your draft", className="text-muted")
         ]),
         dbc.CardBody([
             dbc.Alert([
-                html.Strong("Tiebreaker Rule Reminder: "),
-                "Weekly ties are broken by closest total points in the last game of the week.",
-                html.Br(),
-                html.Strong("Postseason App: "),
-                "Use the embedded view below. It lives at /postseason if you want a direct link."
+                html.Strong("How to use: "),
+                "Edit the table to enter drafted players for each team (10 slots). ",
+                "We'll wire up scoring and persistence after the draft.",
             ], color="info", className="mb-3"),
-            html.Iframe(
-                src="/postseason/",
-                style={
-                    'width': '100%',
-                    'height': '1200px',
-                    'border': '1px solid #dee2e6',
-                    'borderRadius': '6px'
-                },
-                title="Postseason Fantasy"
-            )
+            roster_table
+        ])
+    ])
+
+def render_postseason_picks_tab():
+    """Template for postseason picks across rounds."""
+    rounds = (["Wild Card"] * 6) + (["Divisional"] * 4) + (["Conference"] * 2) + (["Super Bowl"] * 1)
+    data = [{
+        "Round": r,
+        "Away Team": "TBD",
+        "Home Team": "TBD",
+        "Game Date": "",
+        "Your Pick": "",
+        "Tiebreaker (SB)": "" if r == "Super Bowl" else ""
+    } for r in rounds]
+    columns = [
+        {"name": "Round", "id": "Round"},
+        {"name": "Away Team", "id": "Away Team"},
+        {"name": "Home Team", "id": "Home Team"},
+        {"name": "Game Date", "id": "Game Date"},
+        {"name": "Your Pick", "id": "Your Pick"},
+        {"name": "Tiebreaker (SB)", "id": "Tiebreaker (SB)"},
+    ]
+
+    picks_table = dash_table.DataTable(
+        data=data,
+        columns=columns,
+        editable=True,
+        style_table={"overflowX": "auto"},
+        style_cell={'textAlign': 'center', 'padding': '10px'},
+        style_header={'backgroundColor': '#0d6efd', 'color': 'white', 'fontWeight': 'bold'},
+        style_data={'backgroundColor': 'white', 'color': '#1a202c'},
+    )
+
+    return dbc.Card([
+        dbc.CardHeader("Postseason Picks (Template)"),
+        dbc.CardBody([
+            dbc.Alert([
+                "Fill out your picks once matchups are set. ",
+                "We'll add saving, validation, and scoring hooks later.",
+            ], color="warning", className="mb-3"),
+            picks_table
         ])
     ])
 
