@@ -89,7 +89,10 @@ import plotly.graph_objects as go
 import io
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
-import postseason_fantasy_app as postseason_app
+try:
+    import postseason_fantasy_app as postseason_app
+except Exception:
+    postseason_app = None
 
 app = dash.Dash(__name__, external_stylesheets=[
     dbc.themes.BOOTSTRAP,
@@ -1034,35 +1037,6 @@ def build_players_pool(locked_ids, bubble_ids):
         bubble_players.extend(fetch_team_roster(tid))
     return locked_players, bubble_players
 
-def apply_playoff_overrides(conferences, locked_ids, bubble_ids):
-        """Apply user-provided scenario overrides to correct clinch/bubble state.
-        Scenario per user: KC eliminated; two spots left:
-            - AFC: Ravens or Steelers
-            - NFC: Panthers or Buccaneers
-        """
-        # Map known IDs
-        TEAM_IDS = {
-                'Kansas City Chiefs': '12',
-                'Baltimore Ravens': '33',
-                'Pittsburgh Steelers': '23',
-                'Carolina Panthers': '29',
-                'Tampa Bay Buccaneers': '27',
-        }
-
-        # Remove Chiefs from any pool
-        chiefs_id = TEAM_IDS['Kansas City Chiefs']
-        locked_ids.discard(chiefs_id)
-        bubble_ids.discard(chiefs_id)
-
-        # Ensure AFC bubble includes Ravens and Steelers
-        bubble_ids.add(TEAM_IDS['Baltimore Ravens'])
-        bubble_ids.add(TEAM_IDS['Pittsburgh Steelers'])
-
-        # Ensure NFC bubble includes Panthers and Buccaneers
-        bubble_ids.add(TEAM_IDS['Carolina Panthers'])
-        bubble_ids.add(TEAM_IDS['Tampa Bay Buccaneers'])
-
-        return locked_ids, bubble_ids
 
 def get_team_logo_url(team_name):
     """Get ESPN logo URL for a team"""
@@ -4335,10 +4309,11 @@ init_database()
 # Server setup
 server = app.server
 
-# Mount postseason fantasy Dash app at /postseason
-server.wsgi_app = DispatcherMiddleware(server.wsgi_app, {
-    "/postseason": postseason_app.server
-})
+# Optionally mount postseason fantasy Dash app if available
+if postseason_app and hasattr(postseason_app, "server"):
+    server.wsgi_app = DispatcherMiddleware(server.wsgi_app, {
+        "/postseason": postseason_app.server
+    })
 
 # Auto-load picks on startup - runs regardless of how the app starts
 auto_load_picks_on_startup()
