@@ -2754,6 +2754,9 @@ def render_weekly_records_tab():
         # Create a chart showing weekly performance trends
         weekly_chart = create_weekly_trends_chart()
         
+        # Live tiebreaker guesses for the latest week (if applicable)
+        live_tb_card = build_live_tiebreaker_card()
+
         return [
             dbc.Row([
                 dbc.Col([
@@ -2794,6 +2797,9 @@ def render_weekly_records_tab():
                         ])
                     ])
                 ], width=12)
+            ], className="mb-4"),
+            dbc.Row([
+                dbc.Col([live_tb_card], width=12)
             ], className="mb-4"),
             dbc.Row([
                 dbc.Col([
@@ -2869,6 +2875,82 @@ def render_weekly_records_tab():
         
     except Exception as e:
         return dbc.Alert(f"Error loading weekly records: {str(e)}", color="danger")
+
+def build_live_tiebreaker_card():
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return dbc.Alert("Database unavailable for live tiebreaker.", color="warning")
+
+        df_all = pd.read_sql_query("SELECT * FROM picks", conn)
+        conn.close()
+        if df_all.empty:
+            return dbc.Alert("No data for live tiebreaker.", color="light")
+
+        latest_week = int(df_all['week'].max())
+        week_df = df_all[df_all['week'] == latest_week]
+        completed = week_df[week_df['actual_winner'].notna()]
+
+        people = ['bobby', 'chet', 'clyde', 'henry', 'nick', 'riley']
+        record_map = {}
+        for person in people:
+            col = f"{person}_pick"
+            picks = completed[completed[col].notna()]
+            wins = 0
+            for _, row in picks.iterrows():
+                if row[col] == 'away':
+                    pick_team = row['away_team']
+                elif row[col] == 'home':
+                    pick_team = row['home_team']
+                else:
+                    pick_team = row[col]
+                if row['actual_winner'] == 'away':
+                    actual = row['away_team']
+                elif row['actual_winner'] == 'home':
+                    actual = row['home_team']
+                else:
+                    actual = row['actual_winner']
+                if pick_team == actual:
+                    wins += 1
+            record_map[person] = {'wins': wins}
+
+        best_wins = max(v['wins'] for v in record_map.values()) if record_map else 0
+        contenders = [p for p, rec in record_map.items() if rec['wins'] == best_wins]
+
+        tb_row = week_df[week_df.get('is_tiebreaker_game', False) == 1]
+        tb_row = tb_row.iloc[-1] if not tb_row.empty else None
+        if tb_row is None:
+            return dbc.Card([
+                dbc.CardHeader("Current Week Tiebreaker Guesses (Live)"),
+                dbc.CardBody([dbc.Alert("No tiebreaker game configured for latest week.", color="light")])
+            ])
+
+        game_matchup = f"{tb_row['away_team']} vs {tb_row['home_team']}"
+        rows = []
+        for person in contenders:
+            raw = tb_row.get(f"{person}_tiebreaker")
+            guess = "N/A"
+            if pd.notna(raw):
+                try:
+                    guess = str(int(float(raw)))
+                except Exception:
+                    guess = str(raw)
+            rows.append({'Player': person.title(), 'Guess': guess})
+
+        table = dash_table.DataTable(
+            data=rows,
+            columns=[{"name": "Player", "id": "Player"}, {"name": "Guess", "id": "Guess"}],
+            style_cell={'textAlign': 'center', 'padding': '10px'},
+            style_header={'backgroundColor': '#6610f2', 'color': 'white', 'fontWeight': 'bold'},
+            style_data={'backgroundColor': 'white', 'color': '#1a202c'},
+        ) if rows else dbc.Alert("No contenders identified yet.", color="light")
+
+        return dbc.Card([
+            dbc.CardHeader([html.H5("Current Week Tiebreaker Guesses (Live)", className="mb-0"), html.Small(game_matchup, className="text-muted")]),
+            dbc.CardBody([table])
+        ])
+    except Exception as e:
+        return dbc.Alert(f"Live tiebreaker error: {e}", color="danger")
 
 def get_weekly_records_data():
     """Get weekly records data with totals row"""
@@ -3056,7 +3138,22 @@ def get_weekly_winners():
 
                     tiebreaker_detail = f"🏈 {game_matchup} (Final: {final_score}, Total: {actual_total} pts) | " + "; ".join(detail_parts)
                 else:
-                    tiebreaker_detail = "Tiebreaker unavailable (missing last-game score)."
+                    # If last-game score missing, still list contenders' guesses for transparency
+                    if tb_row is not None:
+                        game_matchup = f"{tb_row['away_team']} vs {tb_row['home_team']}"
+                        detail_parts = []
+                        for person in contenders:
+                            tb_val_raw = tb_row.get(f"{person}_tiebreaker")
+                            pred_text = "N/A"
+                            if pd.notna(tb_val_raw):
+                                try:
+                                    pred_text = str(int(float(tb_val_raw)))
+                                except Exception:
+                                    pred_text = str(tb_val_raw)
+                            detail_parts.append(f"{person.title()}: {pred_text}")
+                        tiebreaker_detail = f"🏈 {game_matchup} (Final: TBD) | Contenders' guesses: " + ", ".join(detail_parts)
+                    else:
+                        tiebreaker_detail = "Tiebreaker unavailable (missing last-game setup)."
 
             winner_names = ", ".join([w.title() for w in winners]) if winners else "-"
             primary_winner = winners[0] if winners else contenders[0]
