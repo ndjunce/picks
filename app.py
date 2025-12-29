@@ -2609,8 +2609,6 @@ def fetch_playoff_pools(n_clicks):
     standings = fetch_espn_standings(2025)
     conferences = parse_playoff_picture(standings)
     locked_ids, bubble_ids = get_locked_and_bubble(conferences)
-    # Apply scenario overrides per user
-    locked_ids, bubble_ids = apply_playoff_overrides(conferences, locked_ids, bubble_ids)
     locked_players, bubble_players = build_players_pool(locked_ids, bubble_ids)
 
     # Tables
@@ -2701,12 +2699,6 @@ def fetch_playoff_pools(n_clicks):
         conference_block("NFC Seeds", conferences.get('NFC', []))
     ])
 
-    # Note overrides applied
-    overrides_note = dbc.Alert(
-        "Scenario overrides applied: KC removed; AFC spot = Ravens/Steelers; NFC spot = Panthers/Bucs.",
-        color="info",
-        className="mt-2"
-    )
 
     # Outcomes (simplified): list bubble teams with note
     outcome_items = []
@@ -2718,7 +2710,7 @@ def fetch_playoff_pools(n_clicks):
 
     outcomes_children = html.Ul(outcome_items) if outcome_items else dbc.Alert("No bubble teams detected.", color="light")
 
-    bracket_with_note = html.Div([bracket_children, overrides_note])
+    bracket_with_note = bracket_children
     return lp_table, bp_table, bracket_with_note, outcomes_children, locked_pos, bubble_pos
 
 def render_live_tab():
