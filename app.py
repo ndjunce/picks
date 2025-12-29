@@ -2541,7 +2541,11 @@ def fetch_playoff_pools(n_clicks):
         style_cell={'textAlign': 'center', 'padding': '8px'},
         style_header={'backgroundColor': '#0d6efd', 'color': 'white', 'fontWeight': 'bold'},
         style_data={'backgroundColor': 'white', 'color': '#1a202c'},
-        page_size=10
+        page_size=10,
+        filter_action='native',
+        sort_action='native',
+        export_format='csv',
+        export_headers='display'
     ) if not lp_df.empty else dbc.Alert("No data yet.", color="light")
 
     bp_table = dash_table.DataTable(
@@ -2550,7 +2554,11 @@ def fetch_playoff_pools(n_clicks):
         style_cell={'textAlign': 'center', 'padding': '8px'},
         style_header={'backgroundColor': '#ffc107', 'color': '#000', 'fontWeight': 'bold'},
         style_data={'backgroundColor': 'white', 'color': '#1a202c'},
-        page_size=10
+        page_size=10,
+        filter_action='native',
+        sort_action='native',
+        export_format='csv',
+        export_headers='display'
     ) if not bp_df.empty else dbc.Alert("No data yet.", color="light")
 
     # Bracket view
@@ -2787,6 +2795,22 @@ def render_weekly_records_tab():
     try:
         weekly_df = get_weekly_records_data()
         weekly_winners = get_weekly_winners()
+        # Determine latest week clinch status for header badge
+        header_badge = None
+        try:
+            conn = get_db_connection()
+            if conn:
+                df_all = pd.read_sql_query("SELECT * FROM picks", conn)
+                conn.close()
+                if not df_all.empty:
+                    latest_week = int(df_all['week'].max())
+                    clinched = is_week_clinched(df_all, latest_week, ['bobby','chet','clyde','henry','nick','riley'])
+                    header_badge = html.Span(
+                        "🔒 Latest Week Clinched" if clinched else "⏳ Latest Week In Play",
+                        style={'marginLeft': '10px', 'fontWeight': '700', 'color': '#212529'}
+                    )
+        except Exception:
+            header_badge = None
         
         if weekly_df.empty:
             return dbc.Alert("No completed games available for weekly records.", color="info")
@@ -2803,7 +2827,8 @@ def render_weekly_records_tab():
                     dbc.Card([
                         dbc.CardHeader([
                             html.H4("Weekly Winners", className="mb-0"),
-                            html.Small("Tie = closest total points in last game", className="text-muted")
+                            html.Small("Tie = closest total points in last game", className="text-muted"),
+                            header_badge if header_badge else html.Span()
                         ]),
                         dbc.CardBody([
                             dash_table.DataTable(
