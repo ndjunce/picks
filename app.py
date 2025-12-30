@@ -886,32 +886,43 @@ def parse_playoff_picture(standings_json):
     try:
         for child in standings_json.get('children', []):  # conferences
             conf_name = child.get('name', '').upper()
+            if 'AMERICAN' in conf_name:
+                conf_name = 'AFC'
+            elif 'NATIONAL' in conf_name:
+                conf_name = 'NFC'
             if conf_name not in conferences:
                 continue
-            # Pull all team entries under divisions
+            
+            # New structure: standings.entries
+            standings_obj = child.get('standings', {})
+            entries = standings_obj.get('entries', [])
             teams = []
-            for div in child.get('children', []):
-                for t in div.get('standings', []):
-                    team = t.get('team', {})
-                    records = t.get('records', [])
-                    overall = next((r for r in records if r.get('type') == 'overall'), {})
-                    wins = int(overall.get('wins', 0))
-                    losses = int(overall.get('losses', 0))
-                    ties = int(overall.get('ties', 0))
-                    teams.append({
-                        'id': team.get('id'),
-                        'name': team.get('displayName') or team.get('name'),
-                        'abbrev': team.get('abbreviation'),
-                        'wins': wins,
-                        'losses': losses,
-                        'ties': ties,
-                        'clinched': bool(t.get('clincher')) if 'clincher' in t else False,
-                        'eliminated': bool(t.get('eliminated')) if 'eliminated' in t else False,
-                    })
-            # Approximate seed order by wins, then losses, then ties
+            
+            for t in entries:
+                team = t.get('team', {})
+                stats = {s.get('name'): s.get('value') for s in t.get('stats', [])}
+                wins = int(stats.get('wins', 0))
+                losses = int(stats.get('losses', 0))
+                ties = int(stats.get('ties', 0))
+                clinched = bool(stats.get('clincher'))
+                eliminated = bool(stats.get('eliminated'))
+                
+                teams.append({
+                    'id': team.get('id'),
+                    'name': team.get('displayName') or team.get('name'),
+                    'abbrev': team.get('abbreviation'),
+                    'wins': wins,
+                    'losses': losses,
+                    'ties': ties,
+                    'clinched': clinched,
+                    'eliminated': eliminated,
+                })
+            
+            # Sort by wins desc, losses asc, ties desc
             teams.sort(key=lambda x: (-x['wins'], x['losses'], -x['ties'], x['name']))
             conferences[conf_name] = teams
-    except Exception:
+    except Exception as e:
+        logger.warning(f"Error parsing playoff picture: {e}")
         return {"AFC": [], "NFC": []}
     return conferences
 
@@ -1743,7 +1754,7 @@ def create_manual_entry_form():
                 ])
             ], width=4),
             dbc.Col([
-                dbc.Label("Chet"),
+                dbc.Label("Chet 🐡"),
                 dbc.Select(id="manual-chet", options=[
                     {"label": "Away", "value": "away"},
                     {"label": "Home", "value": "home"}
@@ -2865,7 +2876,7 @@ def fetch_live_scores_for_week(week: int):
 
         # Build summary counts per person for in-progress games
         summary = []
-        for person in ['Bobby', 'Chet', 'Clyde', 'Henry', 'Nick', 'Riley']:
+        for person in ['Bobby', 'Chet 🐡', 'Clyde', 'Henry', 'Nick', 'Riley']:
             pkey = person.lower()
             correct = 0
             wrong = 0
