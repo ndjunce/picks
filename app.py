@@ -2408,7 +2408,7 @@ def render_postseason_tab():
         except Exception as e:
             print(f"Error loading playoff players: {e}")
     
-    teams = ["Ajay", "Chet", "Nick", "Riley", "Seth", "Zach"]
+    teams = ["Ajay", "Chay", "Nick", "Riley", "Seth", "Zach"]
     slots = ["QB", "QB", "RB", "RB", "WR", "WR", "TE", "FLEX", "FLEX", "K", "DEF"]
     data = [{"Team": t, "Total Points": 0, "Players Remaining": 0, **{f"{slots[i]}_{i}": "" for i in range(len(slots))}} for t in teams]
     columns = ([{"name": "Team", "id": "Team"}, 
@@ -2416,15 +2416,17 @@ def render_postseason_tab():
                 {"name": "Players Remaining", "id": "Players Remaining"}] +
                [{"name": slots[i], "id": f"{slots[i]}_{i}"} for i in range(len(slots))])
 
+    # Build roster table (used for table view)
     roster_table = dash_table.DataTable(
         data=data,
         columns=columns,
         editable=True,
-        style_table={"overflowX": "auto"},
+        style_table={"overflowX": "scroll"},
         style_cell={
             'textAlign': 'center',
-            'padding': '8px',
-            'minWidth': '100px', 'width': '100px', 'maxWidth': '140px'
+            'padding': '6px',
+            'minWidth': '80px', 'width': '90px', 'maxWidth': '120px',
+            'fontSize': '13px'
         },
         style_header={
             'backgroundColor': '#00FFFF',
@@ -2449,7 +2451,24 @@ def render_postseason_tab():
                 html.Strong("How to use: "),
                 "Edit the table to enter drafted players for each team (11 slots). Total points and players remaining will update as playoff games are played."
             ], color="info", className="mb-3"),
-                roster_table,
+                # Mobile-friendly view toggle
+                dbc.Row([
+                    dbc.Col(
+                        dcc.RadioItems(
+                            id="postseason-roster-view",
+                            options=[
+                                {"label": "Cards", "value": "cards"},
+                                {"label": "Table", "value": "table"},
+                            ],
+                            value="cards",
+                            inline=True,
+                        ),
+                        xs=12, sm=12, md=6, lg=6, xl=6,
+                    )
+                ], className="mb-2"),
+
+                # Container for roster view (cards/table)
+                html.Div(id="postseason-rosters", children=roster_table),
                 html.Hr(className="my-4"),
                 html.H5("Available Playoff Players", className="mb-3"),
                     dbc.Alert([
@@ -2528,6 +2547,67 @@ def render_postseason_tab():
                     )
         ])
     ])
+
+def build_postseason_roster_table():
+    """Build the editable table view for postseason rosters."""
+    from dash import dash_table
+    teams = ["Ajay", "Chay", "Nick", "Riley", "Seth", "Zach"]
+    slots = ["QB", "QB", "RB", "RB", "WR", "WR", "TE", "FLEX", "FLEX", "K", "DEF"]
+    data = [{"Team": t, "Total Points": 0, "Players Remaining": 0, **{f"{slots[i]}_{i}": "" for i in range(len(slots))}} for t in teams]
+    columns = ([{"name": "Team", "id": "Team"},
+                {"name": "Total Points", "id": "Total Points"},
+                {"name": "Players Remaining", "id": "Players Remaining"}] +
+               [{"name": slots[i], "id": f"{slots[i]}_{i}"} for i in range(len(slots))])
+
+    return dash_table.DataTable(
+        data=data,
+        columns=columns,
+        editable=True,
+        style_table={"overflowX": "scroll"},
+        style_cell={
+            'textAlign': 'center',
+            'padding': '6px',
+            'minWidth': '80px', 'width': '90px', 'maxWidth': '120px',
+            'fontSize': '13px'
+        },
+        style_header={
+            'backgroundColor': '#00FFFF',
+            'color': '#000000',
+            'fontWeight': '900',
+            'border': '4px solid #000000'
+        },
+        style_data={
+            'backgroundColor': 'white',
+            'color': '#1a202c',
+            'border': '1px solid #000000'
+        },
+    )
+
+def build_postseason_roster_cards():
+    """Build the mobile-friendly cards view for postseason rosters."""
+    teams = ["Ajay", "Chay", "Nick", "Riley", "Seth", "Zach"]
+    slots = ["QB", "QB", "RB", "RB", "WR", "WR", "TE", "FLEX", "FLEX", "K", "DEF"]
+    cards = []
+    for t in teams:
+        cards.append(
+            dbc.Card([
+                dbc.CardHeader(t),
+                dbc.CardBody([
+                    html.Ul([html.Li(s) for s in slots], className="mb-0")
+                ])
+            ], className="mb-2")
+        )
+    # Stack cards on mobile, two-column on md+
+    return dbc.Row([dbc.Col(c, xs=12, sm=12, md=6, lg=6, xl=6) for c in cards])
+
+@app.callback(Output('postseason-rosters', 'children'), Input('postseason-roster-view', 'value'))
+def _switch_postseason_rosters(view):
+    try:
+        if view == 'cards':
+            return build_postseason_roster_cards()
+        return build_postseason_roster_table()
+    except Exception as e:
+        return dbc.Alert(f"Error rendering rosters: {e}", color="danger")
 
 def render_postseason_picks_tab():
     """Postseason picks across rounds: 6 people (Bobby, Chet, Clyde, Henry, Nick, Riley) picking each game."""
