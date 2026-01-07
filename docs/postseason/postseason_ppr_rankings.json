@@ -1,0 +1,3146 @@
+{
+  "season": 2025,
+  "generated_at": "2026-01-07T15:56:11.466652Z",
+  "playoff_teams": [
+    "DEN",
+    "NE",
+    "JAX",
+    "PIT",
+    "HOU",
+    "BUF",
+    "LAC",
+    "SEA",
+    "CHI",
+    "PHI",
+    "CAR",
+    "LAR",
+    "SF",
+    "GB"
+  ],
+  "scoring": {
+    "pass_yd": 0.04,
+    "pass_td": 4.0,
+    "int": -2.0,
+    "rush_yd": 0.1,
+    "rush_td": 6.0,
+    "rec_yd": 0.1,
+    "rec_td": 6.0,
+    "rec": 1.0
+  },
+  "rankings": {
+    "overall": [
+      {
+        "player_id": 211,
+        "player_name": "C.McCaffrey",
+        "position": "RB",
+        "team_effective": "SF",
+        "ppr_points": 402.90000000000003,
+        "games_played": 16
+      },
+      {
+        "player_id": 368,
+        "player_name": "J.Allen",
+        "position": "QB",
+        "team_effective": "BUF",
+        "ppr_points": 368.62,
+        "games_played": 16
+      },
+      {
+        "player_id": 864,
+        "player_name": "J.Smith-Njigba",
+        "position": "WR",
+        "team_effective": "SEA",
+        "ppr_points": 347.5,
+        "games_played": 16
+      },
+      {
+        "player_id": 1060,
+        "player_name": "D.Maye",
+        "position": "QB",
+        "team_effective": "NE",
+        "ppr_points": 338.22,
+        "games_played": 16
+      },
+      {
+        "player_id": 636,
+        "player_name": "T.Lawrence",
+        "position": "QB",
+        "team_effective": "JAX",
+        "ppr_points": 318.88,
+        "games_played": 16
+      },
+      {
+        "player_id": 555,
+        "player_name": "J.Hurts",
+        "position": "QB",
+        "team_effective": "PHI",
+        "ppr_points": 307.06,
+        "games_played": 16
+      },
+      {
+        "player_id": 724,
+        "player_name": "J.Cook",
+        "position": "RB",
+        "team_effective": "BUF",
+        "ppr_points": 306.70000000000005,
+        "games_played": 16
+      },
+      {
+        "player_id": 1076,
+        "player_name": "C.Williams",
+        "position": "QB",
+        "team_effective": "CHI",
+        "ppr_points": 303.6,
+        "games_played": 16
+      },
+      {
+        "player_id": 1039,
+        "player_name": "B.Nix",
+        "position": "QB",
+        "team_effective": "DEN",
+        "ppr_points": 290.3,
+        "games_played": 16
+      },
+      {
+        "player_id": 545,
+        "player_name": "J.Herbert",
+        "position": "QB",
+        "team_effective": "LAC",
+        "ppr_points": 288.88,
+        "games_played": 16
+      },
+      {
+        "player_id": 464,
+        "player_name": "J.Jacobs",
+        "position": "RB",
+        "team_effective": "GB",
+        "ppr_points": 241.10000000000002,
+        "games_played": 15
+      },
+      {
+        "player_id": 524,
+        "player_name": "J.Love",
+        "position": "QB",
+        "team_effective": "GB",
+        "ppr_points": 235.14,
+        "games_played": 15
+      },
+      {
+        "player_id": 371,
+        "player_name": "S.Darnold",
+        "position": "QB",
+        "team_effective": "SEA",
+        "ppr_points": 234.6,
+        "games_played": 16
+      },
+      {
+        "player_id": 364,
+        "player_name": "S.Barkley",
+        "position": "RB",
+        "team_effective": "PHI",
+        "ppr_points": 232.3,
+        "games_played": 16
+      },
+      {
+        "player_id": 578,
+        "player_name": "N.Collins",
+        "position": "WR",
+        "team_effective": "HOU",
+        "ppr_points": 226.20000000000002,
+        "games_played": 15
+      },
+      {
+        "player_id": 529,
+        "player_name": "D.Swift",
+        "position": "RB",
+        "team_effective": "CHI",
+        "ppr_points": 225.9,
+        "games_played": 15
+      },
+      {
+        "player_id": 24,
+        "player_name": "A.Brown",
+        "position": "WR",
+        "team_effective": "PHI",
+        "ppr_points": 220.3,
+        "games_played": 15
+      },
+      {
+        "player_id": 310,
+        "player_name": "C.Sutton",
+        "position": "WR",
+        "team_effective": "DEN",
+        "ppr_points": 216.20000000000002,
+        "games_played": 16
+      },
+      {
+        "player_id": 825,
+        "player_name": "R.Dowdle",
+        "position": "RB",
+        "team_effective": "CAR",
+        "ppr_points": 213.3,
+        "games_played": 16
+      },
+      {
+        "player_id": 4,
+        "player_name": "A.Rodgers",
+        "position": "QB",
+        "team_effective": "PIT",
+        "ppr_points": 209.32,
+        "games_played": 15
+      },
+      {
+        "player_id": 933,
+        "player_name": "B.Young",
+        "position": "QB",
+        "team_effective": "CAR",
+        "ppr_points": 207.5,
+        "games_played": 15
+      },
+      {
+        "player_id": 116,
+        "player_name": "S.Diggs",
+        "position": "WR",
+        "team_effective": "NE",
+        "ppr_points": 203.0,
+        "games_played": 16
+      },
+      {
+        "player_id": 719,
+        "player_name": "J.Warren",
+        "position": "RB",
+        "team_effective": "PIT",
+        "ppr_points": 202.2,
+        "games_played": 15
+      },
+      {
+        "player_id": 626,
+        "player_name": "K.Gainwell",
+        "position": "RB",
+        "team_effective": "PIT",
+        "ppr_points": 201.9,
+        "games_played": 16
+      },
+      {
+        "player_id": 128,
+        "player_name": "D.Smith",
+        "position": "WR",
+        "team_effective": "PHI",
+        "ppr_points": 193.6,
+        "games_played": 16
+      },
+      {
+        "player_id": 935,
+        "player_name": "C.Stroud",
+        "position": "QB",
+        "team_effective": "HOU",
+        "ppr_points": 191.28,
+        "games_played": 13
+      },
+      {
+        "player_id": 455,
+        "player_name": "D.Metcalf",
+        "position": "WR",
+        "team_effective": "PIT",
+        "ppr_points": 187.2,
+        "games_played": 15
+      },
+      {
+        "player_id": 311,
+        "player_name": "D.Goedert",
+        "position": "TE",
+        "team_effective": "PHI",
+        "ppr_points": 185.1,
+        "games_played": 15
+      },
+      {
+        "player_id": 1073,
+        "player_name": "L.McConkey",
+        "position": "WR",
+        "team_effective": "LAC",
+        "ppr_points": 180.9,
+        "games_played": 16
+      },
+      {
+        "player_id": 800,
+        "player_name": "K.Walker",
+        "position": "RB",
+        "team_effective": "SEA",
+        "ppr_points": 174.6,
+        "games_played": 16
+      },
+      {
+        "player_id": 780,
+        "player_name": "B.Purdy",
+        "position": "QB",
+        "team_effective": "SF",
+        "ppr_points": 174.2,
+        "games_played": 8
+      },
+      {
+        "player_id": 865,
+        "player_name": "Q.Johnston",
+        "position": "WR",
+        "team_effective": "LAC",
+        "ppr_points": 173.2,
+        "games_played": 13
+      },
+      {
+        "player_id": 1063,
+        "player_name": "T.Franklin",
+        "position": "WR",
+        "team_effective": "DEN",
+        "ppr_points": 173.1,
+        "games_played": 16
+      },
+      {
+        "player_id": 65,
+        "player_name": "K.Allen",
+        "position": "WR",
+        "team_effective": "LAC",
+        "ppr_points": 172.1,
+        "games_played": 16
+      },
+      {
+        "player_id": 195,
+        "player_name": "H.Henry",
+        "position": "TE",
+        "team_effective": "NE",
+        "ppr_points": 168.20000000000002,
+        "games_played": 16
+      },
+      {
+        "player_id": 318,
+        "player_name": "D.Schultz",
+        "position": "TE",
+        "team_effective": "HOU",
+        "ppr_points": 166.4,
+        "games_played": 16
+      },
+      {
+        "player_id": 522,
+        "player_name": "J.Jennings",
+        "position": "WR",
+        "team_effective": "SF",
+        "ppr_points": 165.8,
+        "games_played": 14
+      },
+      {
+        "player_id": 730,
+        "player_name": "K.Shakir",
+        "position": "WR",
+        "team_effective": "BUF",
+        "ppr_points": 165.1,
+        "games_played": 16
+      },
+      {
+        "player_id": 777,
+        "player_name": "R.Doubs",
+        "position": "WR",
+        "team_effective": "GB",
+        "ppr_points": 163.4,
+        "games_played": 16
+      },
+      {
+        "player_id": 937,
+        "player_name": "Z.Charbonnet",
+        "position": "RB",
+        "team_effective": "SEA",
+        "ppr_points": 160.7,
+        "games_played": 15
+      },
+      {
+        "player_id": 243,
+        "player_name": "D.Moore",
+        "position": "WR",
+        "team_effective": "CHI",
+        "ppr_points": 155.78,
+        "games_played": 15
+      },
+      {
+        "player_id": 213,
+        "player_name": "G.Kittle",
+        "position": "TE",
+        "team_effective": "SF",
+        "ppr_points": 153.6,
+        "games_played": 10
+      },
+      {
+        "player_id": 879,
+        "player_name": "P.Washington",
+        "position": "WR",
+        "team_effective": "JAX",
+        "ppr_points": 153.0,
+        "games_played": 14
+      },
+      {
+        "player_id": 705,
+        "player_name": "T.Etienne",
+        "position": "RB",
+        "team_effective": "JAX",
+        "ppr_points": 151.4,
+        "games_played": 9
+      },
+      {
+        "player_id": 1077,
+        "player_name": "R.Odunze",
+        "position": "WR",
+        "team_effective": "CHI",
+        "ppr_points": 146.1,
+        "games_played": 12
+      },
+      {
+        "player_id": 613,
+        "player_name": "R.Stevenson",
+        "position": "RB",
+        "team_effective": "NE",
+        "ppr_points": 145.5,
+        "games_played": 13
+      },
+      {
+        "player_id": 1048,
+        "player_name": "A.Barner",
+        "position": "TE",
+        "team_effective": "SEA",
+        "ppr_points": 143.9,
+        "games_played": 16
+      },
+      {
+        "player_id": 797,
+        "player_name": "C.Watson",
+        "position": "WR",
+        "team_effective": "GB",
+        "ppr_points": 132.4,
+        "games_played": 10
+      },
+      {
+        "player_id": 47,
+        "player_name": "M.Jones",
+        "position": "WR",
+        "team_effective": "SF",
+        "ppr_points": 132.04,
+        "games_played": 11
+      },
+      {
+        "player_id": 1067,
+        "player_name": "B.Thomas",
+        "position": "WR",
+        "team_effective": "JAX",
+        "ppr_points": 130.9,
+        "games_played": 13
+      },
+      {
+        "player_id": 579,
+        "player_name": "C.Hubbard",
+        "position": "RB",
+        "team_effective": "CAR",
+        "ppr_points": 123.7,
+        "games_played": 14
+      },
+      {
+        "player_id": 880,
+        "player_name": "K.Boutte",
+        "position": "WR",
+        "team_effective": "NE",
+        "ppr_points": 119.7,
+        "games_played": 13
+      },
+      {
+        "player_id": 905,
+        "player_name": "D.Kincaid",
+        "position": "TE",
+        "team_effective": "BUF",
+        "ppr_points": 118.30000000000001,
+        "games_played": 11
+      },
+      {
+        "player_id": 914,
+        "player_name": "T.Kraft",
+        "position": "TE",
+        "team_effective": "GB",
+        "ppr_points": 117.19999999999999,
+        "games_played": 8
+      },
+      {
+        "player_id": 685,
+        "player_name": "J.Dobbins",
+        "position": "RB",
+        "team_effective": "DEN",
+        "ppr_points": 115.9,
+        "games_played": 10
+      },
+      {
+        "player_id": 1011,
+        "player_name": "K.Vidal",
+        "position": "RB",
+        "team_effective": "LAC",
+        "ppr_points": 115.9,
+        "games_played": 11
+      },
+      {
+        "player_id": 240,
+        "player_name": "M.Hollins",
+        "position": "WR",
+        "team_effective": "NE",
+        "ppr_points": 113.4,
+        "games_played": 14
+      },
+      {
+        "player_id": 273,
+        "player_name": "C.Kupp",
+        "position": "WR",
+        "team_effective": "SEA",
+        "ppr_points": 111.4,
+        "games_played": 15
+      },
+      {
+        "player_id": 619,
+        "player_name": "P.Freiermuth",
+        "position": "TE",
+        "team_effective": "PIT",
+        "ppr_points": 105.5,
+        "games_played": 14
+      },
+      {
+        "player_id": 906,
+        "player_name": "B.Strange",
+        "position": "TE",
+        "team_effective": "JAX",
+        "ppr_points": 100.80000000000001,
+        "games_played": 11
+      },
+      {
+        "player_id": 376,
+        "player_name": "J.Meyers",
+        "position": "WR",
+        "team_effective": "JAX",
+        "ppr_points": 100.2,
+        "games_played": 8
+      },
+      {
+        "player_id": 1069,
+        "player_name": "K.Coleman",
+        "position": "WR",
+        "team_effective": "BUF",
+        "ppr_points": 95.5,
+        "games_played": 11
+      },
+      {
+        "player_id": 264,
+        "player_name": "E.Engram",
+        "position": "TE",
+        "team_effective": "DEN",
+        "ppr_points": 95.3,
+        "games_played": 15
+      },
+      {
+        "player_id": 714,
+        "player_name": "J.Tonges",
+        "position": "TE",
+        "team_effective": "SF",
+        "ppr_points": 93.30000000000001,
+        "games_played": 9
+      },
+      {
+        "player_id": 218,
+        "player_name": "K.Bourne",
+        "position": "WR",
+        "team_effective": "SF",
+        "ppr_points": 92.10000000000001,
+        "games_played": 13
+      },
+      {
+        "player_id": 463,
+        "player_name": "D.Knox",
+        "position": "TE",
+        "team_effective": "BUF",
+        "ppr_points": 91.30000000000001,
+        "games_played": 15
+      },
+      {
+        "player_id": 885,
+        "player_name": "D.Douglas",
+        "position": "WR",
+        "team_effective": "NE",
+        "ppr_points": 90.9,
+        "games_played": 15
+      },
+      {
+        "player_id": 1074,
+        "player_name": "R.Pearsall",
+        "position": "WR",
+        "team_effective": "SF",
+        "ppr_points": 88.60000000000001,
+        "games_played": 9
+      },
+      {
+        "player_id": 354,
+        "player_name": "N.Chubb",
+        "position": "RB",
+        "team_effective": "HOU",
+        "ppr_points": 88.3,
+        "games_played": 15
+      },
+      {
+        "player_id": 899,
+        "player_name": "E.Wilson",
+        "position": "RB",
+        "team_effective": "GB",
+        "ppr_points": 86.7,
+        "games_played": 15
+      },
+      {
+        "player_id": 910,
+        "player_name": "M.Mims",
+        "position": "WR",
+        "team_effective": "DEN",
+        "ppr_points": 86.0,
+        "games_played": 14
+      },
+      {
+        "player_id": 396,
+        "player_name": "O.Zaccheaus",
+        "position": "WR",
+        "team_effective": "CHI",
+        "ppr_points": 84.80000000000001,
+        "games_played": 14
+      },
+      {
+        "player_id": 883,
+        "player_name": "X.Hutchinson",
+        "position": "WR",
+        "team_effective": "HOU",
+        "ppr_points": 84.6,
+        "games_played": 15
+      },
+      {
+        "player_id": 997,
+        "player_name": "X.Legette",
+        "position": "WR",
+        "team_effective": "CAR",
+        "ppr_points": 84.10000000000001,
+        "games_played": 14
+      },
+      {
+        "player_id": 259,
+        "player_name": "J.Smith",
+        "position": "TE",
+        "team_effective": "PIT",
+        "ppr_points": 83.8,
+        "games_played": 16
+      },
+      {
+        "player_id": 853,
+        "player_name": "D.Wicks",
+        "position": "WR",
+        "team_effective": "GB",
+        "ppr_points": 75.8,
+        "games_played": 13
+      },
+      {
+        "player_id": 1022,
+        "player_name": "J.Coker",
+        "position": "WR",
+        "team_effective": "CAR",
+        "ppr_points": 73.7,
+        "games_played": 10
+      },
+      {
+        "player_id": 869,
+        "player_name": "D.Washington",
+        "position": "TE",
+        "team_effective": "PIT",
+        "ppr_points": 73.4,
+        "games_played": 13
+      },
+      {
+        "player_id": 533,
+        "player_name": "C.Kmet",
+        "position": "TE",
+        "team_effective": "CHI",
+        "ppr_points": 73.10000000000001,
+        "games_played": 15
+      },
+      {
+        "player_id": 850,
+        "player_name": "C.Austin",
+        "position": "WR",
+        "team_effective": "PIT",
+        "ppr_points": 71.7,
+        "games_played": 13
+      },
+      {
+        "player_id": 620,
+        "player_name": "D.Mills",
+        "position": "QB",
+        "team_effective": "HOU",
+        "ppr_points": 63.96,
+        "games_played": 5
+      },
+      {
+        "player_id": 155,
+        "player_name": "A.Hooper",
+        "position": "TE",
+        "team_effective": "NE",
+        "ppr_points": 57.800000000000004,
+        "games_played": 12
+      },
+      {
+        "player_id": 352,
+        "player_name": "C.Kirk",
+        "position": "WR",
+        "team_effective": "HOU",
+        "ppr_points": 57.199999999999996,
+        "games_played": 10
+      },
+      {
+        "player_id": 57,
+        "player_name": "K.Juszczyk",
+        "position": "FB",
+        "team_effective": "SF",
+        "ppr_points": 55.5,
+        "games_played": 14
+      },
+      {
+        "player_id": 1000,
+        "player_name": "J.Sanders",
+        "position": "TE",
+        "team_effective": "CAR",
+        "ppr_points": 54.0,
+        "games_played": 11
+      },
+      {
+        "player_id": 798,
+        "player_name": "M.Willis",
+        "position": "QB",
+        "team_effective": "GB",
+        "ppr_points": 53.17999999999999,
+        "games_played": 4
+      },
+      {
+        "player_id": 642,
+        "player_name": "J.Palmer",
+        "position": "WR",
+        "team_effective": "BUF",
+        "ppr_points": 51.2,
+        "games_played": 11
+      },
+      {
+        "player_id": 646,
+        "player_name": "T.Tremble",
+        "position": "TE",
+        "team_effective": "CAR",
+        "ppr_points": 51.1,
+        "games_played": 14
+      },
+      {
+        "player_id": 170,
+        "player_name": "D.Robinson",
+        "position": "WR",
+        "team_effective": "SF",
+        "ppr_points": 50.8,
+        "games_played": 13
+      },
+      {
+        "player_id": 224,
+        "player_name": "T.Patrick",
+        "position": "WR",
+        "team_effective": "JAX",
+        "ppr_points": 50.300000000000004,
+        "games_played": 12
+      },
+      {
+        "player_id": 136,
+        "player_name": "D.Brown",
+        "position": "TE",
+        "team_effective": "JAX",
+        "ppr_points": 49.900000000000006,
+        "games_played": 10
+      },
+      {
+        "player_id": 931,
+        "player_name": "L.Musgrave",
+        "position": "TE",
+        "team_effective": "GB",
+        "ppr_points": 49.2,
+        "games_played": 13
+      },
+      {
+        "player_id": 932,
+        "player_name": "J.Reed",
+        "position": "WR",
+        "team_effective": "GB",
+        "ppr_points": 48.5,
+        "games_played": 5
+      },
+      {
+        "player_id": 561,
+        "player_name": "A.Trautman",
+        "position": "TE",
+        "team_effective": "DEN",
+        "ppr_points": 45.5,
+        "games_played": 11
+      },
+      {
+        "player_id": 982,
+        "player_name": "T.Shavers",
+        "position": "WR",
+        "team_effective": "BUF",
+        "ppr_points": 45.5,
+        "games_played": 10
+      },
+      {
+        "player_id": 105,
+        "player_name": "M.Evans",
+        "position": "WR",
+        "team_effective": "CAR",
+        "ppr_points": 45.1,
+        "games_played": 11
+      },
+      {
+        "player_id": 782,
+        "player_name": "K.Williams",
+        "position": "RB",
+        "team_effective": "NE",
+        "ppr_points": 43.7,
+        "games_played": 11
+      },
+      {
+        "player_id": 768,
+        "player_name": "J.Dotson",
+        "position": "WR",
+        "team_effective": "PHI",
+        "ppr_points": 43.2,
+        "games_played": 13
+      },
+      {
+        "player_id": 45,
+        "player_name": "R.Wilson",
+        "position": "QB",
+        "team_effective": "PIT",
+        "ppr_points": 40.6,
+        "games_played": 9
+      },
+      {
+        "player_id": 758,
+        "player_name": "R.Shaheed",
+        "position": "WR",
+        "team_effective": "SEA",
+        "ppr_points": 39.0,
+        "games_played": 8
+      },
+      {
+        "player_id": 379,
+        "player_name": "H.Renfrow",
+        "position": "WR",
+        "team_effective": "CAR",
+        "ppr_points": 35.900000000000006,
+        "games_played": 6
+      },
+      {
+        "player_id": 868,
+        "player_name": "T.Bigsby",
+        "position": "RB",
+        "team_effective": "PHI",
+        "ppr_points": 35.0,
+        "games_played": 9
+      },
+      {
+        "player_id": 1065,
+        "player_name": "R.Davis",
+        "position": "RB",
+        "team_effective": "BUF",
+        "ppr_points": 32.7,
+        "games_played": 12
+      },
+      {
+        "player_id": 645,
+        "player_name": "H.Long",
+        "position": "TE",
+        "team_effective": "JAX",
+        "ppr_points": 32.5,
+        "games_played": 7
+      },
+      {
+        "player_id": 617,
+        "player_name": "L.Farrell",
+        "position": "TE",
+        "team_effective": "SF",
+        "ppr_points": 31.5,
+        "games_played": 9
+      },
+      {
+        "player_id": 709,
+        "player_name": "T.Badie",
+        "position": "RB",
+        "team_effective": "DEN",
+        "ppr_points": 30.8,
+        "games_played": 13
+      },
+      {
+        "player_id": 638,
+        "player_name": "E.Moore",
+        "position": "WR",
+        "team_effective": "BUF",
+        "ppr_points": 28.599999999999998,
+        "games_played": 9
+      },
+      {
+        "player_id": 598,
+        "player_name": "S.Williams",
+        "position": "WR",
+        "team_effective": "GB",
+        "ppr_points": 27.500000000000004,
+        "games_played": 11
+      },
+      {
+        "player_id": 892,
+        "player_name": "C.Brooks",
+        "position": "RB",
+        "team_effective": "GB",
+        "ppr_points": 26.6,
+        "games_played": 13
+      },
+      {
+        "player_id": 986,
+        "player_name": "B.Tremayne",
+        "position": "WR",
+        "team_effective": "CAR",
+        "ppr_points": 25.3,
+        "games_played": 7
+      },
+      {
+        "player_id": 839,
+        "player_name": "J.FitzPatrick",
+        "position": "TE",
+        "team_effective": "GB",
+        "ppr_points": 25.2,
+        "games_played": 10
+      },
+      {
+        "player_id": 429,
+        "player_name": "L.Humphrey",
+        "position": "WR",
+        "team_effective": "DEN",
+        "ppr_points": 25.1,
+        "games_played": 5
+      },
+      {
+        "player_id": 898,
+        "player_name": "J.McLaughlin",
+        "position": "RB",
+        "team_effective": "DEN",
+        "ppr_points": 24.6,
+        "games_played": 7
+      },
+      {
+        "player_id": 833,
+        "player_name": "B.Melton",
+        "position": "WR",
+        "team_effective": "GB",
+        "ppr_points": 24.200000000000003,
+        "games_played": 7
+      },
+      {
+        "player_id": 256,
+        "player_name": "D.Ogunbowale",
+        "position": "RB",
+        "team_effective": "HOU",
+        "ppr_points": 24.2,
+        "games_played": 8
+      },
+      {
+        "player_id": 212,
+        "player_name": "C.Samuel",
+        "position": "WR",
+        "team_effective": "BUF",
+        "ppr_points": 21.1,
+        "games_played": 5
+      },
+      {
+        "player_id": 540,
+        "player_name": "A.Gibson",
+        "position": "RB",
+        "team_effective": "NE",
+        "ppr_points": 19.2,
+        "games_played": 5
+      },
+      {
+        "player_id": 293,
+        "player_name": "W.Dissly",
+        "position": "TE",
+        "team_effective": "LAC",
+        "ppr_points": 19.1,
+        "games_played": 7
+      },
+      {
+        "player_id": 606,
+        "player_name": "J.Patterson",
+        "position": "RB",
+        "team_effective": "LAC",
+        "ppr_points": 19.0,
+        "games_played": 5
+      },
+      {
+        "player_id": 484,
+        "player_name": "C.White",
+        "position": "WR",
+        "team_effective": "SEA",
+        "ppr_points": 18.0,
+        "games_played": 3
+      },
+      {
+        "player_id": 1001,
+        "player_name": "C.Stover",
+        "position": "TE",
+        "team_effective": "HOU",
+        "ppr_points": 18.0,
+        "games_played": 5
+      },
+      {
+        "player_id": 207,
+        "player_name": "J.Mundt",
+        "position": "TE",
+        "team_effective": "JAX",
+        "ppr_points": 17.5,
+        "games_played": 10
+      },
+      {
+        "player_id": 351,
+        "player_name": "M.Rudolph",
+        "position": "QB",
+        "team_effective": "PIT",
+        "ppr_points": 17.0,
+        "games_played": 5
+      },
+      {
+        "player_id": 612,
+        "player_name": "B.Skowronek",
+        "position": "WR",
+        "team_effective": "PIT",
+        "ppr_points": 16.9,
+        "games_played": 6
+      },
+      {
+        "player_id": 897,
+        "player_name": "N.Adkins",
+        "position": "TE",
+        "team_effective": "DEN",
+        "ppr_points": 16.8,
+        "games_played": 6
+      },
+      {
+        "player_id": 992,
+        "player_name": "G.Holani",
+        "position": "RB",
+        "team_effective": "SEA",
+        "ppr_points": 16.8,
+        "games_played": 4
+      },
+      {
+        "player_id": 88,
+        "player_name": "B.Cooks",
+        "position": "WR",
+        "team_effective": "BUF",
+        "ppr_points": 16.400000000000002,
+        "games_played": 4
+      },
+      {
+        "player_id": 1042,
+        "player_name": "W.Shipley",
+        "position": "RB",
+        "team_effective": "PHI",
+        "ppr_points": 16.2,
+        "games_played": 10
+      },
+      {
+        "player_id": 506,
+        "player_name": "G.Davis",
+        "position": "WR",
+        "team_effective": "BUF",
+        "ppr_points": 15.8,
+        "games_played": 5
+      },
+      {
+        "player_id": 603,
+        "player_name": "A.Prentice",
+        "position": "FB",
+        "team_effective": "DEN",
+        "ppr_points": 15.700000000000001,
+        "games_played": 12
+      },
+      {
+        "player_id": 300,
+        "player_name": "T.Conklin",
+        "position": "TE",
+        "team_effective": "LAC",
+        "ppr_points": 15.7,
+        "games_played": 5
+      },
+      {
+        "player_id": 301,
+        "player_name": "M.Valdes-Scantling",
+        "position": "WR",
+        "team_effective": "PIT",
+        "ppr_points": 15.6,
+        "games_played": 4
+      },
+      {
+        "player_id": 58,
+        "player_name": "A.Thielen",
+        "position": "WR",
+        "team_effective": "PIT",
+        "ppr_points": 15.4,
+        "games_played": 4
+      },
+      {
+        "player_id": 1046,
+        "player_name": "T.Jennings",
+        "position": "RB",
+        "team_effective": "NE",
+        "ppr_points": 15.200000000000001,
+        "games_played": 5
+      },
+      {
+        "player_id": 704,
+        "player_name": "M.Bandy",
+        "position": "WR",
+        "team_effective": "DEN",
+        "ppr_points": 15.0,
+        "games_played": 3
+      },
+      {
+        "player_id": 787,
+        "player_name": "S.Moore",
+        "position": "WR",
+        "team_effective": "SF",
+        "ppr_points": 14.8,
+        "games_played": 9
+      },
+      {
+        "player_id": 859,
+        "player_name": "M.Heath",
+        "position": "WR",
+        "team_effective": "GB",
+        "ppr_points": 14.6,
+        "games_played": 5
+      },
+      {
+        "player_id": 705,
+        "player_name": "T.Etienne",
+        "position": "RB",
+        "team_effective": "CAR",
+        "ppr_points": 13.700000000000001,
+        "games_played": 8
+      },
+      {
+        "player_id": 31,
+        "player_name": "A.Dalton",
+        "position": "QB",
+        "team_effective": "CAR",
+        "ppr_points": 13.52,
+        "games_played": 4
+      },
+      {
+        "player_id": 876,
+        "player_name": "J.Whyle",
+        "position": "TE",
+        "team_effective": "GB",
+        "ppr_points": 13.200000000000001,
+        "games_played": 5
+      },
+      {
+        "player_id": 710,
+        "player_name": "G.Calcaterra",
+        "position": "TE",
+        "team_effective": "PHI",
+        "ppr_points": 12.5,
+        "games_played": 7
+      },
+      {
+        "player_id": 415,
+        "player_name": "S.Miller",
+        "position": "WR",
+        "team_effective": "PIT",
+        "ppr_points": 12.3,
+        "games_played": 4
+      },
+      {
+        "player_id": 618,
+        "player_name": "N.Harris",
+        "position": "RB",
+        "team_effective": "LAC",
+        "ppr_points": 11.600000000000001,
+        "games_played": 3
+      },
+      {
+        "player_id": 979,
+        "player_name": "S.Matlock",
+        "position": "FB",
+        "team_effective": "LAC",
+        "ppr_points": 11.2,
+        "games_played": 3
+      },
+      {
+        "player_id": 693,
+        "player_name": "Q.Morris",
+        "position": "TE",
+        "team_effective": "JAX",
+        "ppr_points": 10.0,
+        "games_played": 4
+      },
+      {
+        "player_id": 525,
+        "player_name": "A.Dillon",
+        "position": "RB",
+        "team_effective": "PHI",
+        "ppr_points": 9.8,
+        "games_played": 5
+      },
+      {
+        "player_id": 324,
+        "player_name": "B.Berrios",
+        "position": "WR",
+        "team_effective": "HOU",
+        "ppr_points": 9.700000000000001,
+        "games_played": 2
+      },
+      {
+        "player_id": 763,
+        "player_name": "H.Haskins",
+        "position": "RB",
+        "team_effective": "LAC",
+        "ppr_points": 9.700000000000001,
+        "games_played": 4
+      },
+      {
+        "player_id": 301,
+        "player_name": "M.Valdes-Scantling",
+        "position": "WR",
+        "team_effective": "SF",
+        "ppr_points": 8.0,
+        "games_played": 4
+      },
+      {
+        "player_id": 697,
+        "player_name": "A.Trammell",
+        "position": "WR",
+        "team_effective": "JAX",
+        "ppr_points": 7.6000000000000005,
+        "games_played": 5
+      },
+      {
+        "player_id": 1027,
+        "player_name": "K.Johnson",
+        "position": "WR",
+        "team_effective": "PIT",
+        "ppr_points": 6.9,
+        "games_played": 8
+      },
+      {
+        "player_id": 712,
+        "player_name": "D.Young",
+        "position": "WR",
+        "team_effective": "SEA",
+        "ppr_points": 6.8,
+        "games_played": 3
+      },
+      {
+        "player_id": 356,
+        "player_name": "D.Smythe",
+        "position": "TE",
+        "team_effective": "CHI",
+        "ppr_points": 6.5,
+        "games_played": 4
+      },
+      {
+        "player_id": 667,
+        "player_name": "J.Watson",
+        "position": "WR",
+        "team_effective": "HOU",
+        "ppr_points": 6.0,
+        "games_played": 2
+      },
+      {
+        "player_id": 738,
+        "player_name": "J.Mitchell",
+        "position": "TE",
+        "team_effective": "CAR",
+        "ppr_points": 5.800000000000001,
+        "games_played": 2
+      },
+      {
+        "player_id": 847,
+        "player_name": "J.Metchie",
+        "position": "WR",
+        "team_effective": "PHI",
+        "ppr_points": 5.8,
+        "games_played": 3
+      },
+      {
+        "player_id": 648,
+        "player_name": "T.Lance",
+        "position": "QB",
+        "team_effective": "LAC",
+        "ppr_points": 5.2,
+        "games_played": 3
+      },
+      {
+        "player_id": 330,
+        "player_name": "T.Sherfield",
+        "position": "WR",
+        "team_effective": "DEN",
+        "ppr_points": 5.1,
+        "games_played": 3
+      },
+      {
+        "player_id": 772,
+        "player_name": "B.Robinson",
+        "position": "RB",
+        "team_effective": "SF",
+        "ppr_points": 5.0,
+        "games_played": 2
+      },
+      {
+        "player_id": 541,
+        "player_name": "D.Duvernay",
+        "position": "WR",
+        "team_effective": "CHI",
+        "ppr_points": 4.6000000000000005,
+        "games_played": 3
+      },
+      {
+        "player_id": 1021,
+        "player_name": "B.Bates",
+        "position": "TE",
+        "team_effective": "HOU",
+        "ppr_points": 4.300000000000001,
+        "games_played": 1
+      },
+      {
+        "player_id": 242,
+        "player_name": "E.Saubert",
+        "position": "TE",
+        "team_effective": "SEA",
+        "ppr_points": 4.1,
+        "games_played": 4
+      },
+      {
+        "player_id": 896,
+        "player_name": "J.Bobo",
+        "position": "WR",
+        "team_effective": "SEA",
+        "ppr_points": 4.0,
+        "games_played": 2
+      },
+      {
+        "player_id": 984,
+        "player_name": "J.Wayne",
+        "position": "WR",
+        "team_effective": "HOU",
+        "ppr_points": 4.0,
+        "games_played": 1
+      },
+      {
+        "player_id": 614,
+        "player_name": "K.Granson",
+        "position": "TE",
+        "team_effective": "PHI",
+        "ppr_points": 4.0,
+        "games_played": 3
+      },
+      {
+        "player_id": 848,
+        "player_name": "T.Fisk",
+        "position": "TE",
+        "team_effective": "LAC",
+        "ppr_points": 3.9000000000000004,
+        "games_played": 4
+      },
+      {
+        "player_id": 845,
+        "player_name": "L.Krull",
+        "position": "TE",
+        "team_effective": "DEN",
+        "ppr_points": 3.5,
+        "games_played": 2
+      },
+      {
+        "player_id": 771,
+        "player_name": "V.Jones",
+        "position": "WR",
+        "team_effective": "SEA",
+        "ppr_points": 3.2,
+        "games_played": 1
+      },
+      {
+        "player_id": 513,
+        "player_name": "H.Bryant",
+        "position": "TE",
+        "team_effective": "HOU",
+        "ppr_points": 2.7,
+        "games_played": 4
+      },
+      {
+        "player_id": 729,
+        "player_name": "D.Pierce",
+        "position": "RB",
+        "team_effective": "HOU",
+        "ppr_points": 2.6,
+        "games_played": 2
+      },
+      {
+        "player_id": 863,
+        "player_name": "X.Gipson",
+        "position": "WR",
+        "team_effective": "PHI",
+        "ppr_points": 2.6,
+        "games_played": 2
+      },
+      {
+        "player_id": 857,
+        "player_name": "T.Bagent",
+        "position": "QB",
+        "team_effective": "CHI",
+        "ppr_points": 2.58,
+        "games_played": 2
+      },
+      {
+        "player_id": 690,
+        "player_name": "T.Jones",
+        "position": "WR",
+        "team_effective": "JAX",
+        "ppr_points": 2.5,
+        "games_played": 1
+      },
+      {
+        "player_id": 260,
+        "player_name": "M.Trubisky",
+        "position": "QB",
+        "team_effective": "BUF",
+        "ppr_points": 2.26,
+        "games_played": 3
+      },
+      {
+        "player_id": 564,
+        "player_name": "D.Dallas",
+        "position": "RB",
+        "team_effective": "JAX",
+        "ppr_points": 2.1,
+        "games_played": 1
+      },
+      {
+        "player_id": 1064,
+        "player_name": "J.Wright",
+        "position": "RB",
+        "team_effective": "SEA",
+        "ppr_points": 2.0,
+        "games_played": 1
+      },
+      {
+        "player_id": 972,
+        "player_name": "T.McKee",
+        "position": "QB",
+        "team_effective": "PHI",
+        "ppr_points": 1.82,
+        "games_played": 3
+      },
+      {
+        "player_id": 388,
+        "player_name": "D.Davis",
+        "position": "WR",
+        "team_effective": "LAC",
+        "ppr_points": 1.8,
+        "games_played": 4
+      },
+      {
+        "player_id": 916,
+        "player_name": "R.Johnson",
+        "position": "RB",
+        "team_effective": "CHI",
+        "ppr_points": 1.7000000000000002,
+        "games_played": 2
+      },
+      {
+        "player_id": 1028,
+        "player_name": "B.Brooks",
+        "position": "RB",
+        "team_effective": "HOU",
+        "ppr_points": 1.5,
+        "games_played": 2
+      },
+      {
+        "player_id": 243,
+        "player_name": "D.Moore",
+        "position": "WR",
+        "team_effective": "CAR",
+        "ppr_points": 1.5,
+        "games_played": 1
+      },
+      {
+        "player_id": 167,
+        "player_name": "S.Anderson",
+        "position": "TE",
+        "team_effective": "PIT",
+        "ppr_points": 1.4,
+        "games_played": 1
+      },
+      {
+        "player_id": 145,
+        "player_name": "D.Johnson",
+        "position": "RB",
+        "team_effective": "NE",
+        "ppr_points": 1.2000000000000002,
+        "games_played": 3
+      },
+      {
+        "player_id": 868,
+        "player_name": "T.Bigsby",
+        "position": "RB",
+        "team_effective": "JAX",
+        "ppr_points": 1.2000000000000002,
+        "games_played": 1
+      },
+      {
+        "player_id": 505,
+        "player_name": "R.Gilliam",
+        "position": "FB",
+        "team_effective": "BUF",
+        "ppr_points": 1.2,
+        "games_played": 2
+      },
+      {
+        "player_id": 659,
+        "player_name": "J.Dobbs",
+        "position": "QB",
+        "team_effective": "NE",
+        "ppr_points": 1.1799999999999997,
+        "games_played": 3
+      },
+      {
+        "player_id": 25,
+        "player_name": "T.Williams",
+        "position": "T",
+        "team_effective": "LAC",
+        "ppr_points": 0.9,
+        "games_played": 1
+      },
+      {
+        "player_id": 417,
+        "player_name": "M.Gaskin",
+        "position": "RB",
+        "team_effective": "SEA",
+        "ppr_points": 0.6000000000000001,
+        "games_played": 1
+      },
+      {
+        "player_id": 466,
+        "player_name": "D.Lock",
+        "position": "QB",
+        "team_effective": "SEA",
+        "ppr_points": 0.09999999999999998,
+        "games_played": 3
+      },
+      {
+        "player_id": 391,
+        "player_name": "M.Hardman",
+        "position": "WR",
+        "team_effective": "BUF",
+        "ppr_points": 0.0,
+        "games_played": 1
+      },
+      {
+        "player_id": 981,
+        "player_name": "B.Willis",
+        "position": "TE",
+        "team_effective": "SF",
+        "ppr_points": 0.0,
+        "games_played": 1
+      },
+      {
+        "player_id": 564,
+        "player_name": "D.Dallas",
+        "position": "RB",
+        "team_effective": "CAR",
+        "ppr_points": 0.0,
+        "games_played": 1
+      },
+      {
+        "player_id": 370,
+        "player_name": "M.Turner",
+        "position": "WR",
+        "team_effective": "SF",
+        "ppr_points": 0.0,
+        "games_played": 1
+      },
+      {
+        "player_id": 675,
+        "player_name": "J.Stidham",
+        "position": "QB",
+        "team_effective": "DEN",
+        "ppr_points": -0.1,
+        "games_played": 1
+      },
+      {
+        "player_id": 448,
+        "player_name": "T.Homer",
+        "position": "RB",
+        "team_effective": "CHI",
+        "ppr_points": -0.2,
+        "games_played": 1
+      },
+      {
+        "player_id": 220,
+        "player_name": "N.Mullens",
+        "position": "QB",
+        "team_effective": "JAX",
+        "ppr_points": -0.4800000000000001,
+        "games_played": 3
+      },
+      {
+        "player_id": 874,
+        "player_name": "C.Tune",
+        "position": "QB",
+        "team_effective": "GB",
+        "ppr_points": -1.68,
+        "games_played": 1
+      },
+      {
+        "player_id": 537,
+        "player_name": "B.Mann",
+        "position": "P",
+        "team_effective": "PHI",
+        "ppr_points": -3.4000000000000004,
+        "games_played": 1
+      }
+    ],
+    "qb": [
+      {
+        "player_id": 368,
+        "player_name": "J.Allen",
+        "position": "QB",
+        "team_effective": "BUF",
+        "ppr_points": 368.62,
+        "games_played": 16
+      },
+      {
+        "player_id": 1060,
+        "player_name": "D.Maye",
+        "position": "QB",
+        "team_effective": "NE",
+        "ppr_points": 338.22,
+        "games_played": 16
+      },
+      {
+        "player_id": 636,
+        "player_name": "T.Lawrence",
+        "position": "QB",
+        "team_effective": "JAX",
+        "ppr_points": 318.88,
+        "games_played": 16
+      },
+      {
+        "player_id": 555,
+        "player_name": "J.Hurts",
+        "position": "QB",
+        "team_effective": "PHI",
+        "ppr_points": 307.06,
+        "games_played": 16
+      },
+      {
+        "player_id": 1076,
+        "player_name": "C.Williams",
+        "position": "QB",
+        "team_effective": "CHI",
+        "ppr_points": 303.6,
+        "games_played": 16
+      },
+      {
+        "player_id": 1039,
+        "player_name": "B.Nix",
+        "position": "QB",
+        "team_effective": "DEN",
+        "ppr_points": 290.3,
+        "games_played": 16
+      },
+      {
+        "player_id": 545,
+        "player_name": "J.Herbert",
+        "position": "QB",
+        "team_effective": "LAC",
+        "ppr_points": 288.88,
+        "games_played": 16
+      },
+      {
+        "player_id": 524,
+        "player_name": "J.Love",
+        "position": "QB",
+        "team_effective": "GB",
+        "ppr_points": 235.14,
+        "games_played": 15
+      },
+      {
+        "player_id": 371,
+        "player_name": "S.Darnold",
+        "position": "QB",
+        "team_effective": "SEA",
+        "ppr_points": 234.6,
+        "games_played": 16
+      },
+      {
+        "player_id": 4,
+        "player_name": "A.Rodgers",
+        "position": "QB",
+        "team_effective": "PIT",
+        "ppr_points": 209.32,
+        "games_played": 15
+      },
+      {
+        "player_id": 933,
+        "player_name": "B.Young",
+        "position": "QB",
+        "team_effective": "CAR",
+        "ppr_points": 207.5,
+        "games_played": 15
+      },
+      {
+        "player_id": 935,
+        "player_name": "C.Stroud",
+        "position": "QB",
+        "team_effective": "HOU",
+        "ppr_points": 191.28,
+        "games_played": 13
+      },
+      {
+        "player_id": 780,
+        "player_name": "B.Purdy",
+        "position": "QB",
+        "team_effective": "SF",
+        "ppr_points": 174.2,
+        "games_played": 8
+      },
+      {
+        "player_id": 620,
+        "player_name": "D.Mills",
+        "position": "QB",
+        "team_effective": "HOU",
+        "ppr_points": 63.96,
+        "games_played": 5
+      },
+      {
+        "player_id": 798,
+        "player_name": "M.Willis",
+        "position": "QB",
+        "team_effective": "GB",
+        "ppr_points": 53.17999999999999,
+        "games_played": 4
+      },
+      {
+        "player_id": 45,
+        "player_name": "R.Wilson",
+        "position": "QB",
+        "team_effective": "PIT",
+        "ppr_points": 40.6,
+        "games_played": 9
+      },
+      {
+        "player_id": 351,
+        "player_name": "M.Rudolph",
+        "position": "QB",
+        "team_effective": "PIT",
+        "ppr_points": 17.0,
+        "games_played": 5
+      },
+      {
+        "player_id": 31,
+        "player_name": "A.Dalton",
+        "position": "QB",
+        "team_effective": "CAR",
+        "ppr_points": 13.52,
+        "games_played": 4
+      },
+      {
+        "player_id": 648,
+        "player_name": "T.Lance",
+        "position": "QB",
+        "team_effective": "LAC",
+        "ppr_points": 5.2,
+        "games_played": 3
+      },
+      {
+        "player_id": 857,
+        "player_name": "T.Bagent",
+        "position": "QB",
+        "team_effective": "CHI",
+        "ppr_points": 2.58,
+        "games_played": 2
+      },
+      {
+        "player_id": 260,
+        "player_name": "M.Trubisky",
+        "position": "QB",
+        "team_effective": "BUF",
+        "ppr_points": 2.26,
+        "games_played": 3
+      },
+      {
+        "player_id": 972,
+        "player_name": "T.McKee",
+        "position": "QB",
+        "team_effective": "PHI",
+        "ppr_points": 1.82,
+        "games_played": 3
+      },
+      {
+        "player_id": 659,
+        "player_name": "J.Dobbs",
+        "position": "QB",
+        "team_effective": "NE",
+        "ppr_points": 1.1799999999999997,
+        "games_played": 3
+      },
+      {
+        "player_id": 466,
+        "player_name": "D.Lock",
+        "position": "QB",
+        "team_effective": "SEA",
+        "ppr_points": 0.09999999999999998,
+        "games_played": 3
+      },
+      {
+        "player_id": 675,
+        "player_name": "J.Stidham",
+        "position": "QB",
+        "team_effective": "DEN",
+        "ppr_points": -0.1,
+        "games_played": 1
+      },
+      {
+        "player_id": 220,
+        "player_name": "N.Mullens",
+        "position": "QB",
+        "team_effective": "JAX",
+        "ppr_points": -0.4800000000000001,
+        "games_played": 3
+      },
+      {
+        "player_id": 874,
+        "player_name": "C.Tune",
+        "position": "QB",
+        "team_effective": "GB",
+        "ppr_points": -1.68,
+        "games_played": 1
+      }
+    ],
+    "rb": [
+      {
+        "player_id": 211,
+        "player_name": "C.McCaffrey",
+        "position": "RB",
+        "team_effective": "SF",
+        "ppr_points": 402.90000000000003,
+        "games_played": 16
+      },
+      {
+        "player_id": 724,
+        "player_name": "J.Cook",
+        "position": "RB",
+        "team_effective": "BUF",
+        "ppr_points": 306.70000000000005,
+        "games_played": 16
+      },
+      {
+        "player_id": 464,
+        "player_name": "J.Jacobs",
+        "position": "RB",
+        "team_effective": "GB",
+        "ppr_points": 241.10000000000002,
+        "games_played": 15
+      },
+      {
+        "player_id": 364,
+        "player_name": "S.Barkley",
+        "position": "RB",
+        "team_effective": "PHI",
+        "ppr_points": 232.3,
+        "games_played": 16
+      },
+      {
+        "player_id": 529,
+        "player_name": "D.Swift",
+        "position": "RB",
+        "team_effective": "CHI",
+        "ppr_points": 225.9,
+        "games_played": 15
+      },
+      {
+        "player_id": 825,
+        "player_name": "R.Dowdle",
+        "position": "RB",
+        "team_effective": "CAR",
+        "ppr_points": 213.3,
+        "games_played": 16
+      },
+      {
+        "player_id": 719,
+        "player_name": "J.Warren",
+        "position": "RB",
+        "team_effective": "PIT",
+        "ppr_points": 202.2,
+        "games_played": 15
+      },
+      {
+        "player_id": 626,
+        "player_name": "K.Gainwell",
+        "position": "RB",
+        "team_effective": "PIT",
+        "ppr_points": 201.9,
+        "games_played": 16
+      },
+      {
+        "player_id": 800,
+        "player_name": "K.Walker",
+        "position": "RB",
+        "team_effective": "SEA",
+        "ppr_points": 174.6,
+        "games_played": 16
+      },
+      {
+        "player_id": 937,
+        "player_name": "Z.Charbonnet",
+        "position": "RB",
+        "team_effective": "SEA",
+        "ppr_points": 160.7,
+        "games_played": 15
+      },
+      {
+        "player_id": 705,
+        "player_name": "T.Etienne",
+        "position": "RB",
+        "team_effective": "JAX",
+        "ppr_points": 151.4,
+        "games_played": 9
+      },
+      {
+        "player_id": 613,
+        "player_name": "R.Stevenson",
+        "position": "RB",
+        "team_effective": "NE",
+        "ppr_points": 145.5,
+        "games_played": 13
+      },
+      {
+        "player_id": 579,
+        "player_name": "C.Hubbard",
+        "position": "RB",
+        "team_effective": "CAR",
+        "ppr_points": 123.7,
+        "games_played": 14
+      },
+      {
+        "player_id": 685,
+        "player_name": "J.Dobbins",
+        "position": "RB",
+        "team_effective": "DEN",
+        "ppr_points": 115.9,
+        "games_played": 10
+      },
+      {
+        "player_id": 1011,
+        "player_name": "K.Vidal",
+        "position": "RB",
+        "team_effective": "LAC",
+        "ppr_points": 115.9,
+        "games_played": 11
+      },
+      {
+        "player_id": 354,
+        "player_name": "N.Chubb",
+        "position": "RB",
+        "team_effective": "HOU",
+        "ppr_points": 88.3,
+        "games_played": 15
+      },
+      {
+        "player_id": 899,
+        "player_name": "E.Wilson",
+        "position": "RB",
+        "team_effective": "GB",
+        "ppr_points": 86.7,
+        "games_played": 15
+      },
+      {
+        "player_id": 782,
+        "player_name": "K.Williams",
+        "position": "RB",
+        "team_effective": "NE",
+        "ppr_points": 43.7,
+        "games_played": 11
+      },
+      {
+        "player_id": 868,
+        "player_name": "T.Bigsby",
+        "position": "RB",
+        "team_effective": "PHI",
+        "ppr_points": 35.0,
+        "games_played": 9
+      },
+      {
+        "player_id": 1065,
+        "player_name": "R.Davis",
+        "position": "RB",
+        "team_effective": "BUF",
+        "ppr_points": 32.7,
+        "games_played": 12
+      },
+      {
+        "player_id": 709,
+        "player_name": "T.Badie",
+        "position": "RB",
+        "team_effective": "DEN",
+        "ppr_points": 30.8,
+        "games_played": 13
+      },
+      {
+        "player_id": 892,
+        "player_name": "C.Brooks",
+        "position": "RB",
+        "team_effective": "GB",
+        "ppr_points": 26.6,
+        "games_played": 13
+      },
+      {
+        "player_id": 898,
+        "player_name": "J.McLaughlin",
+        "position": "RB",
+        "team_effective": "DEN",
+        "ppr_points": 24.6,
+        "games_played": 7
+      },
+      {
+        "player_id": 256,
+        "player_name": "D.Ogunbowale",
+        "position": "RB",
+        "team_effective": "HOU",
+        "ppr_points": 24.2,
+        "games_played": 8
+      },
+      {
+        "player_id": 540,
+        "player_name": "A.Gibson",
+        "position": "RB",
+        "team_effective": "NE",
+        "ppr_points": 19.2,
+        "games_played": 5
+      },
+      {
+        "player_id": 606,
+        "player_name": "J.Patterson",
+        "position": "RB",
+        "team_effective": "LAC",
+        "ppr_points": 19.0,
+        "games_played": 5
+      },
+      {
+        "player_id": 992,
+        "player_name": "G.Holani",
+        "position": "RB",
+        "team_effective": "SEA",
+        "ppr_points": 16.8,
+        "games_played": 4
+      },
+      {
+        "player_id": 1042,
+        "player_name": "W.Shipley",
+        "position": "RB",
+        "team_effective": "PHI",
+        "ppr_points": 16.2,
+        "games_played": 10
+      },
+      {
+        "player_id": 1046,
+        "player_name": "T.Jennings",
+        "position": "RB",
+        "team_effective": "NE",
+        "ppr_points": 15.200000000000001,
+        "games_played": 5
+      },
+      {
+        "player_id": 705,
+        "player_name": "T.Etienne",
+        "position": "RB",
+        "team_effective": "CAR",
+        "ppr_points": 13.700000000000001,
+        "games_played": 8
+      },
+      {
+        "player_id": 618,
+        "player_name": "N.Harris",
+        "position": "RB",
+        "team_effective": "LAC",
+        "ppr_points": 11.600000000000001,
+        "games_played": 3
+      },
+      {
+        "player_id": 525,
+        "player_name": "A.Dillon",
+        "position": "RB",
+        "team_effective": "PHI",
+        "ppr_points": 9.8,
+        "games_played": 5
+      },
+      {
+        "player_id": 763,
+        "player_name": "H.Haskins",
+        "position": "RB",
+        "team_effective": "LAC",
+        "ppr_points": 9.700000000000001,
+        "games_played": 4
+      },
+      {
+        "player_id": 772,
+        "player_name": "B.Robinson",
+        "position": "RB",
+        "team_effective": "SF",
+        "ppr_points": 5.0,
+        "games_played": 2
+      },
+      {
+        "player_id": 729,
+        "player_name": "D.Pierce",
+        "position": "RB",
+        "team_effective": "HOU",
+        "ppr_points": 2.6,
+        "games_played": 2
+      },
+      {
+        "player_id": 564,
+        "player_name": "D.Dallas",
+        "position": "RB",
+        "team_effective": "JAX",
+        "ppr_points": 2.1,
+        "games_played": 1
+      },
+      {
+        "player_id": 1064,
+        "player_name": "J.Wright",
+        "position": "RB",
+        "team_effective": "SEA",
+        "ppr_points": 2.0,
+        "games_played": 1
+      },
+      {
+        "player_id": 916,
+        "player_name": "R.Johnson",
+        "position": "RB",
+        "team_effective": "CHI",
+        "ppr_points": 1.7000000000000002,
+        "games_played": 2
+      },
+      {
+        "player_id": 1028,
+        "player_name": "B.Brooks",
+        "position": "RB",
+        "team_effective": "HOU",
+        "ppr_points": 1.5,
+        "games_played": 2
+      },
+      {
+        "player_id": 145,
+        "player_name": "D.Johnson",
+        "position": "RB",
+        "team_effective": "NE",
+        "ppr_points": 1.2000000000000002,
+        "games_played": 3
+      },
+      {
+        "player_id": 868,
+        "player_name": "T.Bigsby",
+        "position": "RB",
+        "team_effective": "JAX",
+        "ppr_points": 1.2000000000000002,
+        "games_played": 1
+      },
+      {
+        "player_id": 417,
+        "player_name": "M.Gaskin",
+        "position": "RB",
+        "team_effective": "SEA",
+        "ppr_points": 0.6000000000000001,
+        "games_played": 1
+      },
+      {
+        "player_id": 564,
+        "player_name": "D.Dallas",
+        "position": "RB",
+        "team_effective": "CAR",
+        "ppr_points": 0.0,
+        "games_played": 1
+      },
+      {
+        "player_id": 448,
+        "player_name": "T.Homer",
+        "position": "RB",
+        "team_effective": "CHI",
+        "ppr_points": -0.2,
+        "games_played": 1
+      }
+    ],
+    "wr": [
+      {
+        "player_id": 864,
+        "player_name": "J.Smith-Njigba",
+        "position": "WR",
+        "team_effective": "SEA",
+        "ppr_points": 347.5,
+        "games_played": 16
+      },
+      {
+        "player_id": 578,
+        "player_name": "N.Collins",
+        "position": "WR",
+        "team_effective": "HOU",
+        "ppr_points": 226.20000000000002,
+        "games_played": 15
+      },
+      {
+        "player_id": 24,
+        "player_name": "A.Brown",
+        "position": "WR",
+        "team_effective": "PHI",
+        "ppr_points": 220.3,
+        "games_played": 15
+      },
+      {
+        "player_id": 310,
+        "player_name": "C.Sutton",
+        "position": "WR",
+        "team_effective": "DEN",
+        "ppr_points": 216.20000000000002,
+        "games_played": 16
+      },
+      {
+        "player_id": 116,
+        "player_name": "S.Diggs",
+        "position": "WR",
+        "team_effective": "NE",
+        "ppr_points": 203.0,
+        "games_played": 16
+      },
+      {
+        "player_id": 128,
+        "player_name": "D.Smith",
+        "position": "WR",
+        "team_effective": "PHI",
+        "ppr_points": 193.6,
+        "games_played": 16
+      },
+      {
+        "player_id": 455,
+        "player_name": "D.Metcalf",
+        "position": "WR",
+        "team_effective": "PIT",
+        "ppr_points": 187.2,
+        "games_played": 15
+      },
+      {
+        "player_id": 1073,
+        "player_name": "L.McConkey",
+        "position": "WR",
+        "team_effective": "LAC",
+        "ppr_points": 180.9,
+        "games_played": 16
+      },
+      {
+        "player_id": 865,
+        "player_name": "Q.Johnston",
+        "position": "WR",
+        "team_effective": "LAC",
+        "ppr_points": 173.2,
+        "games_played": 13
+      },
+      {
+        "player_id": 1063,
+        "player_name": "T.Franklin",
+        "position": "WR",
+        "team_effective": "DEN",
+        "ppr_points": 173.1,
+        "games_played": 16
+      },
+      {
+        "player_id": 65,
+        "player_name": "K.Allen",
+        "position": "WR",
+        "team_effective": "LAC",
+        "ppr_points": 172.1,
+        "games_played": 16
+      },
+      {
+        "player_id": 522,
+        "player_name": "J.Jennings",
+        "position": "WR",
+        "team_effective": "SF",
+        "ppr_points": 165.8,
+        "games_played": 14
+      },
+      {
+        "player_id": 730,
+        "player_name": "K.Shakir",
+        "position": "WR",
+        "team_effective": "BUF",
+        "ppr_points": 165.1,
+        "games_played": 16
+      },
+      {
+        "player_id": 777,
+        "player_name": "R.Doubs",
+        "position": "WR",
+        "team_effective": "GB",
+        "ppr_points": 163.4,
+        "games_played": 16
+      },
+      {
+        "player_id": 243,
+        "player_name": "D.Moore",
+        "position": "WR",
+        "team_effective": "CHI",
+        "ppr_points": 155.78,
+        "games_played": 15
+      },
+      {
+        "player_id": 879,
+        "player_name": "P.Washington",
+        "position": "WR",
+        "team_effective": "JAX",
+        "ppr_points": 153.0,
+        "games_played": 14
+      },
+      {
+        "player_id": 1077,
+        "player_name": "R.Odunze",
+        "position": "WR",
+        "team_effective": "CHI",
+        "ppr_points": 146.1,
+        "games_played": 12
+      },
+      {
+        "player_id": 797,
+        "player_name": "C.Watson",
+        "position": "WR",
+        "team_effective": "GB",
+        "ppr_points": 132.4,
+        "games_played": 10
+      },
+      {
+        "player_id": 47,
+        "player_name": "M.Jones",
+        "position": "WR",
+        "team_effective": "SF",
+        "ppr_points": 132.04,
+        "games_played": 11
+      },
+      {
+        "player_id": 1067,
+        "player_name": "B.Thomas",
+        "position": "WR",
+        "team_effective": "JAX",
+        "ppr_points": 130.9,
+        "games_played": 13
+      },
+      {
+        "player_id": 880,
+        "player_name": "K.Boutte",
+        "position": "WR",
+        "team_effective": "NE",
+        "ppr_points": 119.7,
+        "games_played": 13
+      },
+      {
+        "player_id": 240,
+        "player_name": "M.Hollins",
+        "position": "WR",
+        "team_effective": "NE",
+        "ppr_points": 113.4,
+        "games_played": 14
+      },
+      {
+        "player_id": 273,
+        "player_name": "C.Kupp",
+        "position": "WR",
+        "team_effective": "SEA",
+        "ppr_points": 111.4,
+        "games_played": 15
+      },
+      {
+        "player_id": 376,
+        "player_name": "J.Meyers",
+        "position": "WR",
+        "team_effective": "JAX",
+        "ppr_points": 100.2,
+        "games_played": 8
+      },
+      {
+        "player_id": 1069,
+        "player_name": "K.Coleman",
+        "position": "WR",
+        "team_effective": "BUF",
+        "ppr_points": 95.5,
+        "games_played": 11
+      },
+      {
+        "player_id": 218,
+        "player_name": "K.Bourne",
+        "position": "WR",
+        "team_effective": "SF",
+        "ppr_points": 92.10000000000001,
+        "games_played": 13
+      },
+      {
+        "player_id": 885,
+        "player_name": "D.Douglas",
+        "position": "WR",
+        "team_effective": "NE",
+        "ppr_points": 90.9,
+        "games_played": 15
+      },
+      {
+        "player_id": 1074,
+        "player_name": "R.Pearsall",
+        "position": "WR",
+        "team_effective": "SF",
+        "ppr_points": 88.60000000000001,
+        "games_played": 9
+      },
+      {
+        "player_id": 910,
+        "player_name": "M.Mims",
+        "position": "WR",
+        "team_effective": "DEN",
+        "ppr_points": 86.0,
+        "games_played": 14
+      },
+      {
+        "player_id": 396,
+        "player_name": "O.Zaccheaus",
+        "position": "WR",
+        "team_effective": "CHI",
+        "ppr_points": 84.80000000000001,
+        "games_played": 14
+      },
+      {
+        "player_id": 883,
+        "player_name": "X.Hutchinson",
+        "position": "WR",
+        "team_effective": "HOU",
+        "ppr_points": 84.6,
+        "games_played": 15
+      },
+      {
+        "player_id": 997,
+        "player_name": "X.Legette",
+        "position": "WR",
+        "team_effective": "CAR",
+        "ppr_points": 84.10000000000001,
+        "games_played": 14
+      },
+      {
+        "player_id": 853,
+        "player_name": "D.Wicks",
+        "position": "WR",
+        "team_effective": "GB",
+        "ppr_points": 75.8,
+        "games_played": 13
+      },
+      {
+        "player_id": 1022,
+        "player_name": "J.Coker",
+        "position": "WR",
+        "team_effective": "CAR",
+        "ppr_points": 73.7,
+        "games_played": 10
+      },
+      {
+        "player_id": 850,
+        "player_name": "C.Austin",
+        "position": "WR",
+        "team_effective": "PIT",
+        "ppr_points": 71.7,
+        "games_played": 13
+      },
+      {
+        "player_id": 352,
+        "player_name": "C.Kirk",
+        "position": "WR",
+        "team_effective": "HOU",
+        "ppr_points": 57.199999999999996,
+        "games_played": 10
+      },
+      {
+        "player_id": 642,
+        "player_name": "J.Palmer",
+        "position": "WR",
+        "team_effective": "BUF",
+        "ppr_points": 51.2,
+        "games_played": 11
+      },
+      {
+        "player_id": 170,
+        "player_name": "D.Robinson",
+        "position": "WR",
+        "team_effective": "SF",
+        "ppr_points": 50.8,
+        "games_played": 13
+      },
+      {
+        "player_id": 224,
+        "player_name": "T.Patrick",
+        "position": "WR",
+        "team_effective": "JAX",
+        "ppr_points": 50.300000000000004,
+        "games_played": 12
+      },
+      {
+        "player_id": 932,
+        "player_name": "J.Reed",
+        "position": "WR",
+        "team_effective": "GB",
+        "ppr_points": 48.5,
+        "games_played": 5
+      },
+      {
+        "player_id": 982,
+        "player_name": "T.Shavers",
+        "position": "WR",
+        "team_effective": "BUF",
+        "ppr_points": 45.5,
+        "games_played": 10
+      },
+      {
+        "player_id": 105,
+        "player_name": "M.Evans",
+        "position": "WR",
+        "team_effective": "CAR",
+        "ppr_points": 45.1,
+        "games_played": 11
+      },
+      {
+        "player_id": 768,
+        "player_name": "J.Dotson",
+        "position": "WR",
+        "team_effective": "PHI",
+        "ppr_points": 43.2,
+        "games_played": 13
+      },
+      {
+        "player_id": 758,
+        "player_name": "R.Shaheed",
+        "position": "WR",
+        "team_effective": "SEA",
+        "ppr_points": 39.0,
+        "games_played": 8
+      },
+      {
+        "player_id": 379,
+        "player_name": "H.Renfrow",
+        "position": "WR",
+        "team_effective": "CAR",
+        "ppr_points": 35.900000000000006,
+        "games_played": 6
+      },
+      {
+        "player_id": 638,
+        "player_name": "E.Moore",
+        "position": "WR",
+        "team_effective": "BUF",
+        "ppr_points": 28.599999999999998,
+        "games_played": 9
+      },
+      {
+        "player_id": 598,
+        "player_name": "S.Williams",
+        "position": "WR",
+        "team_effective": "GB",
+        "ppr_points": 27.500000000000004,
+        "games_played": 11
+      },
+      {
+        "player_id": 986,
+        "player_name": "B.Tremayne",
+        "position": "WR",
+        "team_effective": "CAR",
+        "ppr_points": 25.3,
+        "games_played": 7
+      },
+      {
+        "player_id": 429,
+        "player_name": "L.Humphrey",
+        "position": "WR",
+        "team_effective": "DEN",
+        "ppr_points": 25.1,
+        "games_played": 5
+      },
+      {
+        "player_id": 833,
+        "player_name": "B.Melton",
+        "position": "WR",
+        "team_effective": "GB",
+        "ppr_points": 24.200000000000003,
+        "games_played": 7
+      },
+      {
+        "player_id": 212,
+        "player_name": "C.Samuel",
+        "position": "WR",
+        "team_effective": "BUF",
+        "ppr_points": 21.1,
+        "games_played": 5
+      },
+      {
+        "player_id": 484,
+        "player_name": "C.White",
+        "position": "WR",
+        "team_effective": "SEA",
+        "ppr_points": 18.0,
+        "games_played": 3
+      },
+      {
+        "player_id": 612,
+        "player_name": "B.Skowronek",
+        "position": "WR",
+        "team_effective": "PIT",
+        "ppr_points": 16.9,
+        "games_played": 6
+      },
+      {
+        "player_id": 88,
+        "player_name": "B.Cooks",
+        "position": "WR",
+        "team_effective": "BUF",
+        "ppr_points": 16.400000000000002,
+        "games_played": 4
+      },
+      {
+        "player_id": 506,
+        "player_name": "G.Davis",
+        "position": "WR",
+        "team_effective": "BUF",
+        "ppr_points": 15.8,
+        "games_played": 5
+      },
+      {
+        "player_id": 301,
+        "player_name": "M.Valdes-Scantling",
+        "position": "WR",
+        "team_effective": "PIT",
+        "ppr_points": 15.6,
+        "games_played": 4
+      },
+      {
+        "player_id": 58,
+        "player_name": "A.Thielen",
+        "position": "WR",
+        "team_effective": "PIT",
+        "ppr_points": 15.4,
+        "games_played": 4
+      },
+      {
+        "player_id": 704,
+        "player_name": "M.Bandy",
+        "position": "WR",
+        "team_effective": "DEN",
+        "ppr_points": 15.0,
+        "games_played": 3
+      },
+      {
+        "player_id": 787,
+        "player_name": "S.Moore",
+        "position": "WR",
+        "team_effective": "SF",
+        "ppr_points": 14.8,
+        "games_played": 9
+      },
+      {
+        "player_id": 859,
+        "player_name": "M.Heath",
+        "position": "WR",
+        "team_effective": "GB",
+        "ppr_points": 14.6,
+        "games_played": 5
+      },
+      {
+        "player_id": 415,
+        "player_name": "S.Miller",
+        "position": "WR",
+        "team_effective": "PIT",
+        "ppr_points": 12.3,
+        "games_played": 4
+      },
+      {
+        "player_id": 324,
+        "player_name": "B.Berrios",
+        "position": "WR",
+        "team_effective": "HOU",
+        "ppr_points": 9.700000000000001,
+        "games_played": 2
+      },
+      {
+        "player_id": 301,
+        "player_name": "M.Valdes-Scantling",
+        "position": "WR",
+        "team_effective": "SF",
+        "ppr_points": 8.0,
+        "games_played": 4
+      },
+      {
+        "player_id": 697,
+        "player_name": "A.Trammell",
+        "position": "WR",
+        "team_effective": "JAX",
+        "ppr_points": 7.6000000000000005,
+        "games_played": 5
+      },
+      {
+        "player_id": 1027,
+        "player_name": "K.Johnson",
+        "position": "WR",
+        "team_effective": "PIT",
+        "ppr_points": 6.9,
+        "games_played": 8
+      },
+      {
+        "player_id": 712,
+        "player_name": "D.Young",
+        "position": "WR",
+        "team_effective": "SEA",
+        "ppr_points": 6.8,
+        "games_played": 3
+      },
+      {
+        "player_id": 667,
+        "player_name": "J.Watson",
+        "position": "WR",
+        "team_effective": "HOU",
+        "ppr_points": 6.0,
+        "games_played": 2
+      },
+      {
+        "player_id": 847,
+        "player_name": "J.Metchie",
+        "position": "WR",
+        "team_effective": "PHI",
+        "ppr_points": 5.8,
+        "games_played": 3
+      },
+      {
+        "player_id": 330,
+        "player_name": "T.Sherfield",
+        "position": "WR",
+        "team_effective": "DEN",
+        "ppr_points": 5.1,
+        "games_played": 3
+      },
+      {
+        "player_id": 541,
+        "player_name": "D.Duvernay",
+        "position": "WR",
+        "team_effective": "CHI",
+        "ppr_points": 4.6000000000000005,
+        "games_played": 3
+      },
+      {
+        "player_id": 896,
+        "player_name": "J.Bobo",
+        "position": "WR",
+        "team_effective": "SEA",
+        "ppr_points": 4.0,
+        "games_played": 2
+      },
+      {
+        "player_id": 984,
+        "player_name": "J.Wayne",
+        "position": "WR",
+        "team_effective": "HOU",
+        "ppr_points": 4.0,
+        "games_played": 1
+      },
+      {
+        "player_id": 771,
+        "player_name": "V.Jones",
+        "position": "WR",
+        "team_effective": "SEA",
+        "ppr_points": 3.2,
+        "games_played": 1
+      },
+      {
+        "player_id": 863,
+        "player_name": "X.Gipson",
+        "position": "WR",
+        "team_effective": "PHI",
+        "ppr_points": 2.6,
+        "games_played": 2
+      },
+      {
+        "player_id": 690,
+        "player_name": "T.Jones",
+        "position": "WR",
+        "team_effective": "JAX",
+        "ppr_points": 2.5,
+        "games_played": 1
+      },
+      {
+        "player_id": 388,
+        "player_name": "D.Davis",
+        "position": "WR",
+        "team_effective": "LAC",
+        "ppr_points": 1.8,
+        "games_played": 4
+      },
+      {
+        "player_id": 243,
+        "player_name": "D.Moore",
+        "position": "WR",
+        "team_effective": "CAR",
+        "ppr_points": 1.5,
+        "games_played": 1
+      },
+      {
+        "player_id": 391,
+        "player_name": "M.Hardman",
+        "position": "WR",
+        "team_effective": "BUF",
+        "ppr_points": 0.0,
+        "games_played": 1
+      },
+      {
+        "player_id": 370,
+        "player_name": "M.Turner",
+        "position": "WR",
+        "team_effective": "SF",
+        "ppr_points": 0.0,
+        "games_played": 1
+      }
+    ],
+    "te": [
+      {
+        "player_id": 311,
+        "player_name": "D.Goedert",
+        "position": "TE",
+        "team_effective": "PHI",
+        "ppr_points": 185.1,
+        "games_played": 15
+      },
+      {
+        "player_id": 195,
+        "player_name": "H.Henry",
+        "position": "TE",
+        "team_effective": "NE",
+        "ppr_points": 168.20000000000002,
+        "games_played": 16
+      },
+      {
+        "player_id": 318,
+        "player_name": "D.Schultz",
+        "position": "TE",
+        "team_effective": "HOU",
+        "ppr_points": 166.4,
+        "games_played": 16
+      },
+      {
+        "player_id": 213,
+        "player_name": "G.Kittle",
+        "position": "TE",
+        "team_effective": "SF",
+        "ppr_points": 153.6,
+        "games_played": 10
+      },
+      {
+        "player_id": 1048,
+        "player_name": "A.Barner",
+        "position": "TE",
+        "team_effective": "SEA",
+        "ppr_points": 143.9,
+        "games_played": 16
+      },
+      {
+        "player_id": 905,
+        "player_name": "D.Kincaid",
+        "position": "TE",
+        "team_effective": "BUF",
+        "ppr_points": 118.30000000000001,
+        "games_played": 11
+      },
+      {
+        "player_id": 914,
+        "player_name": "T.Kraft",
+        "position": "TE",
+        "team_effective": "GB",
+        "ppr_points": 117.19999999999999,
+        "games_played": 8
+      },
+      {
+        "player_id": 619,
+        "player_name": "P.Freiermuth",
+        "position": "TE",
+        "team_effective": "PIT",
+        "ppr_points": 105.5,
+        "games_played": 14
+      },
+      {
+        "player_id": 906,
+        "player_name": "B.Strange",
+        "position": "TE",
+        "team_effective": "JAX",
+        "ppr_points": 100.80000000000001,
+        "games_played": 11
+      },
+      {
+        "player_id": 264,
+        "player_name": "E.Engram",
+        "position": "TE",
+        "team_effective": "DEN",
+        "ppr_points": 95.3,
+        "games_played": 15
+      },
+      {
+        "player_id": 714,
+        "player_name": "J.Tonges",
+        "position": "TE",
+        "team_effective": "SF",
+        "ppr_points": 93.30000000000001,
+        "games_played": 9
+      },
+      {
+        "player_id": 463,
+        "player_name": "D.Knox",
+        "position": "TE",
+        "team_effective": "BUF",
+        "ppr_points": 91.30000000000001,
+        "games_played": 15
+      },
+      {
+        "player_id": 259,
+        "player_name": "J.Smith",
+        "position": "TE",
+        "team_effective": "PIT",
+        "ppr_points": 83.8,
+        "games_played": 16
+      },
+      {
+        "player_id": 869,
+        "player_name": "D.Washington",
+        "position": "TE",
+        "team_effective": "PIT",
+        "ppr_points": 73.4,
+        "games_played": 13
+      },
+      {
+        "player_id": 533,
+        "player_name": "C.Kmet",
+        "position": "TE",
+        "team_effective": "CHI",
+        "ppr_points": 73.10000000000001,
+        "games_played": 15
+      },
+      {
+        "player_id": 155,
+        "player_name": "A.Hooper",
+        "position": "TE",
+        "team_effective": "NE",
+        "ppr_points": 57.800000000000004,
+        "games_played": 12
+      },
+      {
+        "player_id": 1000,
+        "player_name": "J.Sanders",
+        "position": "TE",
+        "team_effective": "CAR",
+        "ppr_points": 54.0,
+        "games_played": 11
+      },
+      {
+        "player_id": 646,
+        "player_name": "T.Tremble",
+        "position": "TE",
+        "team_effective": "CAR",
+        "ppr_points": 51.1,
+        "games_played": 14
+      },
+      {
+        "player_id": 136,
+        "player_name": "D.Brown",
+        "position": "TE",
+        "team_effective": "JAX",
+        "ppr_points": 49.900000000000006,
+        "games_played": 10
+      },
+      {
+        "player_id": 931,
+        "player_name": "L.Musgrave",
+        "position": "TE",
+        "team_effective": "GB",
+        "ppr_points": 49.2,
+        "games_played": 13
+      },
+      {
+        "player_id": 561,
+        "player_name": "A.Trautman",
+        "position": "TE",
+        "team_effective": "DEN",
+        "ppr_points": 45.5,
+        "games_played": 11
+      },
+      {
+        "player_id": 645,
+        "player_name": "H.Long",
+        "position": "TE",
+        "team_effective": "JAX",
+        "ppr_points": 32.5,
+        "games_played": 7
+      },
+      {
+        "player_id": 617,
+        "player_name": "L.Farrell",
+        "position": "TE",
+        "team_effective": "SF",
+        "ppr_points": 31.5,
+        "games_played": 9
+      },
+      {
+        "player_id": 839,
+        "player_name": "J.FitzPatrick",
+        "position": "TE",
+        "team_effective": "GB",
+        "ppr_points": 25.2,
+        "games_played": 10
+      },
+      {
+        "player_id": 293,
+        "player_name": "W.Dissly",
+        "position": "TE",
+        "team_effective": "LAC",
+        "ppr_points": 19.1,
+        "games_played": 7
+      },
+      {
+        "player_id": 1001,
+        "player_name": "C.Stover",
+        "position": "TE",
+        "team_effective": "HOU",
+        "ppr_points": 18.0,
+        "games_played": 5
+      },
+      {
+        "player_id": 207,
+        "player_name": "J.Mundt",
+        "position": "TE",
+        "team_effective": "JAX",
+        "ppr_points": 17.5,
+        "games_played": 10
+      },
+      {
+        "player_id": 897,
+        "player_name": "N.Adkins",
+        "position": "TE",
+        "team_effective": "DEN",
+        "ppr_points": 16.8,
+        "games_played": 6
+      },
+      {
+        "player_id": 300,
+        "player_name": "T.Conklin",
+        "position": "TE",
+        "team_effective": "LAC",
+        "ppr_points": 15.7,
+        "games_played": 5
+      },
+      {
+        "player_id": 876,
+        "player_name": "J.Whyle",
+        "position": "TE",
+        "team_effective": "GB",
+        "ppr_points": 13.200000000000001,
+        "games_played": 5
+      },
+      {
+        "player_id": 710,
+        "player_name": "G.Calcaterra",
+        "position": "TE",
+        "team_effective": "PHI",
+        "ppr_points": 12.5,
+        "games_played": 7
+      },
+      {
+        "player_id": 693,
+        "player_name": "Q.Morris",
+        "position": "TE",
+        "team_effective": "JAX",
+        "ppr_points": 10.0,
+        "games_played": 4
+      },
+      {
+        "player_id": 356,
+        "player_name": "D.Smythe",
+        "position": "TE",
+        "team_effective": "CHI",
+        "ppr_points": 6.5,
+        "games_played": 4
+      },
+      {
+        "player_id": 738,
+        "player_name": "J.Mitchell",
+        "position": "TE",
+        "team_effective": "CAR",
+        "ppr_points": 5.800000000000001,
+        "games_played": 2
+      },
+      {
+        "player_id": 1021,
+        "player_name": "B.Bates",
+        "position": "TE",
+        "team_effective": "HOU",
+        "ppr_points": 4.300000000000001,
+        "games_played": 1
+      },
+      {
+        "player_id": 242,
+        "player_name": "E.Saubert",
+        "position": "TE",
+        "team_effective": "SEA",
+        "ppr_points": 4.1,
+        "games_played": 4
+      },
+      {
+        "player_id": 614,
+        "player_name": "K.Granson",
+        "position": "TE",
+        "team_effective": "PHI",
+        "ppr_points": 4.0,
+        "games_played": 3
+      },
+      {
+        "player_id": 848,
+        "player_name": "T.Fisk",
+        "position": "TE",
+        "team_effective": "LAC",
+        "ppr_points": 3.9000000000000004,
+        "games_played": 4
+      },
+      {
+        "player_id": 845,
+        "player_name": "L.Krull",
+        "position": "TE",
+        "team_effective": "DEN",
+        "ppr_points": 3.5,
+        "games_played": 2
+      },
+      {
+        "player_id": 513,
+        "player_name": "H.Bryant",
+        "position": "TE",
+        "team_effective": "HOU",
+        "ppr_points": 2.7,
+        "games_played": 4
+      }
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+[
+  {"team_id":1,"team_name":"Ajay's Team","owner_name":"Ajay","email":"ajay@email.com","roster":{"QB":[],"QB2":[],"RB":[],"RB2":[],"WR":[],"WR2":[],"TE":[],"FLEX":[],"FLEX2":[],"K":[]},"total_points":0,"ranking":0},
+  {"team_id":2,"team_name":"Chet's Team","owner_name":"Chet","email":"chet@email.com","roster":{"QB":[],"QB2":[],"RB":[],"RB2":[],"WR":[],"WR2":[],"TE":[],"FLEX":[],"FLEX2":[],"K":[]},"total_points":0,"ranking":0},
+  {"team_id":3,"team_name":"Nick's Team","owner_name":"Nick","email":"nick@email.com","roster":{"QB":[],"QB2":[],"RB":[],"RB2":[],"WR":[],"WR2":[],"TE":[],"FLEX":[],"FLEX2":[],"K":[]},"total_points":0,"ranking":0},
+  {"team_id":4,"team_name":"Riley's Team","owner_name":"Riley","email":"riley@email.com","roster":{"QB":[],"QB2":[],"RB":[],"RB2":[],"WR":[],"WR2":[],"TE":[],"FLEX":[],"FLEX2":[],"K":[]},"total_points":0,"ranking":0},
+  {"team_id":5,"team_name":"Seth's Team","owner_name":"Seth","email":"seth@email.com","roster":{"QB":[],"QB2":[],"RB":[],"RB2":[],"WR":[],"WR2":[],"TE":[],"FLEX":[],"FLEX2":[],"K":[]},"total_points":0,"ranking":0},
+  {"team_id":6,"team_name":"Zach's Team","owner_name":"Zach","email":"zach@email.com","roster":{"QB":[],"QB2":[],"RB":[],"RB2":[],"WR":[],"WR2":[],"TE":[],"FLEX":[],"FLEX2":[],"K":[]},"total_points":0,"ranking":0}
+]

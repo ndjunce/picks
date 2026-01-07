@@ -1,0 +1,23 @@
+{
+  "roster_composition": ["QB","QB2","RB","RB2","WR","WR2","TE","FLEX","FLEX2","K"],
+  "league_members_path": "league_members_UPDATED.json",
+  "rankings_path": "postseason_ppr_rankings.json",
+  "playoff_bracket": {
+    "AFC": [
+      {"seed":1, "team":"DEN"}, {"seed":2, "team":"NE"}, {"seed":3, "team":"JAX"},
+      {"seed":4, "team":"PIT"}, {"seed":5, "team":"HOU"}, {"seed":6, "team":"BUF"}, {"seed":7, "team":"LAC"}
+    ],
+    "NFC": [
+      {"seed":1, "team":"SEA"}, {"seed":2, "team":"CHI"}, {"seed":3, "team":"PHI"},
+      {"seed":4, "team":"CAR"}, {"seed":5, "team":"LAR"}, {"seed":6, "team":"SF"}, {"seed":7, "team":"GB"}
+    ],
+    "wildcard_matchups": [
+      {"conf":"NFC","home_seed":4,"home_team":"CAR","away_seed":5,"away_team":"LAR","datetime":"2026-01-10T16:30:00-05:00"},
+      {"conf":"NFC","home_seed":2,"home_team":"CHI","away_seed":7,"away_team":"GB","datetime":"2026-01-10T20:15:00-05:00"},
+      {"conf":"AFC","home_seed":3,"home_team":"JAX","away_seed":6,"away_team":"BUF","datetime":"2026-01-11T13:00:00-05:00"},
+      {"conf":"NFC","home_seed":3,"home_team":"PHI","away_seed":6,"away_team":"SF","datetime":"2026-01-11T16:30:00-05:00"},
+      {"conf":"AFC","home_seed":2,"home_team":"NE","away_seed":7,"away_team":"LAC","datetime":"2026-01-11T20:15:00-05:00"},
+      {"conf":"AFC","home_seed":4,"home_team":"PIT","away_seed":5,"away_team":"HOU","datetime":"2026-01-12T20:15:00-05:00"}
+    ]
+  }
+}
