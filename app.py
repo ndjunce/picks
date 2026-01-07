@@ -791,7 +791,7 @@ app.layout = dbc.Container([
                             {'label': html.Div(['⭐ Postseason Fantasy'], className='nav-pill'), 'value': 'postseason'},
                             {'label': html.Div(['🏆 Postseason Picks'], className='nav-pill'), 'value': 'postseason_picks'}
                         ],
-                        value='leaderboard',
+                        value='postseason',
                         labelStyle={'display': 'block'}
                     ),
                     html.Hr(style={'margin': '25px 0'}),
