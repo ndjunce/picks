@@ -1754,7 +1754,7 @@ def create_manual_entry_form():
                 ])
             ], width=4),
             dbc.Col([
-                dbc.Label("Chet 🐡"),
+                dbc.Label("Chet"),
                 dbc.Select(id="manual-chet", options=[
                     {"label": "Away", "value": "away"},
                     {"label": "Home", "value": "home"}
