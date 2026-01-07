@@ -7,3 +7,4 @@ openpyxl
 plotly
 python-dotenv
 psycopg2-binary
+nfl_data_py
