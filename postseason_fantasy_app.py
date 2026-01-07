@@ -108,6 +108,33 @@ def init_postseason_tables():
     conn.close()
 
 
+def _bootstrap_postseason_managers():
+    """Seed league managers/teams if none exist, using docs/postseason/league_members_UPDATED.json."""
+    try:
+        base_dir = os.getcwd()
+        json_path = os.path.join(base_dir, "docs", "postseason", "league_members_UPDATED.json")
+        if not os.path.exists(json_path):
+            return
+        import json
+        with open(json_path) as f:
+            members = json.load(f)
+        conn = get_conn()
+        cur = conn.cursor()
+        team_count = cur.execute("SELECT COUNT(*) FROM postseason_teams").fetchone()[0]
+        if team_count == 0:
+            for m in members:
+                team_name = m.get("team_name") or m.get("owner_name")
+                if team_name:
+                    cur.execute(
+                        "INSERT OR IGNORE INTO postseason_teams (team_name) VALUES (?)",
+                        (team_name,),
+                    )
+            conn.commit()
+        conn.close()
+    except Exception:
+        pass
+
+
 def register_user(username: str, password: str):
     conn = get_conn()
     cur = conn.cursor()
@@ -344,6 +371,7 @@ def fetch_league_rosters():
 
 
 init_postseason_tables()
+_bootstrap_postseason_managers()
 
 # Auto-load default playoff players from JSON if table is empty
 def _bootstrap_playoff_players():
@@ -458,7 +486,7 @@ app.layout = dbc.Container(
 def tabs_layout():
     return dbc.Tabs(
         [
-            dbc.Tab(label="League Rosters", tab_id="league_rosters"),
+            dbc.Tab(label="Postseason Fantasy", tab_id="postseason_fantasy"),
             dbc.Tab(label="Teams", tab_id="teams"),
             dbc.Tab(label="Players", tab_id="players"),
             dbc.Tab(label="Playoff Players", tab_id="playoff_players"),
@@ -467,7 +495,7 @@ def tabs_layout():
             dbc.Tab(label="Scoreboard", tab_id="score"),
         ],
         id="main-tabs",
-        active_tab="league_rosters",
+        active_tab="postseason_fantasy",
         className="mb-3",
     )
 
@@ -773,6 +801,7 @@ def playoff_players_panel():
     return dbc.Card([
         dbc.CardHeader("Available Playoff Players"),
         dbc.CardBody([
+            dbc.Button("Reload Playoff Players from JSON", id="reload-playoff-btn", color="secondary", className="mb-3 w-100"),
             dash_table.DataTable(
                 data=rows,
                 columns=[
@@ -804,25 +833,104 @@ def playoff_players_panel():
             )
         ])
     ])
+@app.callback(
+    Output("player-status", "children", allow_duplicate=True),
+    Input("reload-playoff-btn", "n_clicks"),
+    prevent_initial_call=True,
+)
+def reload_playoff_players(n_clicks):
+    try:
+        base_dir = os.getcwd()
+        json_path = os.path.join(base_dir, "docs", "postseason", "playoff_players_2026.json")
+        import json
+        with open(json_path) as f:
+            data = json.load(f)
+        players = data.get("players", [])
+        conn = get_conn()
+        cur = conn.cursor()
+        # Clear existing and reload
+        cur.execute("DELETE FROM postseason_players")
+        for p in players:
+            name = p.get("player_name", "").strip()
+            pos = p.get("position", "").strip().upper()
+            team = p.get("team", "").strip().upper()
+            if not name or not pos:
+                continue
+            if pos == "DEF":
+                pos = "DST"
+            cur.execute(
+                "INSERT INTO postseason_players (name, position, nfl_team) VALUES (?, ?, ?)",
+                (name, pos, team),
+            )
+        conn.commit()
+        conn.close()
+        return dbc.Alert(f"Reloaded {len(players)} playoff players.", color="success")
+    except Exception:
+        return dbc.Alert("Failed to reload players.", color="danger")
+
 
 
 def league_rosters_panel():
     data = fetch_league_rosters()
     columns = [{"name": "Team", "id": "Team"}] + [{"name": s, "id": s} for s in ROSTER_SLOTS]
+    # Build cards view for mobile-friendly display
+    cards = []
+    for row in data:
+        items = []
+        for slot in ROSTER_SLOTS:
+            items.append(dbc.Row([
+                dbc.Col(html.Small(slot), width=5),
+                dbc.Col(html.Small(row.get(slot, "")), width=7),
+            ], className="mb-1"))
+        cards.append(dbc.Card([
+            dbc.CardHeader(row.get("Team", "Team")),
+            dbc.CardBody(items)
+        ], className="mb-2"))
+
     return dbc.Card([
-        dbc.CardHeader("League Rosters"),
+        dbc.CardHeader("Postseason Fantasy - League Rosters"),
         dbc.CardBody([
-            dash_table.DataTable(
-                data=data,
-                columns=columns,
-                page_action='native',
-                page_size=10,
-                style_table={'overflowX': 'auto'},
-                style_cell={'textAlign': 'left', 'padding': '8px', 'minWidth': '120px'},
-                style_header={'backgroundColor': '#0d6efd', 'color': 'white', 'fontWeight': 'bold'},
-            )
+            dbc.RadioItems(
+                id="rosters-view",
+                options=[{"label": "Cards", "value": "cards"}, {"label": "Table", "value": "table"}],
+                value="cards",
+                inline=True,
+                className="mb-2"
+            ),
+            html.Div(id="rosters-container"),
         ])
     ])
+@app.callback(
+    Output("rosters-container", "children"),
+    Input("rosters-view", "value"),
+)
+def render_rosters_container(view):
+    data = fetch_league_rosters()
+    if view == "table":
+        columns = [{"name": "Team", "id": "Team"}] + [{"name": s, "id": s} for s in ROSTER_SLOTS]
+        return dash_table.DataTable(
+            data=data,
+            columns=columns,
+            page_action='native',
+            page_size=10,
+            style_table={'overflowX': 'auto'},
+            style_cell={'textAlign': 'left', 'padding': '8px', 'minWidth': '120px'},
+            style_header={'backgroundColor': '#0d6efd', 'color': 'white', 'fontWeight': 'bold'},
+        )
+    # cards view
+    cards = []
+    for row in data:
+        items = []
+        for slot in ROSTER_SLOTS:
+            items.append(dbc.Row([
+                dbc.Col(html.Small(slot), width=5),
+                dbc.Col(html.Small(row.get(slot, "")), width=7),
+            ], className="mb-1"))
+        cards.append(dbc.Card([
+            dbc.CardHeader(row.get("Team", "Team")),
+            dbc.CardBody(items)
+        ], className="mb-2"))
+    return html.Div(cards)
 
 
 @app.callback(
@@ -874,7 +982,7 @@ def render_tab(active_tab, auth, _):
     if not auth:
         return dash.no_update
     user_id = auth.get("user_id")
-    if active_tab == "league_rosters":
+    if active_tab == "postseason_fantasy":
         return league_rosters_panel()
     if active_tab == "teams":
         return teams_panel(user_id)

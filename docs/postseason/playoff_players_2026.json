@@ -1,30 +1,28 @@
 {
-  "season": 2025,
-  "generated_at": "2026-01-07T17:48:11.007496Z",
-  "round_map": {},
+  "last_updated": "2026-01-07",
   "playoff_teams": [
-    "DEN",
-    "NE",
-    "JAX",
-    "PIT",
-    "HOU",
+    "KC",
     "BUF",
+    "BAL",
+    "HOU",
+    "PIT",
     "LAC",
-    "SEA",
-    "CHI",
+    "DEN",
+    "DET",
     "PHI",
-    "CAR",
+    "TB",
     "LAR",
+    "MIN",
     "GB",
-    "SF"
+    "WSH"
   ],
-  "total_players": 42,
+  "total_players": 121,
   "players": [
     {
       "rank": 1,
-      "player_name": "BUF DEF",
-      "position": "DEF",
-      "team": "BUF",
+      "player_name": "Patrick Mahomes",
+      "position": "QB",
+      "team": "KC",
       "weekly_scores": {
         "wild_card": 0.0,
         "divisional": 0.0,
@@ -37,9 +35,9 @@
     },
     {
       "rank": 2,
-      "player_name": "CAR DEF",
-      "position": "DEF",
-      "team": "CAR",
+      "player_name": "Isiah Pacheco",
+      "position": "RB",
+      "team": "KC",
       "weekly_scores": {
         "wild_card": 0.0,
         "divisional": 0.0,
@@ -52,9 +50,9 @@
     },
     {
       "rank": 3,
-      "player_name": "CHI DEF",
-      "position": "DEF",
-      "team": "CHI",
+      "player_name": "Clyde Edwards-Helaire",
+      "position": "RB",
+      "team": "KC",
       "weekly_scores": {
         "wild_card": 0.0,
         "divisional": 0.0,
@@ -67,9 +65,9 @@
     },
     {
       "rank": 4,
-      "player_name": "DEN DEF",
-      "position": "DEF",
-      "team": "DEN",
+      "player_name": "Travis Kelce",
+      "position": "WR",
+      "team": "KC",
       "weekly_scores": {
         "wild_card": 0.0,
         "divisional": 0.0,
@@ -82,9 +80,9 @@
     },
     {
       "rank": 5,
-      "player_name": "GB DEF",
-      "position": "DEF",
-      "team": "GB",
+      "player_name": "Rashee Rice",
+      "position": "WR",
+      "team": "KC",
       "weekly_scores": {
         "wild_card": 0.0,
         "divisional": 0.0,
@@ -97,9 +95,9 @@
     },
     {
       "rank": 6,
-      "player_name": "HOU DEF",
-      "position": "DEF",
-      "team": "HOU",
+      "player_name": "Justin Watson",
+      "position": "WR",
+      "team": "KC",
       "weekly_scores": {
         "wild_card": 0.0,
         "divisional": 0.0,
@@ -112,9 +110,9 @@
     },
     {
       "rank": 7,
-      "player_name": "JAX DEF",
-      "position": "DEF",
-      "team": "JAX",
+      "player_name": "Travis Kelce",
+      "position": "TE",
+      "team": "KC",
       "weekly_scores": {
         "wild_card": 0.0,
         "divisional": 0.0,
@@ -127,9 +125,9 @@
     },
     {
       "rank": 8,
-      "player_name": "LAC DEF",
-      "position": "DEF",
-      "team": "LAC",
+      "player_name": "Harrison Butker",
+      "position": "K",
+      "team": "KC",
       "weekly_scores": {
         "wild_card": 0.0,
         "divisional": 0.0,
@@ -142,9 +140,9 @@
     },
     {
       "rank": 9,
-      "player_name": "LAR DEF",
+      "player_name": "Chiefs",
       "position": "DEF",
-      "team": "LAR",
+      "team": "KC",
       "weekly_scores": {
         "wild_card": 0.0,
         "divisional": 0.0,
@@ -157,9 +155,9 @@
     },
     {
       "rank": 10,
-      "player_name": "NE DEF",
-      "position": "DEF",
-      "team": "NE",
+      "player_name": "Josh Allen",
+      "position": "QB",
+      "team": "BUF",
       "weekly_scores": {
         "wild_card": 0.0,
         "divisional": 0.0,
@@ -172,9 +170,9 @@
     },
     {
       "rank": 11,
-      "player_name": "PHI DEF",
-      "position": "DEF",
-      "team": "PHI",
+      "player_name": "James Cook",
+      "position": "RB",
+      "team": "BUF",
       "weekly_scores": {
         "wild_card": 0.0,
         "divisional": 0.0,
@@ -187,9 +185,9 @@
     },
     {
       "rank": 12,
-      "player_name": "PIT DEF",
-      "position": "DEF",
-      "team": "PIT",
+      "player_name": "Ty Johnson",
+      "position": "RB",
+      "team": "BUF",
       "weekly_scores": {
         "wild_card": 0.0,
         "divisional": 0.0,
@@ -202,9 +200,9 @@
     },
     {
       "rank": 13,
-      "player_name": "SEA DEF",
-      "position": "DEF",
-      "team": "SEA",
+      "player_name": "Stefon Diggs",
+      "position": "WR",
+      "team": "BUF",
       "weekly_scores": {
         "wild_card": 0.0,
         "divisional": 0.0,
@@ -217,9 +215,9 @@
     },
     {
       "rank": 14,
-      "player_name": "SF DEF",
-      "position": "DEF",
-      "team": "SF",
+      "player_name": "Gabe Davis",
+      "position": "WR",
+      "team": "BUF",
       "weekly_scores": {
         "wild_card": 0.0,
         "divisional": 0.0,
@@ -232,8 +230,8 @@
     },
     {
       "rank": 15,
-      "player_name": "BUF K",
-      "position": "K",
+      "player_name": "Khalil Shakir",
+      "position": "WR",
       "team": "BUF",
       "weekly_scores": {
         "wild_card": 0.0,
@@ -247,203 +245,8 @@
     },
     {
       "rank": 16,
-      "player_name": "CAR K",
-      "position": "K",
-      "team": "CAR",
-      "weekly_scores": {
-        "wild_card": 0.0,
-        "divisional": 0.0,
-        "conference": 0.0,
-        "super_bowl": 0.0
-      },
-      "total_points": 0.0,
-      "games_played": 0,
-      "eliminated": false
-    },
-    {
-      "rank": 17,
-      "player_name": "CHI K",
-      "position": "K",
-      "team": "CHI",
-      "weekly_scores": {
-        "wild_card": 0.0,
-        "divisional": 0.0,
-        "conference": 0.0,
-        "super_bowl": 0.0
-      },
-      "total_points": 0.0,
-      "games_played": 0,
-      "eliminated": false
-    },
-    {
-      "rank": 18,
-      "player_name": "DEN K",
-      "position": "K",
-      "team": "DEN",
-      "weekly_scores": {
-        "wild_card": 0.0,
-        "divisional": 0.0,
-        "conference": 0.0,
-        "super_bowl": 0.0
-      },
-      "total_points": 0.0,
-      "games_played": 0,
-      "eliminated": false
-    },
-    {
-      "rank": 19,
-      "player_name": "GB K",
-      "position": "K",
-      "team": "GB",
-      "weekly_scores": {
-        "wild_card": 0.0,
-        "divisional": 0.0,
-        "conference": 0.0,
-        "super_bowl": 0.0
-      },
-      "total_points": 0.0,
-      "games_played": 0,
-      "eliminated": false
-    },
-    {
-      "rank": 20,
-      "player_name": "HOU K",
-      "position": "K",
-      "team": "HOU",
-      "weekly_scores": {
-        "wild_card": 0.0,
-        "divisional": 0.0,
-        "conference": 0.0,
-        "super_bowl": 0.0
-      },
-      "total_points": 0.0,
-      "games_played": 0,
-      "eliminated": false
-    },
-    {
-      "rank": 21,
-      "player_name": "JAX K",
-      "position": "K",
-      "team": "JAX",
-      "weekly_scores": {
-        "wild_card": 0.0,
-        "divisional": 0.0,
-        "conference": 0.0,
-        "super_bowl": 0.0
-      },
-      "total_points": 0.0,
-      "games_played": 0,
-      "eliminated": false
-    },
-    {
-      "rank": 22,
-      "player_name": "LAC K",
-      "position": "K",
-      "team": "LAC",
-      "weekly_scores": {
-        "wild_card": 0.0,
-        "divisional": 0.0,
-        "conference": 0.0,
-        "super_bowl": 0.0
-      },
-      "total_points": 0.0,
-      "games_played": 0,
-      "eliminated": false
-    },
-    {
-      "rank": 23,
-      "player_name": "LAR K",
-      "position": "K",
-      "team": "LAR",
-      "weekly_scores": {
-        "wild_card": 0.0,
-        "divisional": 0.0,
-        "conference": 0.0,
-        "super_bowl": 0.0
-      },
-      "total_points": 0.0,
-      "games_played": 0,
-      "eliminated": false
-    },
-    {
-      "rank": 24,
-      "player_name": "NE K",
-      "position": "K",
-      "team": "NE",
-      "weekly_scores": {
-        "wild_card": 0.0,
-        "divisional": 0.0,
-        "conference": 0.0,
-        "super_bowl": 0.0
-      },
-      "total_points": 0.0,
-      "games_played": 0,
-      "eliminated": false
-    },
-    {
-      "rank": 25,
-      "player_name": "PHI K",
-      "position": "K",
-      "team": "PHI",
-      "weekly_scores": {
-        "wild_card": 0.0,
-        "divisional": 0.0,
-        "conference": 0.0,
-        "super_bowl": 0.0
-      },
-      "total_points": 0.0,
-      "games_played": 0,
-      "eliminated": false
-    },
-    {
-      "rank": 26,
-      "player_name": "PIT K",
-      "position": "K",
-      "team": "PIT",
-      "weekly_scores": {
-        "wild_card": 0.0,
-        "divisional": 0.0,
-        "conference": 0.0,
-        "super_bowl": 0.0
-      },
-      "total_points": 0.0,
-      "games_played": 0,
-      "eliminated": false
-    },
-    {
-      "rank": 27,
-      "player_name": "SEA K",
-      "position": "K",
-      "team": "SEA",
-      "weekly_scores": {
-        "wild_card": 0.0,
-        "divisional": 0.0,
-        "conference": 0.0,
-        "super_bowl": 0.0
-      },
-      "total_points": 0.0,
-      "games_played": 0,
-      "eliminated": false
-    },
-    {
-      "rank": 28,
-      "player_name": "SF K",
-      "position": "K",
-      "team": "SF",
-      "weekly_scores": {
-        "wild_card": 0.0,
-        "divisional": 0.0,
-        "conference": 0.0,
-        "super_bowl": 0.0
-      },
-      "total_points": 0.0,
-      "games_played": 0,
-      "eliminated": false
-    },
-    {
-      "rank": 29,
-      "player_name": "BUF QB",
-      "position": "QB",
+      "player_name": "Dalton Kincaid",
+      "position": "TE",
       "team": "BUF",
       "weekly_scores": {
         "wild_card": 0.0,
@@ -456,10 +259,205 @@
       "eliminated": false
     },
     {
-      "rank": 30,
-      "player_name": "CAR QB",
+      "rank": 17,
+      "player_name": "Tyler Bass",
+      "position": "K",
+      "team": "BUF",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 18,
+      "player_name": "Bills",
+      "position": "DEF",
+      "team": "BUF",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 19,
+      "player_name": "Lamar Jackson",
       "position": "QB",
-      "team": "CAR",
+      "team": "BAL",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 20,
+      "player_name": "Gus Edwards",
+      "position": "RB",
+      "team": "BAL",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 21,
+      "player_name": "Justice Hill",
+      "position": "RB",
+      "team": "BAL",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 22,
+      "player_name": "Zay Flowers",
+      "position": "WR",
+      "team": "BAL",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 23,
+      "player_name": "Rashod Bateman",
+      "position": "WR",
+      "team": "BAL",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 24,
+      "player_name": "Mark Andrews",
+      "position": "TE",
+      "team": "BAL",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 25,
+      "player_name": "Isaiah Likely",
+      "position": "TE",
+      "team": "BAL",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 26,
+      "player_name": "Justin Tucker",
+      "position": "K",
+      "team": "BAL",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 27,
+      "player_name": "Ravens",
+      "position": "DEF",
+      "team": "BAL",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 28,
+      "player_name": "C.J. Stroud",
+      "position": "QB",
+      "team": "HOU",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 29,
+      "player_name": "Joe Mixon",
+      "position": "RB",
+      "team": "HOU",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 30,
+      "player_name": "Dameon Pierce",
+      "position": "RB",
+      "team": "HOU",
       "weekly_scores": {
         "wild_card": 0.0,
         "divisional": 0.0,
@@ -472,9 +470,9 @@
     },
     {
       "rank": 31,
-      "player_name": "CHI QB",
-      "position": "QB",
-      "team": "CHI",
+      "player_name": "Nico Collins",
+      "position": "WR",
+      "team": "HOU",
       "weekly_scores": {
         "wild_card": 0.0,
         "divisional": 0.0,
@@ -487,9 +485,9 @@
     },
     {
       "rank": 32,
-      "player_name": "DEN QB",
-      "position": "QB",
-      "team": "DEN",
+      "player_name": "Tank Dell",
+      "position": "WR",
+      "team": "HOU",
       "weekly_scores": {
         "wild_card": 0.0,
         "divisional": 0.0,
@@ -502,9 +500,9 @@
     },
     {
       "rank": 33,
-      "player_name": "GB QB",
-      "position": "QB",
-      "team": "GB",
+      "player_name": "Robert Woods",
+      "position": "WR",
+      "team": "HOU",
       "weekly_scores": {
         "wild_card": 0.0,
         "divisional": 0.0,
@@ -517,8 +515,8 @@
     },
     {
       "rank": 34,
-      "player_name": "HOU QB",
-      "position": "QB",
+      "player_name": "Dalton Schultz",
+      "position": "TE",
       "team": "HOU",
       "weekly_scores": {
         "wild_card": 0.0,
@@ -532,9 +530,9 @@
     },
     {
       "rank": 35,
-      "player_name": "JAX QB",
-      "position": "QB",
-      "team": "JAX",
+      "player_name": "Ka'imi Fairbairn",
+      "position": "K",
+      "team": "HOU",
       "weekly_scores": {
         "wild_card": 0.0,
         "divisional": 0.0,
@@ -547,9 +545,9 @@
     },
     {
       "rank": 36,
-      "player_name": "LAC QB",
-      "position": "QB",
-      "team": "LAC",
+      "player_name": "Texans",
+      "position": "DEF",
+      "team": "HOU",
       "weekly_scores": {
         "wild_card": 0.0,
         "divisional": 0.0,
@@ -562,52 +560,7 @@
     },
     {
       "rank": 37,
-      "player_name": "LAR QB",
-      "position": "QB",
-      "team": "LAR",
-      "weekly_scores": {
-        "wild_card": 0.0,
-        "divisional": 0.0,
-        "conference": 0.0,
-        "super_bowl": 0.0
-      },
-      "total_points": 0.0,
-      "games_played": 0,
-      "eliminated": false
-    },
-    {
-      "rank": 38,
-      "player_name": "NE QB",
-      "position": "QB",
-      "team": "NE",
-      "weekly_scores": {
-        "wild_card": 0.0,
-        "divisional": 0.0,
-        "conference": 0.0,
-        "super_bowl": 0.0
-      },
-      "total_points": 0.0,
-      "games_played": 0,
-      "eliminated": false
-    },
-    {
-      "rank": 39,
-      "player_name": "PHI QB",
-      "position": "QB",
-      "team": "PHI",
-      "weekly_scores": {
-        "wild_card": 0.0,
-        "divisional": 0.0,
-        "conference": 0.0,
-        "super_bowl": 0.0
-      },
-      "total_points": 0.0,
-      "games_played": 0,
-      "eliminated": false
-    },
-    {
-      "rank": 40,
-      "player_name": "PIT QB",
+      "player_name": "Russell Wilson",
       "position": "QB",
       "team": "PIT",
       "weekly_scores": {
@@ -621,10 +574,55 @@
       "eliminated": false
     },
     {
+      "rank": 38,
+      "player_name": "Najee Harris",
+      "position": "RB",
+      "team": "PIT",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 39,
+      "player_name": "Jaylen Warren",
+      "position": "RB",
+      "team": "PIT",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 40,
+      "player_name": "George Pickens",
+      "position": "WR",
+      "team": "PIT",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
       "rank": 41,
-      "player_name": "SEA QB",
-      "position": "QB",
-      "team": "SEA",
+      "player_name": "Diontae Johnson",
+      "position": "WR",
+      "team": "PIT",
       "weekly_scores": {
         "wild_card": 0.0,
         "divisional": 0.0,
@@ -637,9 +635,1194 @@
     },
     {
       "rank": 42,
-      "player_name": "SF QB",
+      "player_name": "Pat Freiermuth",
+      "position": "TE",
+      "team": "PIT",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 43,
+      "player_name": "Chris Boswell",
+      "position": "K",
+      "team": "PIT",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 44,
+      "player_name": "Steelers",
+      "position": "DEF",
+      "team": "PIT",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 45,
+      "player_name": "Justin Herbert",
       "position": "QB",
-      "team": "SF",
+      "team": "LAC",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 46,
+      "player_name": "Gus Edwards",
+      "position": "RB",
+      "team": "LAC",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 47,
+      "player_name": "J.K. Dobbins",
+      "position": "RB",
+      "team": "LAC",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 48,
+      "player_name": "Keenan Allen",
+      "position": "WR",
+      "team": "LAC",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 49,
+      "player_name": "Joshua Palmer",
+      "position": "WR",
+      "team": "LAC",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 50,
+      "player_name": "Quentin Johnston",
+      "position": "WR",
+      "team": "LAC",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 51,
+      "player_name": "Stone Smartt",
+      "position": "TE",
+      "team": "LAC",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 52,
+      "player_name": "Cameron Dicker",
+      "position": "K",
+      "team": "LAC",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 53,
+      "player_name": "Chargers",
+      "position": "DEF",
+      "team": "LAC",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 54,
+      "player_name": "Bo Nix",
+      "position": "QB",
+      "team": "DEN",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 55,
+      "player_name": "Javonte Williams",
+      "position": "RB",
+      "team": "DEN",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 56,
+      "player_name": "Jaleel McLaughlin",
+      "position": "RB",
+      "team": "DEN",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 57,
+      "player_name": "Courtland Sutton",
+      "position": "WR",
+      "team": "DEN",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 58,
+      "player_name": "Jerry Jeudy",
+      "position": "WR",
+      "team": "DEN",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 59,
+      "player_name": "Greg Dulcich",
+      "position": "TE",
+      "team": "DEN",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 60,
+      "player_name": "Wil Lutz",
+      "position": "K",
+      "team": "DEN",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 61,
+      "player_name": "Broncos",
+      "position": "DEF",
+      "team": "DEN",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 62,
+      "player_name": "Jared Goff",
+      "position": "QB",
+      "team": "DET",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 63,
+      "player_name": "David Montgomery",
+      "position": "RB",
+      "team": "DET",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 64,
+      "player_name": "Jahmyr Gibbs",
+      "position": "RB",
+      "team": "DET",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 65,
+      "player_name": "Amon-Ra St. Brown",
+      "position": "WR",
+      "team": "DET",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 66,
+      "player_name": "Jameson Williams",
+      "position": "WR",
+      "team": "DET",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 67,
+      "player_name": "Sam LaPorta",
+      "position": "TE",
+      "team": "DET",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 68,
+      "player_name": "Jake Bates",
+      "position": "K",
+      "team": "DET",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 69,
+      "player_name": "Lions",
+      "position": "DEF",
+      "team": "DET",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 70,
+      "player_name": "Jalen Hurts",
+      "position": "QB",
+      "team": "PHI",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 71,
+      "player_name": "Saquon Barkley",
+      "position": "RB",
+      "team": "PHI",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 72,
+      "player_name": "Kenneth Gainwell",
+      "position": "RB",
+      "team": "PHI",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 73,
+      "player_name": "A.J. Brown",
+      "position": "WR",
+      "team": "PHI",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 74,
+      "player_name": "DeVonta Smith",
+      "position": "WR",
+      "team": "PHI",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 75,
+      "player_name": "Jahan Dotson",
+      "position": "WR",
+      "team": "PHI",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 76,
+      "player_name": "Dallas Goedert",
+      "position": "TE",
+      "team": "PHI",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 77,
+      "player_name": "Jake Elliott",
+      "position": "K",
+      "team": "PHI",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 78,
+      "player_name": "Eagles",
+      "position": "DEF",
+      "team": "PHI",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 79,
+      "player_name": "Baker Mayfield",
+      "position": "QB",
+      "team": "TB",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 80,
+      "player_name": "Rachaad White",
+      "position": "RB",
+      "team": "TB",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 81,
+      "player_name": "Bucky Irving",
+      "position": "RB",
+      "team": "TB",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 82,
+      "player_name": "Mike Evans",
+      "position": "WR",
+      "team": "TB",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 83,
+      "player_name": "Chris Godwin",
+      "position": "WR",
+      "team": "TB",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 84,
+      "player_name": "Cade Otton",
+      "position": "TE",
+      "team": "TB",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 85,
+      "player_name": "Chase McLaughlin",
+      "position": "K",
+      "team": "TB",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 86,
+      "player_name": "Buccaneers",
+      "position": "DEF",
+      "team": "TB",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 87,
+      "player_name": "Matthew Stafford",
+      "position": "QB",
+      "team": "LAR",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 88,
+      "player_name": "Kyren Williams",
+      "position": "RB",
+      "team": "LAR",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 89,
+      "player_name": "Blake Corum",
+      "position": "RB",
+      "team": "LAR",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 90,
+      "player_name": "Cooper Kupp",
+      "position": "WR",
+      "team": "LAR",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 91,
+      "player_name": "Puka Nacua",
+      "position": "WR",
+      "team": "LAR",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 92,
+      "player_name": "Tyler Higbee",
+      "position": "TE",
+      "team": "LAR",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 93,
+      "player_name": "Joshua Karty",
+      "position": "K",
+      "team": "LAR",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 94,
+      "player_name": "Rams",
+      "position": "DEF",
+      "team": "LAR",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 95,
+      "player_name": "Sam Darnold",
+      "position": "QB",
+      "team": "MIN",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 96,
+      "player_name": "Aaron Jones",
+      "position": "RB",
+      "team": "MIN",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 97,
+      "player_name": "Ty Chandler",
+      "position": "RB",
+      "team": "MIN",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 98,
+      "player_name": "Justin Jefferson",
+      "position": "WR",
+      "team": "MIN",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 99,
+      "player_name": "Jordan Addison",
+      "position": "WR",
+      "team": "MIN",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 100,
+      "player_name": "Jalen Nailor",
+      "position": "WR",
+      "team": "MIN",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 101,
+      "player_name": "T.J. Hockenson",
+      "position": "TE",
+      "team": "MIN",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 102,
+      "player_name": "Josh Oliver",
+      "position": "TE",
+      "team": "MIN",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 103,
+      "player_name": "Will Reichard",
+      "position": "K",
+      "team": "MIN",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 104,
+      "player_name": "Vikings",
+      "position": "DEF",
+      "team": "MIN",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 105,
+      "player_name": "Jordan Love",
+      "position": "QB",
+      "team": "GB",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 106,
+      "player_name": "Josh Jacobs",
+      "position": "RB",
+      "team": "GB",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 107,
+      "player_name": "Emanuel Wilson",
+      "position": "RB",
+      "team": "GB",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 108,
+      "player_name": "Jayden Reed",
+      "position": "WR",
+      "team": "GB",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 109,
+      "player_name": "Christian Watson",
+      "position": "WR",
+      "team": "GB",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 110,
+      "player_name": "Romeo Doubs",
+      "position": "WR",
+      "team": "GB",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 111,
+      "player_name": "Tucker Kraft",
+      "position": "TE",
+      "team": "GB",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 112,
+      "player_name": "Brandon McManus",
+      "position": "K",
+      "team": "GB",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 113,
+      "player_name": "Packers",
+      "position": "DEF",
+      "team": "GB",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 114,
+      "player_name": "Jayden Daniels",
+      "position": "QB",
+      "team": "WSH",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 115,
+      "player_name": "Brian Robinson Jr.",
+      "position": "RB",
+      "team": "WSH",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 116,
+      "player_name": "Austin Ekeler",
+      "position": "RB",
+      "team": "WSH",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 117,
+      "player_name": "Terry McLaurin",
+      "position": "WR",
+      "team": "WSH",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 118,
+      "player_name": "Olamide Zaccheaus",
+      "position": "WR",
+      "team": "WSH",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 119,
+      "player_name": "Zach Ertz",
+      "position": "TE",
+      "team": "WSH",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 120,
+      "player_name": "Zane Gonzalez",
+      "position": "K",
+      "team": "WSH",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 121,
+      "player_name": "Commanders",
+      "position": "DEF",
+      "team": "WSH",
       "weekly_scores": {
         "wild_card": 0.0,
         "divisional": 0.0,
