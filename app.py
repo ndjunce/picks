@@ -2395,8 +2395,10 @@ def render_postseason_tab():
     """Postseason Fantasy League: 6 teams x 11 roster spots (QB QB RB RB WR WR TE FLEX FLEX K DEF)."""
     teams = ["Ajay", "Chet", "Nick", "Riley", "Seth", "Zach"]
     slots = ["QB", "QB", "RB", "RB", "WR", "WR", "TE", "FLEX", "FLEX", "K", "DEF"]
-    data = [{"Team": t, **{f"{slots[i]}_{i}": "" for i in range(len(slots))}} for t in teams]
-    columns = ([{"name": "Team", "id": "Team"}] +
+    data = [{"Team": t, "Total Points": 0, "Players Remaining": 0, **{f"{slots[i]}_{i}": "" for i in range(len(slots))}} for t in teams]
+    columns = ([{"name": "Team", "id": "Team"}, 
+                {"name": "Total Points", "id": "Total Points"}, 
+                {"name": "Players Remaining", "id": "Players Remaining"}] +
                [{"name": slots[i], "id": f"{slots[i]}_{i}"} for i in range(len(slots))])
 
     roster_table = dash_table.DataTable(
@@ -2422,117 +2424,17 @@ def render_postseason_tab():
         },
     )
 
-    # Generic playoff rankings (template-only, no complex model)
-    generic_rankings = [
-        {"Rank": 1, "Player": "Patrick Mahomes", "Position": "QB", "Team": "KC"},
-        {"Rank": 2, "Player": "Christian McCaffrey", "Position": "RB", "Team": "SF"},
-        {"Rank": 3, "Player": "Josh Allen", "Position": "QB", "Team": "BUF"},
-        {"Rank": 4, "Player": "Lamar Jackson", "Position": "QB", "Team": "BAL"},
-        {"Rank": 5, "Player": "Tyreek Hill", "Position": "WR", "Team": "MIA"},
-        {"Rank": 6, "Player": "Jalen Hurts", "Position": "QB", "Team": "PHI"},
-        {"Rank": 7, "Player": "Travis Kelce", "Position": "TE", "Team": "KC"},
-        {"Rank": 8, "Player": "Brock Purdy", "Position": "QB", "Team": "SF"},
-        {"Rank": 9, "Player": "A.J. Brown", "Position": "WR", "Team": "PHI"},
-        {"Rank": 10, "Player": "Stefon Diggs", "Position": "WR", "Team": "BUF"},
-        {"Rank": 11, "Player": "Isiah Pacheco", "Position": "RB", "Team": "KC"},
-        {"Rank": 12, "Player": "Deebo Samuel", "Position": "WR", "Team": "SF"},
-        {"Rank": 13, "Player": "George Kittle", "Position": "TE", "Team": "SF"},
-        {"Rank": 14, "Player": "James Cook", "Position": "RB", "Team": "BUF"},
-        {"Rank": 15, "Player": "Mark Andrews", "Position": "TE", "Team": "BAL"},
-        {"Rank": 16, "Player": "Joe Burrow", "Position": "QB", "Team": "CIN"},
-        {"Rank": 17, "Player": "CeeDee Lamb", "Position": "WR", "Team": "DAL"},
-        {"Rank": 18, "Player": "DeVonta Smith", "Position": "WR", "Team": "PHI"},
-        {"Rank": 19, "Player": "Raheem Mostert", "Position": "RB", "Team": "MIA"},
-        {"Rank": 20, "Player": "Zay Flowers", "Position": "WR", "Team": "BAL"},
-        {"Rank": 21, "Player": "Brandon Aiyuk", "Position": "WR", "Team": "SF"},
-        {"Rank": 22, "Player": "Gus Edwards", "Position": "RB", "Team": "BAL"},
-        {"Rank": 23, "Player": "Tyler Bass", "Position": "K", "Team": "BUF"},
-        {"Rank": 24, "Player": "Harrison Butker", "Position": "K", "Team": "KC"},
-        {"Rank": 25, "Player": "Jake Elliott", "Position": "K", "Team": "PHI"},
-        {"Rank": 26, "Player": "49ers DST", "Position": "DST", "Team": "SF"},
-        {"Rank": 27, "Player": "Ravens DST", "Position": "DST", "Team": "BAL"},
-        {"Rank": 28, "Player": "Bills DST", "Position": "DST", "Team": "BUF"},
-        {"Rank": 29, "Player": "Chiefs DST", "Position": "DST", "Team": "KC"},
-        {"Rank": 30, "Player": "Eagles DST", "Position": "DST", "Team": "PHI"},
-    ]
-
-    ranking_columns = [
-        {"name": "Rank", "id": "Rank"},
-        {"name": "Player", "id": "Player"},
-        {"name": "Position", "id": "Position"},
-        {"name": "Team", "id": "Team"},
-    ]
-
-    rankings_table = dash_table.DataTable(
-        data=generic_rankings,
-        columns=ranking_columns,
-        style_table={"overflowX": "auto"},
-        style_cell={'textAlign': 'center', 'padding': '10px'},
-        style_header={'backgroundColor': '#0d6efd', 'color': 'white', 'fontWeight': 'bold'},
-        style_data={'backgroundColor': 'white', 'color': '#1a202c'},
-    )
-
     return dbc.Card([
         dbc.CardHeader([
             html.H4("Postseason Fantasy League", className="mb-0"),
-            html.Small("6 teams • 10 roster spots each (QB QB RB RB WR WR TE FLEX FLEX K) — fill in after your draft", className="text-muted")
+            html.Small("6 teams • 11 roster spots each (QB QB RB RB WR WR TE FLEX FLEX K DEF) — fill in after your draft", className="text-muted")
         ]),
         dbc.CardBody([
             dbc.Alert([
                 html.Strong("How to use: "),
-                "Edit the table to enter drafted players for each team (10 slots). ",
-                "Click 'Fetch Playoff Pools' to load current playoff players and bubble players.",
+                "Edit the table to enter drafted players for each team (11 slots). Total points and players remaining will update as playoff games are played."
             ], color="info", className="mb-3"),
-            roster_table,
-            dbc.Button([html.I(className="fas fa-database me-2"), "Fetch Playoff Pools"], id="fetch-playoff", color="success", className="mt-3 btn-custom"),
-            dbc.Row([
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardHeader("Locked-In Playoff Players"),
-                        dbc.CardBody([
-                            html.Div(id="locked-players")
-                        ])
-                    ])
-                ], md=6),
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardHeader("Bubble Players (Not Yet Clinched)"),
-                        dbc.CardBody([
-                            html.Div(id="bubble-players")
-                        ])
-                    ])
-                ], md=6)
-            ], className="mt-3"),
-            dbc.Row([
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardHeader("Positional Breakdown — Locked"),
-                        dbc.CardBody([html.Div(id="locked-pos-breakdown")])
-                    ])
-                ], md=6),
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardHeader("Positional Breakdown — Bubble"),
-                        dbc.CardBody([html.Div(id="bubble-pos-breakdown")])
-                    ])
-                ], md=6)
-            ], className="mt-3"),
-            dbc.Card([
-                dbc.CardHeader("Current Playoff Bracket (Approximate)"),
-                dbc.CardBody([
-                    html.Div(id="bracket-view"),
-                    html.Hr(),
-                    html.H6("Potential Outcomes (Simplified)"),
-                    html.Div(id="outcomes-list")
-                ])
-            ], className="mt-3"),
-            dbc.Card([
-                dbc.CardHeader("Generic Playoff Rankings (Template)"),
-                dbc.CardBody([
-                    dbc.Alert("Ordered by expected playoff volume and team strength — update after bracket locks.", color="light"),
-                    rankings_table
-                ])
-            ], className="mt-3")
+            roster_table
         ])
     ])
 
