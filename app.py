@@ -2392,12 +2392,12 @@ def update_weekly_picks_content(selected_week):
 
 
 def render_postseason_tab():
-    """Postseason Fantasy League template: 8 teams x 10 roster spots + player pools + rankings."""
-    teams = [f"Team {i}" for i in range(1, 9)]
-    slots = [f"Slot {i}" for i in range(1, 11)]
-    data = [{"Team": t, **{s: "" for s in slots}} for t in teams]
+    """Postseason Fantasy League: 6 teams x 10 roster spots (QB QB RB RB WR WR TE FLEX FLEX TE K D)."""
+    teams = ["Ajay", "Chet", "Nick", "Riley", "Seth", "Zach"]
+    slots = ["QB", "QB", "RB", "RB", "WR", "WR", "TE", "FLEX", "FLEX", "K"]
+    data = [{"Team": t, **{f"{slots[i]}_{i}": "" for i in range(len(slots))}} for t in teams]
     columns = ([{"name": "Team", "id": "Team"}] +
-               [{"name": s, "id": s} for s in slots])
+               [{"name": slots[i], "id": f"{slots[i]}_{i}"} for i in range(len(slots))])
 
     roster_table = dash_table.DataTable(
         data=data,
@@ -2474,8 +2474,8 @@ def render_postseason_tab():
 
     return dbc.Card([
         dbc.CardHeader([
-            html.H4("Postseason Fantasy League (Template)", className="mb-0"),
-            html.Small("8 teams • 10 roster spots each — fill in after your draft", className="text-muted")
+            html.H4("Postseason Fantasy League", className="mb-0"),
+            html.Small("6 teams • 10 roster spots each (QB QB RB RB WR WR TE FLEX FLEX K) — fill in after your draft", className="text-muted")
         ]),
         dbc.CardBody([
             dbc.Alert([
@@ -2537,24 +2537,58 @@ def render_postseason_tab():
     ])
 
 def render_postseason_picks_tab():
-    """Template for postseason picks across rounds."""
-    rounds = (["Wild Card"] * 6) + (["Divisional"] * 4) + (["Conference"] * 2) + (["Super Bowl"] * 1)
-    data = [{
-        "Round": r,
-        "Away Team": "TBD",
-        "Home Team": "TBD",
-        "Game Date": "",
-        "Your Pick": "",
-        "Tiebreaker (SB)": "" if r == "Super Bowl" else ""
-    } for r in rounds]
-    columns = [
-        {"name": "Round", "id": "Round"},
-        {"name": "Away Team", "id": "Away Team"},
-        {"name": "Home Team", "id": "Home Team"},
-        {"name": "Game Date", "id": "Game Date"},
-        {"name": "Your Pick", "id": "Your Pick"},
-        {"name": "Tiebreaker (SB)", "id": "Tiebreaker (SB)"},
+    """Postseason picks across rounds: 6 people (Bobby, Chet, Clyde, Henry, Nick, Riley) picking each game."""
+    pickers = ["Bobby", "Chet", "Clyde", "Henry", "Nick", "Riley"]
+    
+    # Wildcard games with actual 2026 matchups
+    wildcard_games = [
+        {"round": "Wild Card", "away": "LAR", "home": "CAR", "date": "2026-01-10"},
+        {"round": "Wild Card", "away": "GB", "home": "CHI", "date": "2026-01-10"},
+        {"round": "Wild Card", "away": "BUF", "home": "JAX", "date": "2026-01-11"},
+        {"round": "Wild Card", "away": "SF", "home": "PHI", "date": "2026-01-11"},
+        {"round": "Wild Card", "away": "LAC", "home": "NE", "date": "2026-01-11"},
+        {"round": "Wild Card", "away": "HOU", "home": "PIT", "date": "2026-01-12"},
     ]
+    
+    divisional_games = [
+        {"round": "Divisional", "away": "TBD", "home": "TBD", "date": ""},
+        {"round": "Divisional", "away": "TBD", "home": "TBD", "date": ""},
+        {"round": "Divisional", "away": "TBD", "home": "TBD", "date": ""},
+        {"round": "Divisional", "away": "TBD", "home": "TBD", "date": ""},
+    ]
+    
+    conference_games = [
+        {"round": "Conference", "away": "TBD", "home": "TBD", "date": ""},
+        {"round": "Conference", "away": "TBD", "home": "TBD", "date": ""},
+    ]
+    
+    sb_games = [
+        {"round": "Super Bowl", "away": "TBD", "home": "TBD", "date": ""},
+    ]
+    
+    all_games = wildcard_games + divisional_games + conference_games + sb_games
+    
+    # Build data: one row per game, one column per picker
+    data = [
+        {
+            "Round": g["round"],
+            "Away": g["away"],
+            "Home": g["home"],
+            "Date": g["date"],
+            **{picker: "" for picker in pickers}
+        }
+        for g in all_games
+    ]
+    
+    columns = (
+        [
+            {"name": "Round", "id": "Round"},
+            {"name": "Away", "id": "Away"},
+            {"name": "Home", "id": "Home"},
+            {"name": "Date", "id": "Date"},
+        ] +
+        [{"name": picker, "id": picker} for picker in pickers]
+    )
 
     picks_table = dash_table.DataTable(
         data=data,
@@ -2567,12 +2601,12 @@ def render_postseason_picks_tab():
     )
 
     return dbc.Card([
-        dbc.CardHeader("Postseason Picks (Template)"),
+        dbc.CardHeader("Postseason Picks"),
         dbc.CardBody([
             dbc.Alert([
-                "Fill out your picks once matchups are set. ",
-                "We'll add saving, validation, and scoring hooks later.",
-            ], color="warning", className="mb-3"),
+                "Enter each picker's choice for every game (away team abbreviation or home team). ",
+                "Wildcard matchups are locked in; Divisional+ update after results.",
+            ], color="info", className="mb-3"),
             picks_table
         ])
     ])
