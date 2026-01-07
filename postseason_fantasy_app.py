@@ -1,5 +1,6 @@
 import os
 import sqlite3
+import requests
 from datetime import datetime
 
 import dash
@@ -21,6 +22,8 @@ ROSTER_SLOTS = [
 ]
 DEFAULT_SEASON = 2025
 POSTSEASON_PREFIX = os.getenv("POSTSEASON_PREFIX", "/postseason/")
+POSTSEASON_STATS_API_URL = os.getenv("POSTSEASON_STATS_API_URL", "")
+AUTO_REFRESH_SECS = int(os.getenv("POSTSEASON_AUTO_REFRESH_SECS", "60"))
 
 
 def get_conn():
@@ -356,6 +359,7 @@ _bootstrap_playoff_players()
 app: Dash = dash.Dash(
     __name__,
     external_stylesheets=[dbc.themes.BOOTSTRAP],
+    meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}],
     suppress_callback_exceptions=True,
     requests_pathname_prefix=POSTSEASON_PREFIX,
     routes_pathname_prefix=POSTSEASON_PREFIX,
@@ -434,7 +438,7 @@ def tabs_layout():
             dbc.Tab(label="Scoreboard", tab_id="score"),
         ],
         id="main-tabs",
-        active_tab="teams",
+        active_tab="score",
         className="mb-3",
     )
 
@@ -574,10 +578,11 @@ def stats_panel():
                             for p in players
                         ],
                         placeholder="Choose player",
+                        clearable=False,
                     ),
                     dbc.Row(
                         [
-                            dbc.Col(dbc.Input(id="stat-week", type="number", value=1, min=1), md=3),
+                            dbc.Col(dbc.Input(id="stat-week", type="number", value=1, min=1), width=12, md=3),
                             dbc.Col(
                                 dbc.Input(
                                     id="stat-season",
@@ -585,6 +590,7 @@ def stats_panel():
                                     value=DEFAULT_SEASON,
                                     min=2020,
                                 ),
+                                width=12,
                                 md=3,
                             ),
                         ],
@@ -633,7 +639,7 @@ def stats_panel():
                         ],
                         className="mt-2",
                     ),
-                    dbc.Button("Save Stats", id="save-stats-btn", color="primary", className="mt-3"),
+                    dbc.Button("Save Stats", id="save-stats-btn", color="primary", className="mt-3 w-100"),
                     html.Div(id="stats-status", className="mt-2"),
                 ]
             ),
@@ -649,19 +655,58 @@ def scoreboard_panel():
                 [
                     dbc.Row(
                         [
-                            dbc.Col(dbc.Input(id="score-week", type="number", value=1, min=1), md=3),
+                            dbc.Col(dbc.Input(id="score-week", type="number", value=1, min=1), width=12, md=3),
                             dbc.Col(
-                                dbc.Input(id="score-season", type="number", value=DEFAULT_SEASON, min=2020),
+                                dcc.Dropdown(
+                                    id="score-week-dd",
+                                    options=[
+                                        {"label": "Wild Card (1)", "value": 1},
+                                        {"label": "Divisional (2)", "value": 2},
+                                        {"label": "Conference (3)", "value": 3},
+                                        {"label": "Super Bowl (4)", "value": 4},
+                                    ],
+                                    value=1,
+                                    clearable=False,
+                                ),
+                                width=12,
                                 md=3,
                             ),
                             dbc.Col(
-                                dbc.Button("Refresh", id="refresh-score", color="secondary"),
+                                dbc.Input(id="score-season", type="number", value=DEFAULT_SEASON, min=2020),
+                                width=12,
+                                md=3,
+                            ),
+                            dbc.Col(
+                                dcc.Dropdown(
+                                    id="score-season-dd",
+                                    options=[
+                                        {"label": str(y), "value": y} for y in range(2020, DEFAULT_SEASON + 1)
+                                    ],
+                                    value=DEFAULT_SEASON,
+                                    clearable=False,
+                                ),
+                                width=12,
+                                md=3,
+                            ),
+                            dbc.Col(
+                                dbc.Button("Refresh", id="refresh-score", color="secondary", className="w-100 mb-2"),
+                                width=12,
+                                md=3,
+                            ),
+                            dbc.Col(
+                                dbc.Button("Update Live Stats", id="update-live-stats", color="primary", className="w-100 mb-2"),
+                                width=12,
                                 md=3,
                             ),
                         ],
                         className="mb-3",
                     ),
+                    html.Div(id="update-live-status", className="mb-3"),
                     html.Div(id="score-table"),
+                    # Auto-update on page load (fires once)
+                    dcc.Interval(id="auto-update-on-load", interval=1000, n_intervals=0, max_intervals=1),
+                    # Periodic refresh while page is open
+                    dcc.Interval(id="live-auto-refresh", interval=AUTO_REFRESH_SECS * 1000, n_intervals=0),
                 ]
             ),
         ]
@@ -948,6 +993,168 @@ def refresh_scoreboard(_, week, season):
         columns=[{"name": "Team", "id": "Team"}, {"name": "Points", "id": "Points"}],
         style_cell={"textAlign": "center", "padding": "10px"},
     )
+
+
+def _find_player_id_by_name_or_team(name: str, position: str, team: str | None = None) -> int | None:
+    try:
+        conn = get_conn()
+        cur = conn.cursor()
+        # Try exact name match first (case-insensitive)
+        row = cur.execute(
+            "SELECT id FROM postseason_players WHERE LOWER(name) = LOWER(?)",
+            (name.strip(),),
+        ).fetchone()
+        if row:
+            conn.close()
+            return int(row[0])
+        # Fallback for DST and K placeholders by team
+        if position.upper() in {"DST", "DEF"} and team:
+            row = cur.execute(
+                "SELECT id FROM postseason_players WHERE position = 'DST' AND UPPER(nfl_team) = UPPER(?)",
+                (team.strip(),),
+            ).fetchone()
+            if row:
+                conn.close()
+                return int(row[0])
+        if position.upper() == "K" and team:
+            row = cur.execute(
+                "SELECT id FROM postseason_players WHERE position = 'K' AND UPPER(nfl_team) = UPPER(?)",
+                (team.strip(),),
+            ).fetchone()
+            if row:
+                conn.close()
+                return int(row[0])
+        conn.close()
+        return None
+    except Exception:
+        return None
+
+
+def _fetch_live_stats(season: int, week: int) -> list[dict]:
+    """Fetch live stats from API or local JSON fallback. Returns list of stat dicts."""
+    # Expected schema per entry: {name, position, team, pass_yds, pass_td, interceptions, rush_yds, rush_td,
+    # receptions, rec_yds, rec_td, fumbles, two_pt, fg_made, fg_miss, xp_made, xp_miss, sacks, turnovers, dst_td, points_allowed}
+    # API mode
+    if POSTSEASON_STATS_API_URL:
+        try:
+            resp = requests.get(POSTSEASON_STATS_API_URL, params={"season": season, "week": week}, timeout=10)
+            if resp.ok:
+                payload = resp.json()
+                items = payload if isinstance(payload, list) else payload.get("stats", [])
+                return items if isinstance(items, list) else []
+        except Exception:
+            pass
+    # Local fallback
+    try:
+        local_path = os.path.join(os.getcwd(), "docs", "postseason", "live_weekly_stats.json")
+        if os.path.exists(local_path):
+            import json
+            with open(local_path) as f:
+                payload = json.load(f)
+            if isinstance(payload, list):
+                return payload
+            return payload.get("stats", []) if isinstance(payload, dict) else []
+    except Exception:
+        pass
+    return []
+
+
+def _perform_update_live_stats(week, season):
+    if not week or not season:
+        return dbc.Alert("Enter week and season.", color="danger")
+    stats_items = _fetch_live_stats(int(season), int(week))
+    if not stats_items:
+        return dbc.Alert("No live stats available.", color="warning")
+    saved = 0
+    unmatched = 0
+    for s in stats_items:
+        name = (s.get("name") or "").strip()
+        pos = (s.get("position") or "").strip().upper()
+        team = (s.get("team") or "").strip().upper()
+        pid = _find_player_id_by_name_or_team(name, pos, team)
+        if not pid:
+            unmatched += 1
+            continue
+        record_weekly_stats(
+            player_id=int(pid),
+            week=int(week),
+            season=int(season),
+            stats={
+                "position": pos,
+                "pass_yds": s.get("pass_yds", 0),
+                "pass_td": s.get("pass_td", 0),
+                "interceptions": s.get("interceptions", 0),
+                "rush_yds": s.get("rush_yds", 0),
+                "rush_td": s.get("rush_td", 0),
+                "receptions": s.get("receptions", 0),
+                "rec_yds": s.get("rec_yds", 0),
+                "rec_td": s.get("rec_td", 0),
+                "fumbles": s.get("fumbles", 0),
+                "two_pt": s.get("two_pt", 0),
+                "fg_made": s.get("fg_made", 0),
+                "fg_miss": s.get("fg_miss", 0),
+                "xp_made": s.get("xp_made", 0),
+                "xp_miss": s.get("xp_miss", 0),
+                "sacks": s.get("sacks", 0),
+                "turnovers": s.get("turnovers", 0),
+                "dst_td": s.get("dst_td", 0),
+                "points_allowed": s.get("points_allowed", 0),
+            },
+        )
+        saved += 1
+    msg = f"Updated {saved} players. Unmatched: {unmatched}."
+    return dbc.Alert(msg, color="success" if saved else "warning")
+
+
+@app.callback(
+    Output("update-live-status", "children"),
+    Input("update-live-stats", "n_clicks"),
+    State("score-week", "value"),
+    State("score-season", "value"),
+    State("score-week-dd", "value"),
+    State("score-season-dd", "value"),
+    prevent_initial_call=True,
+)
+def update_live_stats(n_clicks, week, season, week_dd, season_dd):
+    week_final = week_dd if week_dd is not None else week
+    season_final = season_dd if season_dd is not None else season
+    return _perform_update_live_stats(week_final, season_final)
+
+
+@app.callback(
+    Output("update-live-status", "children"),
+    Output("score-table", "children"),
+    Input("auto-update-on-load", "n_intervals"),
+    State("score-week", "value"),
+    State("score-season", "value"),
+    State("score-week-dd", "value"),
+    State("score-season-dd", "value"),
+    prevent_initial_call=True,
+)
+def auto_update_on_load(n_intervals, week, season, week_dd, season_dd):
+    week_final = week_dd if week_dd is not None else week
+    season_final = season_dd if season_dd is not None else season
+    alert = _perform_update_live_stats(week_final, season_final)
+    table = refresh_scoreboard(None, week_final, season_final)
+    return alert, table
+
+
+@app.callback(
+    Output("update-live-status", "children"),
+    Output("score-table", "children"),
+    Input("live-auto-refresh", "n_intervals"),
+    State("score-week", "value"),
+    State("score-season", "value"),
+    State("score-week-dd", "value"),
+    State("score-season-dd", "value"),
+    prevent_initial_call=True,
+)
+def periodic_update(n_intervals, week, season, week_dd, season_dd):
+    week_final = week_dd if week_dd is not None else week
+    season_final = season_dd if season_dd is not None else season
+    alert = _perform_update_live_stats(week_final, season_final)
+    table = refresh_scoreboard(None, week_final, season_final)
+    return alert, table
 
 
 if __name__ == "__main__":
