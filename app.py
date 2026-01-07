@@ -99,6 +99,7 @@ app = dash.Dash(__name__, external_stylesheets=[
     'https://use.fontawesome.com/releases/v6.0.0/css/all.css',
     'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap'
 ])
+server = app.server
 
 # Custom CSS for professional design
 app.index_string = '''

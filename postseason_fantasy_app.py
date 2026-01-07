@@ -314,6 +314,45 @@ def fetch_weekly_totals(week: int, season: int):
 
 init_postseason_tables()
 
+# Auto-load default playoff players from JSON if table is empty
+def _bootstrap_playoff_players():
+    try:
+        conn = get_conn()
+        cur = conn.cursor()
+        count = cur.execute("SELECT COUNT(*) FROM postseason_players").fetchone()[0]
+        if count > 0:
+            conn.close()
+            return
+        # Read generated players JSON
+        base_dir = os.getcwd()
+        json_path = os.path.join(base_dir, "docs", "postseason", "playoff_players_2026.json")
+        if not os.path.exists(json_path):
+            conn.close()
+            return
+        import json
+        with open(json_path) as f:
+            data = json.load(f)
+        players = data.get("players", [])
+        for p in players:
+            name = p.get("player_name", "").strip()
+            pos = p.get("position", "").strip().upper()
+            team = p.get("team", "").strip().upper()
+            if not name or not pos:
+                continue
+            if pos == "DEF":
+                pos = "DST"
+            cur.execute(
+                "INSERT INTO postseason_players (name, position, nfl_team) VALUES (?, ?, ?)",
+                (name, pos, team),
+            )
+        conn.commit()
+        conn.close()
+    except Exception:
+        # Non-fatal: skip bootstrap on errors
+        pass
+
+_bootstrap_playoff_players()
+
 app: Dash = dash.Dash(
     __name__,
     external_stylesheets=[dbc.themes.BOOTSTRAP],

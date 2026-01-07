@@ -1,0 +1,16 @@
+{
+  "season": 2025,
+  "top_seeds": {"AFC": "DEN", "NFC": "SEA"},
+  "wildcard_matchups": [
+    {"conf": "NFC", "home": "CAR", "away": "LAR", "datetime": "2026-01-10T15:30:00-05:00"},
+    {"conf": "NFC", "home": "CHI", "away": "GB",  "datetime": "2026-01-10T19:00:00-05:00"},
+    {"conf": "AFC", "home": "JAX", "away": "BUF", "datetime": "2026-01-11T12:00:00-05:00"},
+    {"conf": "NFC", "home": "PHI", "away": "SF",  "datetime": "2026-01-11T15:30:00-05:00"},
+    {"conf": "AFC", "home": "NE",  "away": "LAC", "datetime": "2026-01-11T19:00:00-05:00"},
+    {"conf": "AFC", "home": "PIT", "away": "HOU", "datetime": "2026-01-12T19:15:00-05:00"}
+  ],
+  "teams": [
+    "DEN", "NE", "JAX", "PIT", "HOU", "BUF", "LAC",
+    "SEA", "CHI", "PHI", "CAR", "LAR", "GB", "SF"
+  ]
+}

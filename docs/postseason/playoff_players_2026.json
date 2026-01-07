@@ -1,0 +1,654 @@
+{
+  "season": 2025,
+  "generated_at": "2026-01-07T17:48:11.007496Z",
+  "round_map": {},
+  "playoff_teams": [
+    "DEN",
+    "NE",
+    "JAX",
+    "PIT",
+    "HOU",
+    "BUF",
+    "LAC",
+    "SEA",
+    "CHI",
+    "PHI",
+    "CAR",
+    "LAR",
+    "GB",
+    "SF"
+  ],
+  "total_players": 42,
+  "players": [
+    {
+      "rank": 1,
+      "player_name": "BUF DEF",
+      "position": "DEF",
+      "team": "BUF",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 2,
+      "player_name": "CAR DEF",
+      "position": "DEF",
+      "team": "CAR",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 3,
+      "player_name": "CHI DEF",
+      "position": "DEF",
+      "team": "CHI",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 4,
+      "player_name": "DEN DEF",
+      "position": "DEF",
+      "team": "DEN",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 5,
+      "player_name": "GB DEF",
+      "position": "DEF",
+      "team": "GB",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 6,
+      "player_name": "HOU DEF",
+      "position": "DEF",
+      "team": "HOU",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 7,
+      "player_name": "JAX DEF",
+      "position": "DEF",
+      "team": "JAX",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 8,
+      "player_name": "LAC DEF",
+      "position": "DEF",
+      "team": "LAC",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 9,
+      "player_name": "LAR DEF",
+      "position": "DEF",
+      "team": "LAR",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 10,
+      "player_name": "NE DEF",
+      "position": "DEF",
+      "team": "NE",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 11,
+      "player_name": "PHI DEF",
+      "position": "DEF",
+      "team": "PHI",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 12,
+      "player_name": "PIT DEF",
+      "position": "DEF",
+      "team": "PIT",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 13,
+      "player_name": "SEA DEF",
+      "position": "DEF",
+      "team": "SEA",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 14,
+      "player_name": "SF DEF",
+      "position": "DEF",
+      "team": "SF",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 15,
+      "player_name": "BUF K",
+      "position": "K",
+      "team": "BUF",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 16,
+      "player_name": "CAR K",
+      "position": "K",
+      "team": "CAR",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 17,
+      "player_name": "CHI K",
+      "position": "K",
+      "team": "CHI",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 18,
+      "player_name": "DEN K",
+      "position": "K",
+      "team": "DEN",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 19,
+      "player_name": "GB K",
+      "position": "K",
+      "team": "GB",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 20,
+      "player_name": "HOU K",
+      "position": "K",
+      "team": "HOU",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 21,
+      "player_name": "JAX K",
+      "position": "K",
+      "team": "JAX",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 22,
+      "player_name": "LAC K",
+      "position": "K",
+      "team": "LAC",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 23,
+      "player_name": "LAR K",
+      "position": "K",
+      "team": "LAR",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 24,
+      "player_name": "NE K",
+      "position": "K",
+      "team": "NE",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 25,
+      "player_name": "PHI K",
+      "position": "K",
+      "team": "PHI",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 26,
+      "player_name": "PIT K",
+      "position": "K",
+      "team": "PIT",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 27,
+      "player_name": "SEA K",
+      "position": "K",
+      "team": "SEA",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 28,
+      "player_name": "SF K",
+      "position": "K",
+      "team": "SF",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 29,
+      "player_name": "BUF QB",
+      "position": "QB",
+      "team": "BUF",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 30,
+      "player_name": "CAR QB",
+      "position": "QB",
+      "team": "CAR",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 31,
+      "player_name": "CHI QB",
+      "position": "QB",
+      "team": "CHI",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 32,
+      "player_name": "DEN QB",
+      "position": "QB",
+      "team": "DEN",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 33,
+      "player_name": "GB QB",
+      "position": "QB",
+      "team": "GB",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 34,
+      "player_name": "HOU QB",
+      "position": "QB",
+      "team": "HOU",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 35,
+      "player_name": "JAX QB",
+      "position": "QB",
+      "team": "JAX",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 36,
+      "player_name": "LAC QB",
+      "position": "QB",
+      "team": "LAC",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 37,
+      "player_name": "LAR QB",
+      "position": "QB",
+      "team": "LAR",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 38,
+      "player_name": "NE QB",
+      "position": "QB",
+      "team": "NE",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 39,
+      "player_name": "PHI QB",
+      "position": "QB",
+      "team": "PHI",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 40,
+      "player_name": "PIT QB",
+      "position": "QB",
+      "team": "PIT",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 41,
+      "player_name": "SEA QB",
+      "position": "QB",
+      "team": "SEA",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    },
+    {
+      "rank": 42,
+      "player_name": "SF QB",
+      "position": "QB",
+      "team": "SF",
+      "weekly_scores": {
+        "wild_card": 0.0,
+        "divisional": 0.0,
+        "conference": 0.0,
+        "super_bowl": 0.0
+      },
+      "total_points": 0.0,
+      "games_played": 0,
+      "eliminated": false
+    }
+  ]
+}
