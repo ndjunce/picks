@@ -2392,6 +2392,139 @@ def update_weekly_picks_content(selected_week):
         return dbc.Alert(f"Error loading picks for week {selected_week}: {str(e)}", color="danger")
 
 
+def build_bestball_rankings_grid():
+    """Build NFC/AFC grid-style best ball rankings (FantasyAlarm-inspired)."""
+    import json, os
+    
+    # Load playoff players
+    playoff_players = []
+    players_file = os.path.join(os.getcwd(), 'docs', 'postseason', 'playoff_players_2026.json')
+    if os.path.exists(players_file):
+        try:
+            with open(players_file) as f:
+                data = json.load(f)
+            playoff_players = data.get('players', [])
+        except Exception:
+            pass
+    
+    if not playoff_players:
+        return dbc.Alert("No playoff rankings available yet.", color="warning")
+    
+    df = pd.DataFrame(playoff_players)
+    df = df.sort_values('total_points', ascending=False)
+    
+    # AFC and NFC team assignments
+    afc_teams = ["KC", "BUF", "BAL", "HOU", "PIT", "LAC", "DEN"]
+    nfc_teams = ["PHI", "DET", "GB", "SF", "LAR", "TB", "WSH"]
+    
+    df_nfc = df[df['team'].isin(nfc_teams)]
+    df_afc = df[df['team'].isin(afc_teams)]
+    
+    positions = ['QB', 'RB', 'WR', 'TE', 'K', 'DEF']
+    position_tabs = []
+    
+    for pos in positions:
+        nfc_pos = df_nfc[df_nfc['position'] == pos].head(12)
+        afc_pos = df_afc[df_afc['position'] == pos].head(12)
+        
+        nfc_pos = nfc_pos.copy()
+        nfc_pos['rank'] = range(1, len(nfc_pos) + 1)
+        afc_pos = afc_pos.copy()
+        afc_pos['rank'] = range(1, len(afc_pos) + 1)
+        
+        # Build NFC cards
+        nfc_cards = []
+        for _, row in nfc_pos.iterrows():
+            nfc_cards.append(
+                dbc.Card([
+                    dbc.CardHeader(
+                        html.Div([
+                            html.Span(f"#{row['rank']}", className="badge badge-primary me-2"),
+                            html.Span(row['player_name'], className="fw-bold"),
+                            html.Span(row['team'], className="badge badge-secondary ms-2"),
+                        ]),
+                        style={'backgroundColor': '#f8f9fa', 'fontSize': '0.9rem'}
+                    ),
+                    dbc.CardBody([
+                        html.Div([
+                            html.Small(f"{row['total_points']:.1f} PPR", className="text-muted"),
+                            html.Small(f" • {row['games_played']} GP", className="text-muted")
+                        ])
+                    ], style={'padding': '0.5rem'})
+                ], className="mb-1", style={'borderLeft': '4px solid #1f77b4'})
+            )
+        
+        # Build AFC cards
+        afc_cards = []
+        for _, row in afc_pos.iterrows():
+            afc_cards.append(
+                dbc.Card([
+                    dbc.CardHeader(
+                        html.Div([
+                            html.Span(f"#{row['rank']}", className="badge badge-danger me-2"),
+                            html.Span(row['player_name'], className="fw-bold"),
+                            html.Span(row['team'], className="badge badge-secondary ms-2"),
+                        ]),
+                        style={'backgroundColor': '#f8f9fa', 'fontSize': '0.9rem'}
+                    ),
+                    dbc.CardBody([
+                        html.Div([
+                            html.Small(f"{row['total_points']:.1f} PPR", className="text-muted"),
+                            html.Small(f" • {row['games_played']} GP", className="text-muted")
+                        ])
+                    ], style={'padding': '0.5rem'})
+                ], className="mb-1", style={'borderLeft': '4px solid #ff7f0e'})
+            )
+        
+        # Side-by-side layout
+        grid = dbc.Row([
+            dbc.Col([
+                html.H6("NFC", className="text-center fw-bold mb-3", style={'color': '#1f77b4'}),
+                html.Div(nfc_cards)
+            ], xs=12, sm=12, md=6, lg=6, xl=6, className="mb-3"),
+            dbc.Col([
+                html.H6("AFC", className="text-center fw-bold mb-3", style={'color': '#ff7f0e'}),
+                html.Div(afc_cards)
+            ], xs=12, sm=12, md=6, lg=6, xl=6, className="mb-3"),
+        ])
+        
+        position_tabs.append(dcc.Tab(
+            label=f"{pos} ({len(nfc_pos)+len(afc_pos)})",
+            value=pos,
+            children=[grid]
+        ))
+    
+    # Overall tab
+    df_top = df.head(50)
+    df_top['overall_rank'] = range(1, len(df_top) + 1)
+    
+    overall_rows = []
+    for _, row in df_top.iterrows():
+        conf = "NFC" if row['team'] in nfc_teams else "AFC"
+        overall_rows.append(
+            dbc.Row([
+                dbc.Col(html.Small(f"#{row['overall_rank']}", className="fw-bold"), width=1),
+                dbc.Col(html.Small(row['player_name']), width=4),
+                dbc.Col(html.Small(row['position'], className="badge badge-info"), width=1),
+                dbc.Col(html.Small(row['team'], className="badge badge-secondary"), width=1),
+                dbc.Col(html.Small(conf, className=f"badge badge-{'primary' if conf=='NFC' else 'danger'}"), width=1),
+                dbc.Col(html.Small(f"{row['total_points']:.1f}", className="text-end fw-bold"), width=2),
+            ], className="mb-1 pb-1 border-bottom small")
+        )
+    
+    overall_tab = dcc.Tab(
+        label="Overall",
+        value="overall",
+        children=[
+            html.Div(overall_rows, style={'maxHeight': '600px', 'overflowY': 'auto'})
+        ]
+    )
+    
+    position_tabs.insert(0, overall_tab)
+    
+    return dcc.Tabs(position_tabs, value="overall", id="bestball-tabs")
+
+
 def render_postseason_tab():
     """Postseason Fantasy League: 6 teams x 11 roster spots (QB QB RB RB WR WR TE FLEX FLEX K DEF)."""
     import json
@@ -2407,6 +2540,19 @@ def render_postseason_tab():
             playoff_players = data.get('players', [])
         except Exception as e:
             print(f"Error loading playoff players: {e}")
+    # Compute per-position rank mapping based on Total points
+    pos_rank_map = {}
+    try:
+        from collections import defaultdict
+        groups = defaultdict(list)
+        for p in playoff_players:
+            groups[p.get('position')].append(p)
+        for pos, lst in groups.items():
+            lst.sort(key=lambda x: x.get('total_points', 0.0), reverse=True)
+            for i, player in enumerate(lst):
+                pos_rank_map[(pos, player.get('player_name'))] = i + 1
+    except Exception:
+        pos_rank_map = {}
     
     teams = ["Ajay", "Chay", "Nick", "Riley", "Seth", "Zach"]
     slots = ["QB", "QB", "RB", "RB", "WR", "WR", "TE", "FLEX", "FLEX", "K", "DEF"]
@@ -2444,13 +2590,31 @@ def render_postseason_tab():
     return dbc.Card([
         dbc.CardHeader([
             html.H4("Postseason Fantasy League", className="mb-0"),
-            html.Small("6 teams • 11 roster spots each (QB QB RB RB WR WR TE FLEX FLEX K DEF) — fill in after your draft", className="text-muted")
+            html.Small(
+                "6 teams • 11 roster spots each (QB QB RB RB WR WR TE FLEX FLEX K DEF) — fill in after your draft",
+                className="text-muted",
+                style={"textShadow": "none", "color": "#4a5568", "fontSize": "0.95rem"}
+            )
         ]),
         dbc.CardBody([
             dbc.Alert([
                 html.Strong("How to use: "),
                 "Edit the table to enter drafted players for each team (11 slots). Total points and players remaining will update as playoff games are played."
             ], color="info", className="mb-3"),
+            dbc.Card([
+                dbc.CardHeader("Scoring Format (PPR)"),
+                dbc.CardBody([
+                    html.Ul([
+                        html.Li("Passing: 0.04/yd, 4/TD, -2/INT"),
+                        html.Li("Rushing: 0.1/yd, 6/TD"),
+                        html.Li("Receiving: 1 per reception, 0.1/yd, 6/TD"),
+                        html.Li("Two-point conversions: +2"),
+                        html.Li("Fumbles lost: -2"),
+                        html.Li("Kickers: FG made +3, FG miss -1, XP +1, XP miss -1"),
+                        html.Li("DEF/DST: sacks +1, turnovers +2, TD +6; points allowed bonus (0=+10, ≤6=+7, ≤13=+4, ≤20=+1, ≤27=0, ≤34=-1, >34=-4)")
+                    ], className="mb-0")
+                ])
+            ], className="mb-3"),
                 # Mobile-friendly view toggle
                 dbc.Row([
                     dbc.Col(
@@ -2466,13 +2630,21 @@ def render_postseason_tab():
                         xs=12, sm=12, md=6, lg=6, xl=6,
                     )
                 ], className="mb-2"),
-
+                # Store to retain roster table data
+                dcc.Store(id="postseason-roster-store"),
                 # Container for roster view (cards/table)
                 html.Div(id="postseason-rosters", children=roster_table),
                 html.Hr(className="my-4"),
+                html.H5("🏈 Best Ball Rankings — PPR (NFC/AFC Grid)", className="mb-3"),
+                dbc.Alert([
+                    html.Strong("Equation-Based Rankings: "),
+                    "All 14 playoff teams ranked by 2025 regular season PPR performance. Compare with FantasyAlarm, RotoBaller, and expert consensus."
+                ], color="info", className="mb-3"),
+                html.Div(id="bestball-rankings-container", children=build_bestball_rankings_grid()),
+                html.Hr(className="my-4"),
                 html.H5("Available Playoff Players", className="mb-3"),
                     dbc.Alert([
-                        "All players from the 14 playoff teams (KC, BUF, BAL, HOU, PIT, LAC, DEN, DET, PHI, TB, LAR, MIN, GB, WSH). ",
+                        "All players from the 14 playoff teams. ",
                         "Weekly scores will be updated after each playoff round."
                     ], color="light", className="mb-3"),
             
@@ -2491,17 +2663,19 @@ def render_postseason_tab():
                     dash_table.DataTable(
                         id='playoff-players-table',
                         data=[{
-                            'Rank': p['rank'],
-                            'Player': p['player_name'],
-                            'Pos': p['position'],
-                            'Team': p['team'],
-                            'WC': p['weekly_scores']['wild_card'],
-                            'DIV': p['weekly_scores']['divisional'],
-                            'CONF': p['weekly_scores']['conference'],
-                            'SB': p['weekly_scores']['super_bowl'],
-                            'Total': p['total_points'],
-                            'Games': p['games_played'],
-                            'Status': 'Eliminated' if p['eliminated'] else 'Active'
+                            'Rank': p.get('rank'),
+                            'Player': p.get('player_name'),
+                            'Pos': p.get('position'),
+                            'Team': p.get('team'),
+                            'WC': p.get('weekly_scores', {}).get('wild_card', 0.0),
+                            'DIV': p.get('weekly_scores', {}).get('divisional', 0.0),
+                            'CONF': p.get('weekly_scores', {}).get('conference', 0.0),
+                            'SB': p.get('weekly_scores', {}).get('super_bowl', 0.0),
+                            'Total': p.get('total_points', 0.0),
+                            'Season PPR': p.get('season_ppr_points', p.get('total_points', 0.0)),
+                            'Pos Rank': pos_rank_map.get((p.get('position'), p.get('player_name'))),
+                            'Games': p.get('games_played', 0),
+                            'Status': 'Eliminated' if p.get('eliminated') else 'Active'
                         } for p in playoff_players],
                         columns=[
                             {'name': 'Rank', 'id': 'Rank'},
@@ -2513,6 +2687,8 @@ def render_postseason_tab():
                             {'name': 'CONF', 'id': 'CONF'},
                             {'name': 'SB', 'id': 'SB'},
                             {'name': 'Total', 'id': 'Total'},
+                            {'name': 'Season PPR', 'id': 'Season PPR'},
+                            {'name': 'Pos Rank', 'id': 'Pos Rank'},
                             {'name': 'Games', 'id': 'Games'},
                             {'name': 'Status', 'id': 'Status'},
                         ],
@@ -2560,6 +2736,7 @@ def build_postseason_roster_table():
                [{"name": slots[i], "id": f"{slots[i]}_{i}"} for i in range(len(slots))])
 
     return dash_table.DataTable(
+        id='postseason-roster-table',
         data=data,
         columns=columns,
         editable=True,
@@ -2583,31 +2760,65 @@ def build_postseason_roster_table():
         },
     )
 
-def build_postseason_roster_cards():
-    """Build the mobile-friendly cards view for postseason rosters."""
+def build_postseason_roster_cards(roster_data, player_points_map):
+    """Build the mobile-friendly cards view. Show per-player totals and team totals.
+    roster_data: list of dict rows from the roster table
+    player_points_map: dict mapping player name -> total points
+    """
     teams = ["Ajay", "Chay", "Nick", "Riley", "Seth", "Zach"]
-    slots = ["QB", "QB", "RB", "RB", "WR", "WR", "TE", "FLEX", "FLEX", "K", "DEF"]
+    # Build cards per team
     cards = []
+    # Map team -> list of (slot, player_name, total_points)
+    team_rows = {row.get('Team'): row for row in (roster_data or [])}
     for t in teams:
-        cards.append(
-            dbc.Card([
-                dbc.CardHeader(t),
-                dbc.CardBody([
-                    html.Ul([html.Li(s) for s in slots], className="mb-0")
-                ])
-            ], className="mb-2")
-        )
-    # Stack cards on mobile, two-column on md+
+        row = team_rows.get(t, {})
+        slot_items = []
+        team_total = 0.0
+        players_remaining = 0
+        for key, val in row.items():
+            if key in ("Team", "Total Points", "Players Remaining"):
+                continue
+            slot_label = key.split("_")[0]
+            player_name = (val or "").strip()
+            if player_name:
+                pts = float(player_points_map.get(player_name, 0.0))
+                team_total += pts
+                slot_items.append(html.Li(f"{slot_label}: {player_name} — {pts:.1f} pts"))
+            else:
+                players_remaining += 1
+                slot_items.append(html.Li(f"{slot_label}: —"))
+        header = dbc.CardHeader([html.Span(t), html.Small(f"  • Total: {team_total:.1f} • Remaining: {players_remaining}", className="ms-1 text-muted")])
+        body = dbc.CardBody([html.Ul(slot_items, className="mb-0")])
+        cards.append(dbc.Card([header, body], className="mb-2"))
     return dbc.Row([dbc.Col(c, xs=12, sm=12, md=6, lg=6, xl=6) for c in cards])
 
-@app.callback(Output('postseason-rosters', 'children'), Input('postseason-roster-view', 'value'))
-def _switch_postseason_rosters(view):
+@app.callback(Output('postseason-rosters', 'children'),
+              Input('postseason-roster-view', 'value'),
+              State('postseason-roster-store', 'data'))
+def _switch_postseason_rosters(view, roster_data):
     try:
         if view == 'cards':
-            return build_postseason_roster_cards()
+            # Load player totals from JSON
+            import json, os
+            players_file = os.path.join(os.getcwd(), 'docs', 'postseason', 'playoff_players_2026.json')
+            player_points_map = {}
+            if os.path.exists(players_file):
+                with open(players_file, 'r') as f:
+                    j = json.load(f)
+                for p in j.get('players', []):
+                    name = p.get('player_name')
+                    total = p.get('total_points', 0.0)
+                    if name:
+                        player_points_map[name] = total
+            return build_postseason_roster_cards(roster_data or [], player_points_map)
         return build_postseason_roster_table()
     except Exception as e:
         return dbc.Alert(f"Error rendering rosters: {e}", color="danger")
+
+@app.callback(Output('postseason-roster-store', 'data'), Input('postseason-roster-table', 'data'))
+def _capture_roster_table_data(data):
+    # Pass through latest table data to store for card rendering
+    return data
 
 def render_postseason_picks_tab():
     """Postseason picks across rounds: 6 people (Bobby, Chet, Clyde, Henry, Nick, Riley) picking each game."""

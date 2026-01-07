@@ -792,14 +792,24 @@ def playoff_players_panel():
                     "CONF": ws.get("conference", 0.0),
                     "SB": ws.get("super_bowl", 0.0),
                     "Total": p.get("total_points", 0.0),
+                    "Season PPR": p.get("season_ppr_points", p.get("total_points", 0.0)),
                     "Games": p.get("games_played", 0),
                     "Status": "Eliminated" if p.get("eliminated") else "Active",
                 })
+            # Compute position ranks by Total desc
+            from collections import defaultdict
+            groups = defaultdict(list)
+            for r in rows:
+                groups[r.get("Pos")].append(r)
+            for pos, lst in groups.items():
+                lst.sort(key=lambda x: x.get("Total", 0.0), reverse=True)
+                for i, r in enumerate(lst):
+                    r["Pos Rank"] = i + 1
     except Exception:
         rows = []
 
     return dbc.Card([
-        dbc.CardHeader("Available Playoff Players"),
+        dbc.CardHeader("Playoff Players"),
         dbc.CardBody([
             dbc.Button("Reload Playoff Players from JSON", id="reload-playoff-btn", color="secondary", className="mb-3 w-100"),
             dash_table.DataTable(
@@ -814,6 +824,8 @@ def playoff_players_panel():
                     {"name": "CONF", "id": "CONF"},
                     {"name": "SB", "id": "SB"},
                     {"name": "Total", "id": "Total"},
+                    {"name": "Season PPR", "id": "Season PPR"},
+                    {"name": "Pos Rank", "id": "Pos Rank"},
                     {"name": "Games", "id": "Games"},
                     {"name": "Status", "id": "Status"},
                 ],
