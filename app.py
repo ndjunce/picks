@@ -2392,9 +2392,9 @@ def update_weekly_picks_content(selected_week):
 
 
 def render_postseason_tab():
-    """Postseason Fantasy League: 6 teams x 10 roster spots (QB QB RB RB WR WR TE FLEX FLEX TE K D)."""
+    """Postseason Fantasy League: 6 teams x 11 roster spots (QB QB RB RB WR WR TE FLEX FLEX K DEF)."""
     teams = ["Ajay", "Chet", "Nick", "Riley", "Seth", "Zach"]
-    slots = ["QB", "QB", "RB", "RB", "WR", "WR", "TE", "FLEX", "FLEX", "K"]
+    slots = ["QB", "QB", "RB", "RB", "WR", "WR", "TE", "FLEX", "FLEX", "K", "DEF"]
     data = [{"Team": t, **{f"{slots[i]}_{i}": "" for i in range(len(slots))}} for t in teams]
     columns = ([{"name": "Team", "id": "Team"}] +
                [{"name": slots[i], "id": f"{slots[i]}_{i}"} for i in range(len(slots))])
