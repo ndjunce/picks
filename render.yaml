@@ -11,5 +11,5 @@ services:
     name: update-results
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: python nfl_picks_automator.py
+    startCommand: python scripts/safe_cron_runner.py
     schedule: "0 */2 * * 0,1,4"

@@ -428,6 +428,7 @@ def tabs_layout():
         [
             dbc.Tab(label="Teams", tab_id="teams"),
             dbc.Tab(label="Players", tab_id="players"),
+            dbc.Tab(label="Playoff Players", tab_id="playoff_players"),
             dbc.Tab(label="Rosters", tab_id="rosters"),
             dbc.Tab(label="Weekly Stats", tab_id="stats"),
             dbc.Tab(label="Scoreboard", tab_id="score"),
@@ -667,6 +668,70 @@ def scoreboard_panel():
     )
 
 
+def playoff_players_panel():
+    # Load generated playoff players JSON
+    base_dir = os.getcwd()
+    json_path = os.path.join(base_dir, "docs", "postseason", "playoff_players_2026.json")
+    rows = []
+    try:
+        import json
+        if os.path.exists(json_path):
+            with open(json_path) as f:
+                data = json.load(f)
+            for p in data.get("players", []):
+                ws = p.get("weekly_scores", {})
+                rows.append({
+                    "Rank": p.get("rank"),
+                    "Player": p.get("player_name"),
+                    "Pos": p.get("position"),
+                    "Team": p.get("team"),
+                    "WC": ws.get("wild_card", 0.0),
+                    "DIV": ws.get("divisional", 0.0),
+                    "CONF": ws.get("conference", 0.0),
+                    "SB": ws.get("super_bowl", 0.0),
+                    "Total": p.get("total_points", 0.0),
+                    "Games": p.get("games_played", 0),
+                    "Status": "Eliminated" if p.get("eliminated") else "Active",
+                })
+    except Exception:
+        rows = []
+
+    return dbc.Card([
+        dbc.CardHeader("Available Playoff Players"),
+        dbc.CardBody([
+            dash_table.DataTable(
+                data=rows,
+                columns=[
+                    {"name": "Rank", "id": "Rank"},
+                    {"name": "Player", "id": "Player"},
+                    {"name": "Pos", "id": "Pos"},
+                    {"name": "Team", "id": "Team"},
+                    {"name": "WC", "id": "WC"},
+                    {"name": "DIV", "id": "DIV"},
+                    {"name": "CONF", "id": "CONF"},
+                    {"name": "SB", "id": "SB"},
+                    {"name": "Total", "id": "Total"},
+                    {"name": "Games", "id": "Games"},
+                    {"name": "Status", "id": "Status"},
+                ],
+                filter_action='native',
+                sort_action='native',
+                page_action='native',
+                page_size=20,
+                style_table={'overflowX': 'auto'},
+                style_cell={'textAlign': 'center', 'padding': '8px', 'minWidth': '70px'},
+                style_header={'backgroundColor': '#0d6efd', 'color': 'white', 'fontWeight': 'bold'},
+                style_data_conditional=[
+                    {
+                        'if': {'column_id': 'Status', 'filter_query': '{Status} = "Eliminated"'},
+                        'backgroundColor': '#f8d7da', 'color': '#721c24'
+                    }
+                ]
+            )
+        ])
+    ])
+
+
 @app.callback(
     Output("auth-store", "data"),
     Output("login-alert", "children"),
@@ -720,6 +785,8 @@ def render_tab(active_tab, auth, _):
         return teams_panel(user_id)
     if active_tab == "players":
         return players_panel()
+    if active_tab == "playoff_players":
+        return playoff_players_panel()
     if active_tab == "rosters":
         return roster_panel(user_id)
     if active_tab == "stats":

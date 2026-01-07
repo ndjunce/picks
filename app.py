@@ -2394,19 +2394,19 @@ def update_weekly_picks_content(selected_week):
 
 def render_postseason_tab():
     """Postseason Fantasy League: 6 teams x 11 roster spots (QB QB RB RB WR WR TE FLEX FLEX K DEF)."""
-        import json
-        import os
+    import json
+    import os
     
-        # Load playoff players data
-        playoff_players = []
-        players_file = 'docs/postseason/playoff_players_2026.json'
-        if os.path.exists(players_file):
-            try:
-                with open(players_file) as f:
-                    data = json.load(f)
-                playoff_players = data.get('players', [])
-            except Exception as e:
-                print(f"Error loading playoff players: {e}")
+    # Load playoff players data
+    playoff_players = []
+    players_file = os.path.join(os.getcwd(), 'docs', 'postseason', 'playoff_players_2026.json')
+    if os.path.exists(players_file):
+        try:
+            with open(players_file) as f:
+                data = json.load(f)
+            playoff_players = data.get('players', [])
+        except Exception as e:
+            print(f"Error loading playoff players: {e}")
     
     teams = ["Ajay", "Chet", "Nick", "Riley", "Seth", "Zach"]
     slots = ["QB", "QB", "RB", "RB", "WR", "WR", "TE", "FLEX", "FLEX", "K", "DEF"]
@@ -2449,9 +2449,9 @@ def render_postseason_tab():
                 html.Strong("How to use: "),
                 "Edit the table to enter drafted players for each team (11 slots). Total points and players remaining will update as playoff games are played."
             ], color="info", className="mb-3"),
-            roster_table
-                    html.Hr(className="my-4"),
-                    html.H5("Available Playoff Players", className="mb-3"),
+                roster_table,
+                html.Hr(className="my-4"),
+                html.H5("Available Playoff Players", className="mb-3"),
                     dbc.Alert([
                         "All players from the 14 playoff teams (KC, BUF, BAL, HOU, PIT, LAC, DEN, DET, PHI, TB, LAR, MIN, GB, WSH). ",
                         "Weekly scores will be updated after each playoff round."
