@@ -2393,6 +2393,20 @@ def update_weekly_picks_content(selected_week):
 
 def render_postseason_tab():
     """Postseason Fantasy League: 6 teams x 11 roster spots (QB QB RB RB WR WR TE FLEX FLEX K DEF)."""
+        import json
+        import os
+    
+        # Load playoff players data
+        playoff_players = []
+        players_file = 'docs/postseason/playoff_players_2026.json'
+        if os.path.exists(players_file):
+            try:
+                with open(players_file) as f:
+                    data = json.load(f)
+                playoff_players = data.get('players', [])
+            except Exception as e:
+                print(f"Error loading playoff players: {e}")
+    
     teams = ["Ajay", "Chet", "Nick", "Riley", "Seth", "Zach"]
     slots = ["QB", "QB", "RB", "RB", "WR", "WR", "TE", "FLEX", "FLEX", "K", "DEF"]
     data = [{"Team": t, "Total Points": 0, "Players Remaining": 0, **{f"{slots[i]}_{i}": "" for i in range(len(slots))}} for t in teams]
@@ -2435,6 +2449,82 @@ def render_postseason_tab():
                 "Edit the table to enter drafted players for each team (11 slots). Total points and players remaining will update as playoff games are played."
             ], color="info", className="mb-3"),
             roster_table
+                    html.Hr(className="my-4"),
+                    html.H5("Available Playoff Players", className="mb-3"),
+                    dbc.Alert([
+                        "All players from the 14 playoff teams (KC, BUF, BAL, HOU, PIT, LAC, DEN, DET, PHI, TB, LAR, MIN, GB, WSH). ",
+                        "Weekly scores will be updated after each playoff round."
+                    ], color="light", className="mb-3"),
+            
+                    # Position filter buttons
+                    dbc.ButtonGroup([
+                        dbc.Button("All", id="filter-all", color="primary", size="sm", className="me-1"),
+                        dbc.Button("QB", id="filter-qb", color="secondary", size="sm", className="me-1"),
+                        dbc.Button("RB", id="filter-rb", color="secondary", size="sm", className="me-1"),
+                        dbc.Button("WR", id="filter-wr", color="secondary", size="sm", className="me-1"),
+                        dbc.Button("TE", id="filter-te", color="secondary", size="sm", className="me-1"),
+                        dbc.Button("K", id="filter-k", color="secondary", size="sm", className="me-1"),
+                        dbc.Button("DEF", id="filter-def", color="secondary", size="sm", className="me-1"),
+                    ], className="mb-3"),
+            
+                    # Build player rankings table
+                    dash_table.DataTable(
+                        id='playoff-players-table',
+                        data=[{
+                            'Rank': p['rank'],
+                            'Player': p['player_name'],
+                            'Pos': p['position'],
+                            'Team': p['team'],
+                            'WC': p['weekly_scores']['wild_card'],
+                            'DIV': p['weekly_scores']['divisional'],
+                            'CONF': p['weekly_scores']['conference'],
+                            'SB': p['weekly_scores']['super_bowl'],
+                            'Total': p['total_points'],
+                            'Games': p['games_played'],
+                            'Status': 'Eliminated' if p['eliminated'] else 'Active'
+                        } for p in playoff_players],
+                        columns=[
+                            {'name': 'Rank', 'id': 'Rank'},
+                            {'name': 'Player', 'id': 'Player'},
+                            {'name': 'Pos', 'id': 'Pos'},
+                            {'name': 'Team', 'id': 'Team'},
+                            {'name': 'WC', 'id': 'WC'},
+                            {'name': 'DIV', 'id': 'DIV'},
+                            {'name': 'CONF', 'id': 'CONF'},
+                            {'name': 'SB', 'id': 'SB'},
+                            {'name': 'Total', 'id': 'Total'},
+                            {'name': 'Games', 'id': 'Games'},
+                            {'name': 'Status', 'id': 'Status'},
+                        ],
+                        filter_action='native',
+                        sort_action='native',
+                        page_action='native',
+                        page_size=20,
+                        style_table={'overflowX': 'auto'},
+                        style_cell={
+                            'textAlign': 'center',
+                            'padding': '8px',
+                            'minWidth': '70px',
+                            'fontSize': '14px'
+                        },
+                        style_header={
+                            'backgroundColor': '#0d6efd',
+                            'color': 'white',
+                            'fontWeight': 'bold',
+                            'border': '1px solid #0d6efd'
+                        },
+                        style_data_conditional=[
+                            {
+                                'if': {'column_id': 'Status', 'filter_query': '{Status} = "Eliminated"'},
+                                'backgroundColor': '#f8d7da',
+                                'color': '#721c24'
+                            },
+                            {
+                                'if': {'column_id': 'Total'},
+                                'fontWeight': 'bold'
+                            }
+                        ]
+                    )
         ])
     ])
 
