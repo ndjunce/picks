@@ -315,6 +315,34 @@ def fetch_weekly_totals(week: int, season: int):
     return results
 
 
+def fetch_league_rosters():
+    conn = get_conn()
+    cur = conn.cursor()
+    teams = cur.execute(
+        "SELECT id, team_name FROM postseason_teams ORDER BY team_name"
+    ).fetchall()
+    rows = []
+    for team_id, team_name in teams:
+        row = {"Team": team_name}
+        for slot in ROSTER_SLOTS:
+            player = cur.execute(
+                """
+                SELECT p.name, p.position, p.nfl_team
+                FROM postseason_rosters r
+                JOIN postseason_players p ON p.id = r.player_id
+                WHERE r.team_id = ? AND r.slot = ?
+                """,
+                (team_id, slot),
+            ).fetchone()
+            if player:
+                row[slot] = f"{player[0]} ({player[1]}-{player[2]})"
+            else:
+                row[slot] = ""
+        rows.append(row)
+    conn.close()
+    return rows
+
+
 init_postseason_tables()
 
 # Auto-load default playoff players from JSON if table is empty
@@ -430,6 +458,7 @@ app.layout = dbc.Container(
 def tabs_layout():
     return dbc.Tabs(
         [
+            dbc.Tab(label="League Rosters", tab_id="league_rosters"),
             dbc.Tab(label="Teams", tab_id="teams"),
             dbc.Tab(label="Players", tab_id="players"),
             dbc.Tab(label="Playoff Players", tab_id="playoff_players"),
@@ -438,7 +467,7 @@ def tabs_layout():
             dbc.Tab(label="Scoreboard", tab_id="score"),
         ],
         id="main-tabs",
-        active_tab="score",
+        active_tab="league_rosters",
         className="mb-3",
     )
 
@@ -777,6 +806,25 @@ def playoff_players_panel():
     ])
 
 
+def league_rosters_panel():
+    data = fetch_league_rosters()
+    columns = [{"name": "Team", "id": "Team"}] + [{"name": s, "id": s} for s in ROSTER_SLOTS]
+    return dbc.Card([
+        dbc.CardHeader("League Rosters"),
+        dbc.CardBody([
+            dash_table.DataTable(
+                data=data,
+                columns=columns,
+                page_action='native',
+                page_size=10,
+                style_table={'overflowX': 'auto'},
+                style_cell={'textAlign': 'left', 'padding': '8px', 'minWidth': '120px'},
+                style_header={'backgroundColor': '#0d6efd', 'color': 'white', 'fontWeight': 'bold'},
+            )
+        ])
+    ])
+
+
 @app.callback(
     Output("auth-store", "data"),
     Output("login-alert", "children"),
@@ -826,6 +874,8 @@ def render_tab(active_tab, auth, _):
     if not auth:
         return dash.no_update
     user_id = auth.get("user_id")
+    if active_tab == "league_rosters":
+        return league_rosters_panel()
     if active_tab == "teams":
         return teams_panel(user_id)
     if active_tab == "players":
@@ -991,7 +1041,8 @@ def refresh_scoreboard(_, week, season):
     return dash_table.DataTable(
         data=data,
         columns=[{"name": "Team", "id": "Team"}, {"name": "Points", "id": "Points"}],
-        style_cell={"textAlign": "center", "padding": "10px"},
+        style_cell={"textAlign": "center", "padding": "10px", "minWidth": "90px"},
+        style_table={"overflowX": "auto"},
     )
 
 
